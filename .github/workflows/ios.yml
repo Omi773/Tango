@@ -6,13 +6,20 @@ on:
 jobs:
   build-ios:
     runs-on: macos-15
-    env:
-      # Local-only build: no Discord SDK.
-      MORNYE_DISCORD_SDK: "0"
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Fetch Discord SDK (iOS)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download discord-sdk --pattern discord-ios.zip --dir /tmp
+          mkdir -p third_party/mornye_discord/ios/Frameworks
+          unzip -q /tmp/discord-ios.zip -d third_party/mornye_discord/ios/Frameworks
+          test -d third_party/mornye_discord/ios/Frameworks/discord_partner_sdk.xcframework
+          test -f third_party/mornye_discord/ios/Frameworks/Discord-License-Notices.txt
 
       - name: Select Xcode 26.1.1
         run: |
@@ -85,7 +92,7 @@ jobs:
           cd ios/build/Runner.xcarchive/Products/Applications
           mkdir Payload
           cp -r Runner.app Payload/
-          zip -r "$GITHUB_WORKSPACE/build/ios/ipa/Player-ios-unsigned.ipa" Payload
+          zip -r "$GITHUB_WORKSPACE/build/ios/ipa/LocalPlayer-ios-unsigned.ipa" Payload
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
