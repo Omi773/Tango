@@ -16,7 +16,7 @@ struct PlayerWidgetState: Codable {
     static let kind = "MornyePlayer"
     static var container: URL? {
         let group = Bundle.main.object(forInfoDictionaryKey: "PlayerWidgetAppGroup") as? String
-            ?? "group.app.music.localplayer"
+            ?? "group.app.localplayer.pers"
         return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: group)
     }
 

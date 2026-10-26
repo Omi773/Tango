@@ -57,7 +57,7 @@
     if ([call.method isEqualToString:@"initialize"]) {
         if (!_client) {
             _client = std::make_unique<discordpp::Client>();
-            _client->SetApplicationId(1549854098801692862ULL);
+            _client->SetApplicationId(1564320165863366676ULL);
             _client->SetEngineManagedAudioSession(true);
             __weak DiscordPresencePlugin *weakSelf = self;
             _client->SetStatusChangedCallback([weakSelf](discordpp::Client::Status status, discordpp::Client::Error, int32_t) {
@@ -91,11 +91,11 @@
             [self finishAuth:@{@"access": @(access.c_str()), @"refresh": @(refresh.c_str()), @"expiresIn": @(expires)}];
         };
         if ([call.method isEqualToString:@"refresh"]) {
-            _client->RefreshToken(1549854098801692862ULL, [args[@"refresh"] UTF8String], exchanged);
+            _client->RefreshToken(1564320165863366676ULL, [args[@"refresh"] UTF8String], exchanged);
         } else {
             auto verifier = _client->CreateAuthorizationCodeVerifier();
             discordpp::AuthorizationArgs auth;
-            auth.SetClientId(1549854098801692862ULL);
+            auth.SetClientId(1564320165863366676ULL);
             auth.SetScopes(discordpp::Client::GetDefaultPresenceScopes());
             auth.SetCodeChallenge(verifier.Challenge());
             _client->Authorize(auth, [weakSelf, generation, verifier, exchanged](discordpp::ClientResult response, std::string code, std::string redirect) {
@@ -105,7 +105,7 @@
                     [self finishAuth:[FlutterError errorWithCode:@"cancelled" message:@"Discord linking was cancelled or unavailable." details:nil]];
                     return;
                 }
-                self->_client->GetToken(1549854098801692862ULL, code, verifier.Verifier(), redirect, exchanged);
+                self->_client->GetToken(1564320165863366676ULL, code, verifier.Verifier(), redirect, exchanged);
             });
         }
     } else if ([call.method isEqualToString:@"connect"]) {
@@ -121,7 +121,7 @@
         result(nil);
     } else if ([call.method isEqualToString:@"update"]) {
         discordpp::Activity activity;
-        activity.SetName("Mornye");
+        activity.SetName("LocalPlayer");
         activity.SetType(discordpp::ActivityTypes::Listening);
         activity.SetDetails([args[@"title"] UTF8String]);
         activity.SetState([args[@"state"] UTF8String]);

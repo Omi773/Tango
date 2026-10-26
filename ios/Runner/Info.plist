@@ -24,7 +24,7 @@
 		<string>zh-Hant</string>
 	</array>
 	<key>CFBundleDisplayName</key>
-	<string>Player</string>
+	<string>LocalPlayer</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -32,7 +32,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Player</string>
+	<string>LocalPlayer</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -110,11 +110,11 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>CFBundleURLName</key>
-			<string>app.music.localplayer</string>
+			<string>app.localplayer.pers</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>mornye</string>
-				<string>discord-1549854098801692862</string>
+				<string>discord-1564320165863366676</string>
 			</array>
 		</dict>
 	</array>

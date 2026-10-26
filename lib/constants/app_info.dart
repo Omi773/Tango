@@ -18,7 +18,7 @@ class AppInfo {
     return desktop ?? isDesktopPlatform ? '$version (beta)' : version;
   }
 
-  static const String appName = 'Mornye';
+  static const String appName = 'LocalPlayer';
   static const String copyright = '© 2026 Zarz Eleutherius';
 
   static const String mobileAuthor = 'zarzet';
