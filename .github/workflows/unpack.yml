@@ -1,0 +1,29 @@
+name: Unpack Player.zip
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Unzip into repo root
+        run: |
+          unzip -q Player.zip -d /tmp/unpacked
+          # GitHub's token can't push workflow files; add ios.yml by hand.
+          rm -rf /tmp/unpacked/Player/.github
+          rsync -a /tmp/unpacked/Player/ ./
+          rm Player.zip
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Unpack Player.zip"
+          git push
