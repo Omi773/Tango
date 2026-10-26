@@ -1,0 +1,40 @@
+name: Rename app
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply rename
+        run: |
+          sed -i 's/app\.music\.localplayer/app.localplayer.pers/g' \
+            ios/Runner/Info.plist \
+            ios/Runner.xcodeproj/project.pbxproj \
+            ios/PlayerWidget/PlayerWidgetState.swift \
+            ios/PlayerWidget/PlayerWidget.xcconfig
+          sed -i 's#<string>Player</string>#<string>LocalPlayer</string>#' \
+            ios/Runner/Info.plist ios/PlayerWidget/Info.plist
+          sed -i "s/static const String appName = 'Mornye';/static const String appName = 'LocalPlayer';/" \
+            lib/constants/app_info.dart
+          sed -i 's/1549854098801692862/1564320165863366676/g' \
+            ios/Runner/Info.plist \
+            third_party/mornye_discord/ios/Classes/DiscordPresencePlugin.mm
+          sed -i 's/SetName("Mornye")/SetName("LocalPlayer")/' \
+            third_party/mornye_discord/ios/Classes/DiscordPresencePlugin.mm
+          git diff --stat
+          ! grep -rn "app.music.localplayer" ios
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Rename app to LocalPlayer, bundle id app.localplayer.pers, Discord app id"
+          git push
