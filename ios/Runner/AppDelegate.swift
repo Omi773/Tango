@@ -26,13 +26,13 @@ import UniformTypeIdentifiers
     private var concertCalendar: ConcertCalendarBridge?
     private var playbackNotification: PlaybackNotificationBridge?
     private var audioRouteInfo: AudioRouteInfoBridge?
+    private var audioDiagnostics: AudioDiagnosticsBridge?
     private var musicHaptics: MusicHapticsBridge?
     private let coreBackend: CoreBackend = createCoreBackend()
     private var pendingSessionGrantEvents: [[String: Any]] = []
-
     private let securityScopedAccessLock = NSLock()
     private var securityScopedAccesses: [String: (URL, CoreDirectoryScope)] = [:]
-
+    
     // Folders picked through Files stay open for the whole process so songs in
     // them can be played in place, without copying them into the app.
     private let libraryBookmarksKey = "tango.pickedFolderBookmarks"
@@ -126,6 +126,7 @@ import UniformTypeIdentifiers
         GeneratedPluginRegistrant.register(with: registry)
         playbackNotification = PlaybackNotificationBridge(messenger: messenger)
         audioRouteInfo = AudioRouteInfoBridge(messenger: messenger)
+        audioDiagnostics = AudioDiagnosticsBridge(messenger: messenger)
         musicHaptics = MusicHapticsBridge(messenger: messenger)
         registry.registrar(forPlugin: "AudioOutputView")?.register(
             AudioOutputViewFactory(messenger: messenger),
