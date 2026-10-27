@@ -34,6 +34,8 @@ import UniformTypeIdentifiers
     private var securityScopedAccesses: [String: (URL, CoreDirectoryScope)] = [:]
 
     private var pendingDirectoryPickerResult: FlutterResult?
+    private var importPickerResult: FlutterResult?
+    private weak var importPicker: UIDocumentPickerViewController?
 
     /// Whether a download queue is active; while true a background assertion
     /// is acquired before work starts and renewed on later background entries.
@@ -264,7 +266,7 @@ import UniformTypeIdentifiers
     private func handleMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let osMethods: Set<String> = ["getBackendImplementations", "startWebAuthSession", "beginBackgroundDownloadTask", "endBackgroundDownloadTask",
             "startBackgroundWork", "updateBackgroundWork", "stopBackgroundWork",
-            "pickIosDirectory", "startAccessingIosBookmark", "stopAccessingIosBookmark", "downloadCoverToFile", "releaseMemory", "releaseMemoryUnderPressure",
+            "pickIosDirectory", "importIosAudio", "startAccessingIosBookmark", "stopAccessingIosBookmark", "downloadCoverToFile", "releaseMemory", "releaseMemoryUnderPressure",
             "setLibraryCoverCacheDir", "scanLibraryFolderToNDJSONFile", "scanLibraryFolderIncremental",
             "getLibraryScanProgress", "cancelLibraryScan", "pauseLibraryScan", "resumeLibraryScan",
             "parseCueSheet", "extractCoverToFile",
@@ -332,7 +334,11 @@ import UniformTypeIdentifiers
             result(nil)
             return
         case "pickIosDirectory":
-            pickIosDirectory(result: result)
+            let useBrowser = (call.arguments as? [String: Any])?["useBrowser"] as? Bool ?? false
+            pickIosDirectory(useBrowser: useBrowser, result: result)
+            return
+        case "importIosAudio":
+            importIosAudio(result: result)
             return
         case "startWebAuthSession":
             let args = call.arguments as? [String: Any] ?? [:]
@@ -640,8 +646,8 @@ import UniformTypeIdentifiers
     /// Present a native folder picker and return `{path, bookmark}` where the
     /// security-scoped bookmark is created inside the picker callback, while
     /// the picker's access grant is still active. Returns nil on cancel.
-    private func pickIosDirectory(result: @escaping FlutterResult) {
-        if pendingDirectoryPickerResult != nil {
+    private func pickIosDirectory(useBrowser: Bool, result: @escaping FlutterResult) {
+        if pendingDirectoryPickerResult != nil || importPickerResult != nil {
             result(FlutterError(
                 code: "PICKER_ACTIVE",
                 message: "A folder picker is already active",
@@ -661,10 +667,110 @@ import UniformTypeIdentifiers
             topController = presented
         }
         pendingDirectoryPickerResult = result
+        if useBrowser {
+            // Full Files browser instead of the picker sheet. A folder tapped
+            // here is reported through documentBrowser(_:didPickDocumentsAt:).
+            let browser = UIDocumentBrowserViewController(forOpening: [UTType.folder])
+            browser.delegate = self
+            browser.allowsDocumentCreation = false
+            browser.allowsPickingMultipleItems = false
+            browser.modalPresentationStyle = .fullScreen
+            browser.additionalLeadingNavigationBarButtonItems = [
+                UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction { [weak self, weak browser] _ in
+                    browser?.dismiss(animated: true) { self?.finishDirectoryPick(urls: []) }
+                })
+            ]
+            topController.present(browser, animated: true)
+            return
+        }
         let picker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.folder])
         picker.delegate = self
         picker.allowsMultipleSelection = false
         topController.present(picker, animated: true)
+    }
+
+    // MARK: - Import songs (copy into the app's Documents folder)
+
+    /// Presents a picker that returns app-owned copies of the chosen audio
+    /// files, so no security-scoped access to the original location is needed.
+    private func importIosAudio(result: @escaping FlutterResult) {
+        if pendingDirectoryPickerResult != nil || importPickerResult != nil {
+            result(FlutterError(code: "PICKER_ACTIVE", message: "A picker is already active", details: nil))
+            return
+        }
+        guard var topController = activeWindow?.rootViewController else {
+            result(FlutterError(
+                code: "NO_VIEW_CONTROLLER",
+                message: "No view controller available to present the file picker",
+                details: nil
+            ))
+            return
+        }
+        while let presented = topController.presentedViewController {
+            topController = presented
+        }
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.audio], asCopy: true)
+        picker.delegate = self
+        picker.allowsMultipleSelection = true
+        importPickerResult = result
+        importPicker = picker
+        topController.present(picker, animated: true)
+    }
+
+    fileprivate func finishAudioImport(urls: [URL]) {
+        guard let result = importPickerResult else { return }
+        importPickerResult = nil
+        importPicker = nil
+        guard !urls.isEmpty else {
+            result(nil)
+            return
+        }
+        DispatchQueue.global(qos: .userInitiated).async {
+            let fm = FileManager.default
+            let documents = fm.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let destination = documents.appendingPathComponent("Imported", isDirectory: true)
+            try? fm.createDirectory(at: destination, withIntermediateDirectories: true)
+            func size(_ url: URL) -> Int64 {
+                ((try? fm.attributesOfItem(atPath: url.path)[.size]) as? NSNumber)?.int64Value ?? -1
+            }
+            var imported = 0, skipped = 0, failed = 0
+            for source in urls {
+                let started = source.startAccessingSecurityScopedResource()
+                defer { if started { source.stopAccessingSecurityScopedResource() } }
+                let base = source.deletingPathExtension().lastPathComponent
+                let ext = source.pathExtension
+                var target = destination.appendingPathComponent(source.lastPathComponent)
+                var counter = 2
+                var duplicate = false
+                while fm.fileExists(atPath: target.path) {
+                    if size(target) == size(source) {
+                        duplicate = true
+                        break
+                    }
+                    let name = ext.isEmpty ? "\(base) (\(counter))" : "\(base) (\(counter)).\(ext)"
+                    target = destination.appendingPathComponent(name)
+                    counter += 1
+                }
+                if duplicate {
+                    skipped += 1
+                    continue
+                }
+                do {
+                    try fm.moveItem(at: source, to: target)
+                    imported += 1
+                } catch {
+                    do {
+                        try fm.copyItem(at: source, to: target)
+                        imported += 1
+                    } catch {
+                        failed += 1
+                    }
+                }
+            }
+            DispatchQueue.main.async {
+                result(["imported": imported, "skipped": skipped, "failed": failed, "path": destination.path])
+            }
+        }
     }
 
     // MARK: - iOS Security-Scoped Bookmark Helpers
@@ -747,11 +853,36 @@ extension AppDelegate: ASWebAuthenticationPresentationContextProviding {
     }
 }
 
-extension AppDelegate: UIDocumentPickerDelegate {
+extension AppDelegate: UIDocumentPickerDelegate, UIDocumentBrowserViewControllerDelegate {
     func documentPicker(
         _ controller: UIDocumentPickerViewController,
         didPickDocumentsAt urls: [URL]
     ) {
+        if controller === importPicker {
+            finishAudioImport(urls: urls)
+        } else {
+            finishDirectoryPick(urls: urls)
+        }
+    }
+
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        if controller === importPicker {
+            finishAudioImport(urls: [])
+        } else {
+            finishDirectoryPick(urls: [])
+        }
+    }
+
+    func documentBrowser(
+        _ controller: UIDocumentBrowserViewController,
+        didPickDocumentsAt documentURLs: [URL]
+    ) {
+        // Create the bookmark first, while the browser's grant is active.
+        finishDirectoryPick(urls: documentURLs)
+        controller.dismiss(animated: true)
+    }
+
+    fileprivate func finishDirectoryPick(urls: [URL]) {
         guard let result = pendingDirectoryPickerResult else { return }
         pendingDirectoryPickerResult = nil
         guard let url = urls.first else {
@@ -783,11 +914,6 @@ extension AppDelegate: UIDocumentPickerDelegate {
                 details: nil
             ))
         }
-    }
-
-    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-        pendingDirectoryPickerResult?(nil)
-        pendingDirectoryPickerResult = nil
     }
 }
 
