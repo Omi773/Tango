@@ -24,7 +24,7 @@
 		<string>zh-Hant</string>
 	</array>
 	<key>CFBundleDisplayName</key>
-	<string>LocalPlayer</string>
+	<string>Tango</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -32,7 +32,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>LocalPlayer</string>
+	<string>Tango</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -102,7 +102,7 @@
 	<true/>
 	
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Mornye needs access to save album artwork</string>
+	<string>Tango needs access to save album artwork</string>
 	
 	<key>CFBundleURLTypes</key>
 	<array>
@@ -110,7 +110,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>CFBundleURLName</key>
-			<string>app.localplayer.pers</string>
+			<string>app.tango.music</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>mornye</string>

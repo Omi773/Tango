@@ -1,7 +1,7 @@
 name: mornye
 description: Player, a local-files music player for iPhone
 publish_to: "none"
-version: 5.2.5+164
+version: 1.0.0+1
 
 environment:
   sdk: ^3.10.0
