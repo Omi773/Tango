@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -9,6 +10,7 @@ import 'package:tango/l10n/l10n.dart';
 import 'package:tango/models/equalizer_settings.dart';
 import 'package:tango/models/settings.dart';
 import 'package:tango/services/audio_route_info.dart';
+import 'package:tango/services/audio_diagnostics.dart';
 import 'package:tango/services/music_playback_deck.dart';
 import 'package:tango/services/music_player_service.dart';
 import 'package:tango/services/platform_bridge.dart';
@@ -52,19 +54,33 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
   int? _fileSize;
   String? _loadedPath;
   int _loadGeneration = 0;
-  bool _loading = false;
+    bool _loading = false;
+  Timer? _liveTimer;
+  AudioLive? _live;
 
   @override
   void initState() {
     super.initState();
     widget.metadata.addListener(_load);
     _load();
+    _refreshLive();
+    _liveTimer = Timer.periodic(
+      const Duration(milliseconds: 700),
+      (_) => _refreshLive(),
+    );
   }
 
   @override
   void dispose() {
+    _liveTimer?.cancel();
     widget.metadata.removeListener(_load);
     super.dispose();
+  }
+
+  Future<void> _refreshLive() async {
+    final next = await AudioDiagnostics.readLive();
+    if (!mounted || next == null) return;
+    setState(() => _live = next);
   }
 
   Future<void> _load() async {
