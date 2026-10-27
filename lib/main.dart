@@ -31,6 +31,7 @@ import 'package:tango/services/desktop_deep_links.dart';
 import 'package:tango/services/desktop_diagnostics.dart';
 import 'package:tango/services/desktop_library_watcher.dart';
 import 'package:tango/services/music_player_service.dart';
+import 'package:tango/services/audio_diagnostics.dart';
 import 'package:tango/services/player_widget_service.dart';
 import 'package:tango/screens/now_playing_screen.dart';
 import 'package:tango/utils/desktop_platform.dart';
@@ -163,6 +164,7 @@ void main() {
           ),
         ),
       );
+      unawaited(AudioDiagnostics.start());
       if (Platform.isAndroid || Platform.isIOS) {
         unawaited(
           PlayerWidgetService.instance.initialize((command) async {
