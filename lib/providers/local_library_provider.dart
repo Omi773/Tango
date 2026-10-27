@@ -272,6 +272,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       state = state.copyWith(sources: configuredSources);
       await ref.read(settingsProvider.notifier).ensureLoaded();
       await _migrateLegacySource();
+      final documentsSourceId = await _ensureAppDocumentsSource();
       final reconnectedSources = await _refreshSourceAvailabilityInDatabase();
       while (ref.mounted) {
         final sourceVersion = _sourceVersion;
@@ -318,6 +319,11 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
         );
         _hasLoadedFromDatabase = true;
         break;
+      }
+      if (ref.mounted && documentsSourceId != null) {
+        unawaited(
+          Future<void>.microtask(() => startSourceScan(documentsSourceId)),
+        );
       }
       if (ref.mounted && reconnectedSources.reconnected.isNotEmpty) {
         unawaited(
