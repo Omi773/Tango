@@ -193,3 +193,223 @@ private final class AudioOutputView: NSObject, FlutterPlatformView, AVRoutePicke
         channel.setMethodCallHandler(nil)
     }
 }
+/// Watches the iOS audio session and reports changes to Tango's log.
+final class AudioDiagnosticsBridge {
+    private let channel: FlutterMethodChannel
+    private let session = AVAudioSession.sharedInstance()
+    private var timer: Timer?
+    private var buffered: [[String: String]] = []
+    private var dartListening = false
+    private var lastRate = 0.0
+    private var lastBuffer = 0.0
+    private var lastChannels = 0
+    private var lastCategory = ""
+    private var usbConnected = false
+    private var connects = 0
+    private var disconnects = 0
+
+    init(messenger: FlutterBinaryMessenger) {
+        channel = FlutterMethodChannel(name: "app.tango/audio_diag", binaryMessenger: messenger)
+        lastRate = session.sampleRate
+        lastBuffer = session.ioBufferDuration
+        lastChannels = session.outputNumberOfChannels
+        lastCategory = categoryText()
+        usbConnected = session.currentRoute.outputs.contains { $0.portType == .usbAudio }
+        channel.setMethodCallHandler { [weak self] call, result in
+            guard let self = self else { result(nil); return }
+            switch call.method {
+            case "drain":
+                self.dartListening = true
+                let pending = self.buffered
+                self.buffered = []
+                result(pending)
+            case "live":
+                result(self.liveSnapshot())
+            default:
+                result(FlutterMethodNotImplemented)
+            }
+        }
+        observe()
+        emit("INFO", "Audio monitor started · " + summary())
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+            self?.poll()
+        }
+    }
+
+    deinit {
+        timer?.invalidate()
+        channel.setMethodCallHandler(nil)
+    }
+
+    private func emit(_ level: String, _ message: String) {
+        let item = ["level": level, "message": message]
+        if dartListening {
+            channel.invokeMethod("event", arguments: item)
+        } else {
+            buffered.append(item)
+            if buffered.count > 200 { buffered.removeFirst() }
+        }
+    }
+
+    private func observe() {
+        let nc = NotificationCenter.default
+        nc.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: .main) { [weak self] n in
+            self?.routeChanged(n)
+        }
+        nc.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: .main) { [weak self] n in
+            let raw = (n.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt) ?? 0
+            let began = AVAudioSession.InterruptionType(rawValue: raw) == .began
+            var text = began ? "Interruption began" : "Interruption ended"
+            if !began, let o = n.userInfo?[AVAudioSessionInterruptionOptionKey] as? UInt,
+               AVAudioSession.InterruptionOptions(rawValue: o).contains(.shouldResume) {
+                text += " (should resume)"
+            }
+            self?.emit(began ? "WARN" : "INFO", text)
+        }
+        nc.addObserver(forName: AVAudioSession.mediaServicesWereResetNotification, object: nil, queue: .main) { [weak self] _ in
+            self?.emit("WARN", "Media services were reset")
+            self?.poll()
+        }
+        nc.addObserver(forName: AVAudioSession.mediaServicesWereLostNotification, object: nil, queue: .main) { [weak self] _ in
+            self?.emit("WARN", "Media services were lost")
+        }
+        nc.addObserver(forName: AVAudioSession.silenceSecondaryAudioHintNotification, object: nil, queue: .main) { [weak self] n in
+            let t = (n.userInfo?[AVAudioSessionSilenceSecondaryAudioHintTypeKey] as? UInt) ?? 0
+            self?.emit("INFO", "Silence-secondary-audio hint: \(t == 1 ? "begin" : "end")")
+        }
+        nc.addObserver(forName: .EAAccessoryDidConnect, object: nil, queue: .main) { [weak self] n in
+            let a = n.userInfo?[EAAccessoryKey] as? EAAccessory
+            self?.emit("INFO", "MFi accessory connected: \(a?.name ?? "?")")
+        }
+        nc.addObserver(forName: .EAAccessoryDidDisconnect, object: nil, queue: .main) { [weak self] n in
+            let a = n.userInfo?[EAAccessoryKey] as? EAAccessory
+            self?.emit("WARN", "MFi accessory disconnected: \(a?.name ?? "?")")
+        }
+        EAAccessoryManager.shared().registerForLocalNotifications()
+    }
+
+    private func routeChanged(_ n: Notification) {
+        let raw = (n.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt) ?? 0
+        let reason = AVAudioSession.RouteChangeReason(rawValue: raw).map { self.reasonName($0) } ?? "unknown(\(raw))"
+        let previous = (n.userInfo?[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription)
+            .map { self.routeText($0) } ?? "-"
+        emit("INFO", "Route change: \(reason) · was \(previous) · now \(routeText(session.currentRoute))")
+        poll()
+    }
+
+    /// Runs twice a second and reports only what changed.
+    private func poll() {
+        let s = session
+        let outs = s.currentRoute.outputs
+        let usb = outs.contains { $0.portType == .usbAudio }
+        if usb != usbConnected {
+            usbConnected = usb
+            if usb {
+                connects += 1
+                emit("INFO", "DAC connected: \(outs.first?.portName ?? "?") · " + summary())
+            } else {
+                disconnects += 1
+                emit("WARN", "DAC disconnected")
+            }
+        }
+        let rate = s.sampleRate
+        if abs(rate - lastRate) > 0.5 {
+            emit("INFO", String(format: "Session sample rate %.0f → %.0f Hz (preferred %.0f Hz)", lastRate, rate, s.preferredSampleRate))
+            lastRate = rate
+        }
+        let buf = s.ioBufferDuration
+        if abs(buf - lastBuffer) > 0.0005 {
+            emit("INFO", String(format: "IO buffer %.2f → %.2f ms", lastBuffer * 1000, buf * 1000))
+            lastBuffer = buf
+        }
+        let ch = s.outputNumberOfChannels
+        if ch != lastChannels {
+            emit("INFO", "Output channels \(lastChannels) → \(ch)")
+            lastChannels = ch
+        }
+        let cat = categoryText()
+        if cat != lastCategory {
+            emit("INFO", "Audio session changed: \(lastCategory) → \(cat)")
+            lastCategory = cat
+        }
+    }
+
+    private func summary() -> String {
+        let s = session
+        return String(format: "%.0f Hz · IO %.1f ms · %d out ch · ", s.sampleRate, s.ioBufferDuration * 1000, s.outputNumberOfChannels)
+            + routeText(s.currentRoute) + " · " + categoryText()
+    }
+
+    private func categoryText() -> String {
+        let s = session
+        return "\(s.category.rawValue) / \(s.mode.rawValue) / \(optionsText(s.categoryOptions))"
+    }
+
+    private func liveSnapshot() -> [String: Any] {
+        let s = session
+        let out = s.currentRoute.outputs.first
+        var rows: [[String: String]] = []
+        func add(_ key: String, _ value: String) { rows.append(["key": key, "value": value]) }
+        add("Output device", out.map { "\($0.portName) [\($0.portType.rawValue)]" } ?? "none")
+        add("Session sample rate", String(format: "%.0f Hz (preferred %.0f Hz)", s.sampleRate, s.preferredSampleRate))
+        add("IO buffer", String(format: "%.2f ms (preferred %.2f ms)", s.ioBufferDuration * 1000, s.preferredIOBufferDuration * 1000))
+        add("Output latency", String(format: "%.2f ms", s.outputLatency * 1000))
+        add("Output channels", "\(s.outputNumberOfChannels) now · \(s.maximumOutputNumberOfChannels) max · \(s.preferredOutputNumberOfChannels) preferred")
+        if let out = out {
+            let chans = (out.channels ?? []).map { "\($0.channelNumber): \($0.channelName)" }
+            if !chans.isEmpty { add("Channel map", chans.joined(separator: ", ")) }
+            let sources = (out.dataSources ?? []).map { $0.dataSourceName }
+            if !sources.isEmpty { add("Data sources", sources.joined(separator: ", ")) }
+            if let selected = out.selectedDataSource { add("Selected data source", selected.dataSourceName) }
+            add("Spatial audio", out.isSpatialAudioEnabled ? "on" : "off")
+        }
+        add("All outputs", routeText(s.currentRoute))
+        add("Session category / mode", "\(s.category.rawValue) / \(s.mode.rawValue)")
+        add("Category options", optionsText(s.categoryOptions))
+        add("Route sharing policy", policyName(s.routeSharingPolicy))
+        add("Other audio playing", s.isOtherAudioPlaying ? "yes" : "no")
+        add("DAC (USB audio)", usbConnected ? "connected" : "not connected")
+        add("DAC connects / disconnects", "\(connects) / \(disconnects)")
+        return ["rows": rows, "sessionRate": s.sampleRate]
+    }
+
+    private func routeText(_ r: AVAudioSessionRouteDescription) -> String {
+        r.outputs.isEmpty ? "none" : r.outputs.map { "\($0.portName) [\($0.portType.rawValue)]" }.joined(separator: ", ")
+    }
+
+    private func optionsText(_ o: AVAudioSession.CategoryOptions) -> String {
+        var names: [String] = []
+        if o.contains(.mixWithOthers) { names.append("mixWithOthers") }
+        if o.contains(.duckOthers) { names.append("duckOthers") }
+        if o.contains(.interruptSpokenAudioAndMixWithOthers) { names.append("interruptSpoken") }
+        if o.contains(.allowBluetooth) { names.append("allowBluetooth") }
+        if o.contains(.allowBluetoothA2DP) { names.append("allowBluetoothA2DP") }
+        if o.contains(.allowAirPlay) { names.append("allowAirPlay") }
+        if o.contains(.defaultToSpeaker) { names.append("defaultToSpeaker") }
+        return names.isEmpty ? "none" : names.joined(separator: "+")
+    }
+
+    private func reasonName(_ r: AVAudioSession.RouteChangeReason) -> String {
+        switch r {
+        case .unknown: return "unknown"
+        case .newDeviceAvailable: return "new device available"
+        case .oldDeviceUnavailable: return "old device unavailable"
+        case .categoryChange: return "category change"
+        case .override: return "override"
+        case .wakeFromSleep: return "wake from sleep"
+        case .noSuitableRouteForCategory: return "no suitable route"
+        case .routeConfigurationChange: return "route configuration change"
+        @unknown default: return "other"
+        }
+    }
+
+    private func policyName(_ p: AVAudioSession.RouteSharingPolicy) -> String {
+        switch p {
+        case .default: return "default"
+        case .longFormAudio: return "long-form audio"
+        case .longFormVideo: return "long-form video"
+        case .independent: return "independent"
+        @unknown default: return "other"
+        }
+    }
+}
