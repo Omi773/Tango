@@ -155,7 +155,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
         if (!mounted) return;
         IosPickedDirectory? picked;
         try {
-          picked = await showIosLibraryFolderSheet(context);
+          picked = await PlatformBridge.pickIosDirectory();
         } catch (e) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -657,17 +657,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
             child: SettingsGroup(
               connected: true,
               children: [
-                SettingsSwitchItem(
-                  icon: Icons.library_music_outlined,
-                  title: context.l10n.libraryEnableLocalLibrary,
-                  subtitle: settings.localLibraryEnabled
-                      ? context.l10n.libraryEnableLocalLibrarySubtitle
-                      : context.l10n.extensionsDisabled,
-                  value: settings.localLibraryEnabled,
-                  onChanged: (value) => ref
-                      .read(settingsProvider.notifier)
-                      .setLocalLibraryEnabled(value),
-                ),
                 for (final source in librarySources)
                   Consumer(
                     builder: (context, ref, _) {
