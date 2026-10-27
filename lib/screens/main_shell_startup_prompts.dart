@@ -94,7 +94,7 @@ extension _MainShellStartupPrompts on _MainShellState {
   Future<void> _checkUpgradeIntro() async {
     try {
       final preferences = await SharedPreferences.getInstance();
-      if (!mounted || !UpgradeIntroService.shouldShow(preferences)) return;
+      return;
       await Navigator.of(context, rootNavigator: true).push<void>(
         MaterialPageRoute(
           builder: (_) => const UpgradeIntroScreen(),

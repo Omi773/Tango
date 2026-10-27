@@ -188,30 +188,6 @@ class DonateConfig {
       title: 'Support ${AppInfo.appName}',
       message: 'Optional support helps cover dev tools and testing devices.',
       methods: [
-        DonateMethod(
-          id: 'kofi',
-          title: 'Ko-fi',
-          subtitle: 'ko-fi.com/zarzet',
-          url: AppInfo.kofiUrl,
-          icon: 'kofi',
-          color: 0xFFFF5E5B,
-        ),
-        DonateMethod(
-          id: 'github-sponsors',
-          title: 'GitHub Sponsors',
-          subtitle: 'github.com/sponsors/zarzet',
-          url: AppInfo.githubSponsorsUrl,
-          icon: 'github',
-          color: 0xFF2D333B,
-        ),
-        DonateMethod(
-          id: 'usdt-trc20',
-          title: 'USDT (TRC20)',
-          subtitle: 'TL7iAqjq9M8BwVMi9AtHvuAGHtdwEvsDta',
-          walletAddress: 'TL7iAqjq9M8BwVMi9AtHvuAGHtdwEvsDta',
-          icon: 'crypto',
-          color: 0xFF26A17B,
-        ),
       ],
       supporters: [],
       notices: [
