@@ -134,7 +134,7 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   nativeDownloadWorkerEnabled:
       json['nativeDownloadWorkerEnabled'] as bool? ?? false,
   concurrentDownloads: (json['concurrentDownloads'] as num?)?.toInt() ?? 1,
-  localLibraryEnabled: json['localLibraryEnabled'] as bool? ?? false,
+  localLibraryEnabled: true,
   localLibraryPath: json['localLibraryPath'] as String? ?? '',
   localLibraryBookmark: json['localLibraryBookmark'] as String? ?? '',
   localLibraryShowDuplicates:
