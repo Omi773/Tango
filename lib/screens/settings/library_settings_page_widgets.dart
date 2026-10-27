@@ -13,6 +13,7 @@ class _LibrarySourceSettingsItem extends StatelessWidget {
   final VoidCallback onScan;
   final VoidCallback onFullScan;
   final VoidCallback onRemove;
+  final bool locked;
 
   const _LibrarySourceSettingsItem({
     required this.source,
@@ -27,6 +28,7 @@ class _LibrarySourceSettingsItem extends StatelessWidget {
     required this.onScan,
     required this.onFullScan,
     required this.onRemove,
+    this.locked = false,
   });
 
   String _title() {
@@ -73,17 +75,18 @@ class _LibrarySourceSettingsItem extends StatelessWidget {
             subtitle: Text(context.l10n.libraryForceFullScanSubtitle),
             onTap: canScan ? () => Navigator.pop(context, 'full_scan') : null,
           ),
-          AppSheetOption(
-            leading: AppIcon(
-              Icons.delete_outline,
-              color: Theme.of(context).colorScheme.error,
+          if (!locked)
+            AppSheetOption(
+              leading: AppIcon(
+                Icons.delete_outline,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              title: Text(
+                context.l10n.libraryRemoveFolder,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+              onTap: () => Navigator.pop(context, 'remove'),
             ),
-            title: Text(
-              context.l10n.libraryRemoveFolder,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
-            onTap: () => Navigator.pop(context, 'remove'),
-          ),
           const SizedBox(height: 8),
         ],
       ),
@@ -161,12 +164,13 @@ class _LibrarySourceSettingsItem extends StatelessWidget {
                   determinate: totalFiles > 0 && !isFinalizing,
                 ),
               ),
-            AppSwitch(
-              adaptive: true,
-              semanticLabel: title,
-              value: source.enabled,
-              onChanged: enabled ? onEnabledChanged : null,
-            ),
+            if (!locked)
+              AppSwitch(
+                adaptive: true,
+                semanticLabel: title,
+                value: source.enabled,
+                onChanged: enabled ? onEnabledChanged : null,
+              ),
           ],
         ),
       ),
