@@ -4,7 +4,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/services/platform_bridge.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 
-enum _LibraryFolderLocation { documents, files }
+enum _LibraryFolderLocation { documents, files, browser, import }
 
 /// App-owned music does not need a grant from the system Files picker.
 Future<IosPickedDirectory?> showIosLibraryFolderSheet(
@@ -32,6 +32,22 @@ Future<IosPickedDirectory?> showIosLibraryFolderSheet(
               subtitle: Text(context.l10n.setupChooseFromFilesSubtitle),
               onTap: () => Navigator.pop(context, _LibraryFolderLocation.files),
             ),
+            AppSheetOption(
+              leading: const Icon(Icons.library_music_outlined),
+              title: const Text('Import songs'),
+              subtitle: const Text(
+                'Pick audio files from Files or iCloud Drive and copy them '
+                'into the app',
+              ),
+              onTap: () => Navigator.pop(context, _LibraryFolderLocation.import),
+            ),
+            AppSheetOption(
+              leading: const Icon(Icons.folder_copy_outlined),
+              title: const Text('Browse folders with Files'),
+              subtitle: const Text('Alternative folder picker'),
+              onTap: () =>
+                  Navigator.pop(context, _LibraryFolderLocation.browser),
+            ),
             const SizedBox(height: 8),
           ],
         ),
@@ -39,6 +55,19 @@ Future<IosPickedDirectory?> showIosLibraryFolderSheet(
     ),
   );
   if (location == null || !context.mounted) return null;
+  if (location == _LibraryFolderLocation.browser) {
+    return PlatformBridge.pickIosDirectory(useBrowser: true);
+  }
+  if (location == _LibraryFolderLocation.import) {
+    final imported = await PlatformBridge.importIosAudio();
+    if (imported == null) return null;
+    if (imported.imported + imported.skipped == 0) {
+      throw const FormatException('No songs could be imported');
+    }
+    // Imports land in Documents/Imported, which the app documents source scans.
+    final documents = await getApplicationDocumentsDirectory();
+    return IosPickedDirectory(path: documents.path, bookmark: '');
+  }
   if (location == _LibraryFolderLocation.files) {
     // Keep the native picker and its bookmark for folders outside our sandbox.
     return PlatformBridge.pickIosDirectory();
