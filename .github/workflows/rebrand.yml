@@ -1,0 +1,45 @@
+name: Rebrand step 1
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rebrand:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply
+        run: |
+          set -e
+          sed -i 's/app\.localplayer\.pers/app.tango.music/g' \
+            ios/Runner/Info.plist \
+            ios/Runner.xcodeproj/project.pbxproj \
+            ios/PlayerWidget/PlayerWidgetState.swift \
+            ios/PlayerWidget/PlayerWidget.xcconfig
+          sed -i 's#<string>LocalPlayer</string>#<string>Tango</string>#' \
+            ios/Runner/Info.plist ios/PlayerWidget/Info.plist
+          sed -i 's/Mornye needs/Tango needs/' ios/Runner/Info.plist
+          sed -i 's/^version: .*/version: 1.0.0+1/' pubspec.yaml
+          F=lib/constants/app_info.dart
+          sed -i "s/static const String version = '5.2.5';/static const String version = '1.0.0';/" $F
+          sed -i "s/static const String buildNumber = '164';/static const String buildNumber = '1';/" $F
+          sed -i "s/static const String appName = '.*';/static const String appName = 'Tango';/" $F
+          sed -i "s/static const String copyright = '.*';/static const String copyright = '© 2026 Omi773 \& Claude AI';/" $F
+          sed -i "s/static const String mobileAuthor = '.*';/static const String mobileAuthor = 'Omi773';/" $F
+          sed -i "s#static const String githubRepo = '.*';#static const String githubRepo = '${GITHUB_REPOSITORY}';#" $F
+          sed -i "s#static const String desktopGithubRepo = '.*';#static const String desktopGithubRepo = '${GITHUB_REPOSITORY}';#" $F
+          sed -i 's#https://api\.zarz\.moe/v1/spotiflac-mobile/config#https://invalid.invalid/config#' $F
+          git diff --stat
+          ! grep -rn "app.localplayer.pers" ios
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Rebrand to Tango, app.tango.music, v1.0.0"
+          git push
