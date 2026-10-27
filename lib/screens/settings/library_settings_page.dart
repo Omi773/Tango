@@ -155,6 +155,8 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
         if (!mounted) return;
         IosPickedDirectory? picked;
         try {
+          // Straight to the Files folder picker: the folder is bookmarked and
+          // played in place, so nothing is copied into the app.
           picked = await PlatformBridge.pickIosDirectory();
         } catch (e) {
           if (mounted) {
@@ -682,11 +684,11 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                         totalFiles: scan.total,
                         progress: scan.progress,
                         enabled: settings.localLibraryEnabled,
-locked:
-    Platform.isIOS &&
-    !source.path.startsWith('network://') &&
-    (source.bookmark == null ||
-        source.bookmark!.trim().isEmpty),
+                        locked:
+                            Platform.isIOS &&
+                            !source.path.startsWith('network://') &&
+                            (source.bookmark == null ||
+                                source.bookmark!.trim().isEmpty),
                         onEnabledChanged: (value) => ref
                             .read(localLibraryProvider.notifier)
                             .setSourceEnabled(source.id, value),
