@@ -120,6 +120,44 @@ extension _LocalLibrarySources on LocalLibraryNotifier {
     _isLoaded = true;
   }
 
+  /// iOS: the app's Documents folder is always part of the library. It is
+  /// created on first launch, kept enabled, and has no switch or remove
+  /// action. Returns the new source id when it had to be created.
+  Future<String?> _ensureAppDocumentsSource() async {
+    if (!Platform.isIOS) return null;
+    try {
+      final documents = await getApplicationDocumentsDirectory();
+      final path = documents.path;
+      final existing = await _db.getSourceByPath(path);
+      if (existing != null) {
+        if (!existing.enabled) {
+          _sourceVersion++;
+          await _db.updateSourceState(
+            existing.id,
+            enabled: true,
+            available: true,
+            lastSeenAt: DateTime.now(),
+          );
+        }
+        return null;
+      }
+      final source = LocalLibrarySource(
+        id: _newSourceId(path),
+        path: path,
+        displayName: 'App Documents Folder',
+        enabled: true,
+        available: true,
+        lastSeenAt: DateTime.now(),
+      );
+      _sourceVersion++;
+      await _db.upsertSource(source);
+      return source.id;
+    } catch (e) {
+      _log.w('Could not prepare the app Documents source: $e');
+      return null;
+    }
+  }
+
   Future<void> _migrateLegacySource() async {
     final settings = ref.read(settingsProvider);
     final path = settings.localLibraryPath.trim();
