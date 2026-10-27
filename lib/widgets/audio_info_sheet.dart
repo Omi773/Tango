@@ -135,6 +135,7 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
         equalizer: playbackEqualizer.value,
         processing: musicPlayerRuntime.handler?.processing,
         settings: musicPlayerRuntime.settings,
+        live: _live,
       );
       final sections = facts.sections();
       final path = widget.metadata.filePath;
@@ -351,6 +352,7 @@ class _AudioFacts {
     required this.equalizer,
     required this.processing,
     required this.settings,
+    required this.live,
   });
 
   final AppLocalizations l10n;
@@ -362,6 +364,7 @@ class _AudioFacts {
   final EqualizerSettings equalizer;
   final PlaybackProcessing? processing;
   final AppSettings settings;
+  final AudioLive? live;
 
   late final String format = (metadata['format'] ?? '').toString().trim();
   late final String codec = (metadata['audio_codec'] ?? '').toString().trim();
@@ -383,12 +386,31 @@ class _AudioFacts {
   late final bool direct =
       (processing?.direct ?? false) && usb.reason == 'active';
 
+  List<_Fact> _liveFacts() {
+    final snapshot = live;
+    if (snapshot == null) return const [];
+    final session = snapshot.sessionRate;
+    final file = sampleRate;
+    return [
+      if (file != null && session != null && session > 0)
+        _Fact(
+          'Rate chain (file → session)',
+          (file - session).abs() < 1
+              ? '${_khz(file)} → ${_khz(session.round())} · no resampling'
+              : '${_khz(file)} → ${_khz(session.round())} · resampled',
+          emphasis: true,
+        ),
+      for (final row in snapshot.rows) _Fact(row.key, row.value),
+    ];
+  }
+
   List<_Section> sections() => [
     _Section(l10n.audioInfoSource, _source()),
     if (_signal().isNotEmpty) _Section(l10n.audioInfoSignal, _signal()),
     _Section(l10n.audioInfoLoudness, _loudness()),
     _Section(l10n.audioInfoProcessing, _processing()),
     if (_output().isNotEmpty) _Section(l10n.audioInfoOutput, _output()),
+    if (_liveFacts().isNotEmpty) _Section('Live output', _liveFacts()),
   ];
 
   List<_Fact> _source() {
