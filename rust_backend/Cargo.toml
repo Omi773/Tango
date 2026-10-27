@@ -18,10 +18,10 @@ publish = false
 
 [workspace.dependencies]
 image = { version = "=0.25.10", default-features = false, features = ["jpeg", "png", "gif", "webp"] }
-mornye-core = { path = "crates/core" }
-mornye-extensions = { path = "crates/extensions" }
-mornye-network = { path = "crates/network" }
-mornye-providers = { path = "crates/providers" }
+tango-core = { path = "crates/core" }
+tango-extensions = { path = "crates/extensions" }
+tango-network = { path = "crates/network" }
+tango-providers = { path = "crates/providers" }
 # Crates enable `bindgen` per target: rquickjs-sys ships Windows bindings.
 rquickjs = "=0.14.0"
 base64 = "0.23"

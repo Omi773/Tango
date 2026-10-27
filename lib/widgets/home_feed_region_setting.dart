@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/explore_provider.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/utils/extension_country_name.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/settings_group.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/explore_provider.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/utils/extension_country_name.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
+import 'package:tango/widgets/settings_group.dart';
 
 class HomeFeedRegionSetting extends ConsumerStatefulWidget {
   const HomeFeedRegionSetting({super.key});

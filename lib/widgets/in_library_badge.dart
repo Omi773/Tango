@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/l10n/l10n.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/l10n/l10n.dart';
 
 /// Compact folder badge shown next to a track that already exists in the
 /// local library or download history.

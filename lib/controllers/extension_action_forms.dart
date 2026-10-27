@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
 
 /// Account input goes straight to the action, never into extension settings.
 Future<Map<String, dynamic>?> runExtensionActionWithForms(
@@ -233,7 +233,7 @@ class _AccountFormDialogState extends State<_AccountFormDialog> {
     final label = field['label'] as String? ?? key;
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final last = index == widget.form.fields.length - 1;
     final secret = field['type'] == 'password' || field['secret'] == true;
     final keyboard = field['type'] == 'number'
@@ -256,10 +256,10 @@ class _AccountFormDialogState extends State<_AccountFormDialog> {
     );
     Widget input;
     if (field['type'] == 'select') {
-      input = mornye
+      input = tango
           ? CupertinoButton(
               onPressed: () => _chooseOption(field),
-              color: MornyeTheme.controlFill(context),
+              color: TangoTheme.controlFill(context),
               borderRadius: BorderRadius.circular(12),
               padding: const EdgeInsets.all(12),
               child: Row(
@@ -304,7 +304,7 @@ class _AccountFormDialogState extends State<_AccountFormDialog> {
                 ),
               ),
             );
-    } else if (mornye) {
+    } else if (tango) {
       input = FormField<String>(
         validator: (value) => _validate(field, value),
         builder: (state) => Column(
@@ -314,7 +314,7 @@ class _AccountFormDialogState extends State<_AccountFormDialog> {
               controller: _controllers[key],
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: MornyeTheme.controlFill(context),
+                color: TangoTheme.controlFill(context),
                 borderRadius: BorderRadius.circular(12),
               ),
               style: theme.textTheme.bodyLarge,
@@ -365,7 +365,7 @@ class _AccountFormDialogState extends State<_AccountFormDialog> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (mornye) ...[
+          if (tango) ...[
             Padding(
               padding: const EdgeInsetsDirectional.only(start: 4, bottom: 6),
               child: Text(

@@ -1,1 +1,1 @@
-export 'package:mornye/models/ffmpeg_models.dart';
+export 'package:tango/models/ffmpeg_models.dart';

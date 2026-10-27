@@ -3,23 +3,23 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/library_collections_provider.dart';
-import 'package:mornye/providers/user_profile_provider.dart';
-import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/services/user_profile_store.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/desktop/desktop_commands.dart';
-import 'package:mornye/widgets/desktop/desktop_inspector.dart';
-import 'package:mornye/widgets/desktop/desktop_now_playing.dart';
-import 'package:mornye/widgets/desktop/desktop_player_bar.dart';
-import 'package:mornye/widgets/desktop/desktop_window.dart';
-import 'package:mornye/widgets/profile_avatar.dart';
-import 'package:mornye/widgets/no_scrollbars.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/library_collections_provider.dart';
+import 'package:tango/providers/user_profile_provider.dart';
+import 'package:tango/services/shell_navigation_service.dart';
+import 'package:tango/services/user_profile_store.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/theme/material_expressive.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/desktop/desktop_commands.dart';
+import 'package:tango/widgets/desktop/desktop_inspector.dart';
+import 'package:tango/widgets/desktop/desktop_now_playing.dart';
+import 'package:tango/widgets/desktop/desktop_player_bar.dart';
+import 'package:tango/widgets/desktop/desktop_window.dart';
+import 'package:tango/widgets/profile_avatar.dart';
+import 'package:tango/widgets/no_scrollbars.dart';
 
 /// Window width at which the Material rail shows labels beside its icons.
 const double desktopExpandedRailBreakpoint = 1200;
@@ -34,7 +34,7 @@ const double desktopCollapsedRailWidth = 96;
 /// 56dp indicators and hover layers never touch.
 const double desktopRailItemGap = 8;
 
-/// A Library page or playlist in the Mornye sidebar.
+/// A Library page or playlist in the Tango sidebar.
 class DesktopSidebarLink {
   const DesktopSidebarLink({
     required this.id,
@@ -57,16 +57,16 @@ class DesktopSidebarLink {
   static const allPlaylistsId = 'playlists';
 }
 
-/// The Library link open in the Mornye sidebar, or null for the Library
+/// The Library link open in the Tango sidebar, or null for the Library
 /// root, which the first Library link stands for.
 final desktopSidebarLink = ValueNotifier<String?>(null);
 
-/// The user's playlists listed in the Mornye sidebar.
+/// The user's playlists listed in the Tango sidebar.
 final desktopSidebarPlaylistsProvider = Provider<List<UserPlaylistCollection>>(
   (ref) => ref.watch(libraryCollectionsProvider.select((s) => s.playlists)),
 );
 
-/// The profile in the Mornye sidebar's account row, once it has loaded.
+/// The profile in the Tango sidebar's account row, once it has loaded.
 final desktopSidebarProfileProvider = Provider<UserProfile?>(
   (ref) => ref.watch(userProfileProvider).value,
 );
@@ -91,7 +91,7 @@ class DesktopDestination {
 /// The desktop shell: navigation on the leading edge, the content pane and
 /// the trailing inspector.
 ///
-/// Material uses [DesktopNavigationRail] and the player bar docked across the bottom. Mornye follows Music: the
+/// Material uses [DesktopNavigationRail] and the player bar docked across the bottom. Tango follows Music: the
 /// [DesktopSidebar] runs the full window height, and the player floats as a
 /// glass capsule at the bottom of the content pane, which pads its pages so
 /// their last rows scroll clear of it.
@@ -124,14 +124,14 @@ class DesktopShellLayout extends StatelessWidget {
   final ValueChanged<ShellTab> onSelected;
   final Widget body;
 
-  /// Mornye: the Library pages listed under the sidebar's Library heading.
+  /// Tango: the Library pages listed under the sidebar's Library heading.
   /// The first stands for the Library destination itself.
   final List<DesktopSidebarLink> libraryLinks;
 
-  /// Mornye: opens a Library link or a playlist from the sidebar.
+  /// Tango: opens a Library link or a playlist from the sidebar.
   final ValueChanged<String>? onOpenLibraryLink;
 
-  /// Mornye: opens the profile from the sidebar's account row.
+  /// Tango: opens the profile from the sidebar's account row.
   final VoidCallback? onOpenProfile;
   final Widget playerBar;
   final Widget nowPlaying;
@@ -245,7 +245,7 @@ class DesktopShellLayout extends StatelessWidget {
 
   Widget _shell(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
-    if (context.isMornye) {
+    if (context.isTango) {
       // The sidebar always shows; the page background shows around the
       // inset panel.
       return ColoredBox(
@@ -356,7 +356,7 @@ class _PaneMediaQuery extends StatelessWidget {
   );
 }
 
-/// The content pane, the trailing inspector and, in Mornye, the floating
+/// The content pane, the trailing inspector and, in Tango, the floating
 /// player. Pages bring their own search fields (Home, Library), so there is
 /// no shell search bar above them.
 class _DesktopContentArea extends StatelessWidget {
@@ -370,7 +370,7 @@ class _DesktopContentArea extends StatelessWidget {
   final bool overlayInspector;
   final Widget body;
 
-  /// The Mornye player capsule, floating over the bottom of the pane.
+  /// The Tango player capsule, floating over the bottom of the pane.
   final Widget? floatingPlayer;
 
   /// Whether the top of the pane is the window's title bar row, where a
@@ -792,7 +792,7 @@ class _RailDestinationState extends State<_RailDestination> {
   }
 }
 
-/// The Mornye source-list sidebar, laid out like Music's: a rounded panel
+/// The Tango source-list sidebar, laid out like Music's: a rounded panel
 /// inset from the window edges, with the window controls and the sidebar
 /// button on top, then Search and the top-level destinations, the Library
 /// pages and the user's playlists under section headings, and the account
@@ -1037,7 +1037,7 @@ class _SidebarAccountRow extends ConsumerWidget {
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
-            color: MornyeTheme.metadataDividerColor(context),
+            color: TangoTheme.metadataDividerColor(context),
             width: 0.5,
           ),
         ),

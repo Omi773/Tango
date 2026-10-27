@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:mornye/models/equalizer_settings.dart';
+import 'package:tango/models/equalizer_settings.dart';
 
 /// One filter in the equalizer's libavfilter graph.
 @immutable
@@ -152,8 +152,8 @@ class MpvAudioFilterChain {
   /// The value of mpv's `af` property.
   String get spec => filters.isEmpty
       ? ''
-      : '@mornye_format:format=format=floatp,'
-            '@mornye_dsp:lavfi=[${filters.map((filter) => filter.spec).join(',')}]';
+      : '@tango_format:format=format=floatp,'
+            '@tango_dsp:lavfi=[${filters.map((filter) => filter.spec).join(',')}]';
 
   bool get isEmpty => filters.isEmpty;
 

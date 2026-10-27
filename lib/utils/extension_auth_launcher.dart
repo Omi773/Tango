@@ -1,1 +1,1 @@
-export 'package:mornye/controllers/extension_auth_launcher.dart';
+export 'package:tango/controllers/extension_auth_launcher.dart';

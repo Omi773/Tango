@@ -1,9 +1,9 @@
-import 'package:mornye/models/library_collections.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/models/download_history.dart';
-import 'package:mornye/models/library_database_models.dart';
-import 'package:mornye/utils/audio_quality_badge_policy.dart';
-import 'package:mornye/utils/string_utils.dart';
+import 'package:tango/models/library_collections.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/models/download_history.dart';
+import 'package:tango/models/library_database_models.dart';
+import 'package:tango/utils/audio_quality_badge_policy.dart';
+import 'package:tango/utils/string_utils.dart';
 
 enum LibraryItemSource { downloaded, local }
 

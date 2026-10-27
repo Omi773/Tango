@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/constants/language_choices.dart';
-import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/providers/theme_provider.dart';
-import 'package:mornye/models/theme_settings.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/widgets/custom_font_setting.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/constants/language_choices.dart';
+import 'package:tango/providers/runtime_profile_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/providers/theme_provider.dart';
+import 'package:tango/models/theme_settings.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/tango_chrome.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/custom_font_setting.dart';
 
 part 'appearance_settings_page_widgets.dart';
 
@@ -45,11 +45,11 @@ class AppearanceSettingsPage extends ConsumerWidget {
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           Text(
-                            style == AppThemeStyle.mornye
-                                ? 'Mornye'
+                            style == AppThemeStyle.tango
+                                ? 'Tango'
                                 : 'Material',
                           ),
-                          if (style == AppThemeStyle.mornye)
+                          if (style == AppThemeStyle.tango)
                             Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 7,
@@ -72,10 +72,10 @@ class AppearanceSettingsPage extends ConsumerWidget {
                             ),
                         ],
                       ),
-                      leading: context.isMornye
+                      leading: context.isTango
                           ? null
                           : AppIcon(
-                              style == AppThemeStyle.mornye
+                              style == AppThemeStyle.tango
                                   ? Icons.music_note_outlined
                                   : Icons.palette_outlined,
                             ),
@@ -103,29 +103,29 @@ class AppearanceSettingsPage extends ConsumerWidget {
               ),
             ),
 
-            if (themeSettings.style == AppThemeStyle.mornye) ...[
+            if (themeSettings.style == AppThemeStyle.tango) ...[
               SliverToBoxAdapter(
                 child: SettingsSectionHeader(title: context.l10n.sectionColor),
               ),
               SliverToBoxAdapter(
                 child: SettingsGroup(
                   children: [
-                    _MornyeAccentPicker(
-                      selected: themeSettings.mornyeAccent,
+                    _TangoAccentPicker(
+                      selected: themeSettings.tangoAccent,
                       onChanged: ref
                           .read(themeProvider.notifier)
-                          .setMornyeAccent,
+                          .setTangoAccent,
                     ),
-                    const _MornyeGlassClaritySlider(),
+                    const _TangoGlassClaritySlider(),
                     SettingsSwitchItem(
-                      key: const ValueKey('mornye-glass-outlines'),
+                      key: const ValueKey('tango-glass-outlines'),
                       icon: Icons.rounded_corner,
                       title: context.l10n.appearanceGlassOutlines,
                       subtitle: context.l10n.appearanceGlassOutlinesSubtitle,
-                      value: themeSettings.mornyeGlassOutlines,
+                      value: themeSettings.tangoGlassOutlines,
                       onChanged: ref
                           .read(themeProvider.notifier)
-                          .setMornyeGlassOutlines,
+                          .setTangoGlassOutlines,
                       showDivider: false,
                     ),
                   ],

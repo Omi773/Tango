@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/screens/settings/provider_priority_list_page.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/screens/settings/provider_priority_list_page.dart';
 
 class MetadataProviderPriorityPage extends StatelessWidget {
   const MetadataProviderPriorityPage({super.key});

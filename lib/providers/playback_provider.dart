@@ -1,14 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/providers/download_queue_provider.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/services/library_database.dart';
-import 'package:mornye/services/history_database.dart';
-import 'package:mornye/services/music_player_service.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/providers/download_queue_provider.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/services/library_database.dart';
+import 'package:tango/services/history_database.dart';
+import 'package:tango/services/music_player_service.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/utils/file_access.dart';
+import 'package:tango/utils/logger.dart';
 
 final _log = AppLogger('PlaybackProvider');
 

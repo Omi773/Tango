@@ -4,7 +4,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mornye/utils/desktop_platform.dart';
+import 'package:tango/utils/desktop_platform.dart';
 
 /// Overrides [desktopTitleBarInContent] in tests.
 bool? debugDesktopTitleBarInContentOverride;
@@ -25,7 +25,7 @@ const double desktopTitleBarHeight = 52;
 /// Width the traffic lights take at the leading edge of the title bar row.
 const double desktopWindowControlsWidth = 78;
 
-const _windowChannel = MethodChannel('com.zarz.mornye/window');
+const _windowChannel = MethodChannel('app.tango/window');
 
 /// Whether the window is in full screen. Only the macOS runner reports it;
 /// elsewhere it stays false.

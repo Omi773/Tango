@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/download_queue_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/download_queue_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
 
 class AppSettingsPage extends ConsumerWidget {
   const AppSettingsPage({super.key});
@@ -187,7 +187,7 @@ class AppSettingsPage extends ConsumerWidget {
       builder: (context) => AppAlertDialog(
         content: Row(
           children: [
-            if (context.isMornye)
+            if (context.isTango)
               const CupertinoActivityIndicator()
             else
               const AppLoadingIndicator(),
@@ -247,7 +247,7 @@ class _UpdateChannelSelector extends StatelessWidget {
             children: [
               AppIcon(
                 context.adaptiveIcon(Icons.new_releases),
-                color: context.isMornye
+                color: context.isTango
                     ? colorScheme.primary
                     : colorScheme.onSurfaceVariant,
                 size: 24,
@@ -350,7 +350,7 @@ class _VerificationBrowserModeSelector extends StatelessWidget {
                 children: [
                   AppIcon(
                     context.adaptiveIcon(Icons.open_in_browser),
-                    color: context.isMornye
+                    color: context.isTango
                         ? colorScheme.primary
                         : colorScheme.onSurfaceVariant,
                     size: 24,

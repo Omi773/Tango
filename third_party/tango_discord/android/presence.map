@@ -1,0 +1,9 @@
+{
+    global:
+        Java_app_tango_discord_DiscordPresencePlugin_nativeStart;
+        Java_app_tango_discord_DiscordPresencePlugin_nativeTick;
+        Java_app_tango_discord_DiscordPresencePlugin_nativeUpdate;
+        Java_app_tango_discord_DiscordPresencePlugin_nativeClear;
+        Java_app_tango_discord_DiscordPresencePlugin_nativeStop;
+    local: *;
+};

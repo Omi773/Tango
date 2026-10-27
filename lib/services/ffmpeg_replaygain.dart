@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:mornye/services/ffmpeg_models.dart';
-import 'package:mornye/services/ffmpeg_support.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/services/ffmpeg_models.dart';
+import 'package:tango/services/ffmpeg_support.dart';
+import 'package:tango/utils/logger.dart';
 
 final _log = AppLogger('FFmpeg');
 

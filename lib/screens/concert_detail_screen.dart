@@ -4,24 +4,24 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/artist_concert.dart';
-import 'package:mornye/screens/playlist_screen.dart';
-import 'package:mornye/services/concert_calendar_service.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/nav_bar_inset.dart';
-import 'package:mornye/widgets/album_detail_header.dart';
-import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/widgets/cached_cover_image.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_shape.dart';
-import 'package:mornye/widgets/error_card.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/settings_group.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/artist_concert.dart';
+import 'package:tango/screens/playlist_screen.dart';
+import 'package:tango/services/concert_calendar_service.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/services/shell_navigation_service.dart';
+import 'package:tango/theme/cover_palette.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/nav_bar_inset.dart';
+import 'package:tango/widgets/album_detail_header.dart';
+import 'package:tango/widgets/animation_utils.dart';
+import 'package:tango/widgets/cached_cover_image.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_shape.dart';
+import 'package:tango/widgets/error_card.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/settings_group.dart';
 
 class ConcertDetailScreen extends StatefulWidget {
   const ConcertDetailScreen({
@@ -89,7 +89,7 @@ class _ConcertDetailScreenState extends State<ConcertDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final source = _detail.coverUrl ?? widget.coverUrl;
-    if (!context.isMornye) {
+    if (!context.isTango) {
       // Material follows the app brightness with a cover-seeded scheme.
       return CoverPaletteBuilder(
         imageSource: source,
@@ -99,7 +99,7 @@ class _ConcertDetailScreenState extends State<ConcertDetailScreen> {
         ),
       );
     }
-    final base = MornyeTheme.fromContext(context, brightness: Brightness.dark);
+    final base = TangoTheme.fromContext(context, brightness: Brightness.dark);
     return Theme(
       data: base,
       child: CoverPaletteBuilder(

@@ -1,4 +1,4 @@
-import 'package:mornye/utils/file_access.dart';
+import 'package:tango/utils/file_access.dart';
 
 sealed class FileAccessCheck {
   const FileAccessCheck();

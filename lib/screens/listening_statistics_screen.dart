@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/listening_statistics_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/screens/listening_rewind_screen.dart';
-import 'package:mornye/services/listening_statistics.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/widgets/animation_utils.dart' show SkeletonBox;
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/app_choice_chip.dart';
-import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_refresh_indicator.dart';
-import 'package:mornye/widgets/app_shape.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/widgets/player_artwork.dart';
-import 'package:mornye/widgets/settings_group.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/listening_statistics_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/screens/listening_rewind_screen.dart';
+import 'package:tango/services/listening_statistics.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/theme/material_expressive.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/widgets/animation_utils.dart' show SkeletonBox;
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/app_choice_chip.dart';
+import 'package:tango/widgets/app_content_card.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_refresh_indicator.dart';
+import 'package:tango/widgets/app_shape.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/player_artwork.dart';
+import 'package:tango/widgets/settings_group.dart';
 
-export 'package:mornye/providers/listening_statistics_provider.dart';
+export 'package:tango/providers/listening_statistics_provider.dart';
 
 class ListeningStatisticsScreen extends ConsumerStatefulWidget {
   const ListeningStatisticsScreen({super.key});
@@ -188,14 +188,14 @@ class _ListeningStatisticsScreenState
     );
   }
 
-  /// Material rows form an expressive connected list; Mornye keeps plain rows.
+  /// Material rows form an expressive connected list; Tango keeps plain rows.
   Widget _connectedRow(
     BuildContext context, {
     required int index,
     required int count,
     required Widget child,
   }) {
-    if (context.isMornye) return child;
+    if (context.isTango) return child;
     return Padding(
       padding: EdgeInsets.fromLTRB(16, index == 0 ? 0 : 2, 16, 0),
       child: Material(
@@ -212,19 +212,19 @@ class _ListeningStatisticsScreenState
   }
 
   Widget _summarySkeleton(BuildContext context) {
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     return ExcludeSemantics(
       child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: AppContentCard(
-              mornyeSurface: false,
-              color: mornye
+              tangoSurface: false,
+              color: tango
                   ? null
                   : Theme.of(context).colorScheme.primaryContainer,
               child: Padding(
-                padding: EdgeInsets.all(mornye ? 20 : 24),
+                padding: EdgeInsets.all(tango ? 20 : 24),
                 child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -308,7 +308,7 @@ class _ListeningStatisticsScreenState
 
   List<Widget> _summarySlivers(BuildContext context, ListeningSummary data) {
     final colors = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final artists = data.artists.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     final topArtists = artists.take(10).toList();
@@ -328,11 +328,11 @@ class _ListeningStatisticsScreenState
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: AppContentCard(
-            mornyeSurface: false,
+            tangoSurface: false,
             // Material leads with the total as an emphasized hero figure.
-            color: mornye ? null : colors.primaryContainer,
+            color: tango ? null : colors.primaryContainer,
             child: Padding(
-              padding: EdgeInsets.all(mornye ? 20 : 24),
+              padding: EdgeInsets.all(tango ? 20 : 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -340,7 +340,7 @@ class _ListeningStatisticsScreenState
                     context.l10n.listeningStatsMinutes(
                       (data.milliseconds / 60000).round(),
                     ),
-                    style: mornye
+                    style: tango
                         ? textTheme.headlineMedium
                         : textTheme.displaySmall?.copyWith(
                             fontWeight: FontWeight.w700,
@@ -354,7 +354,7 @@ class _ListeningStatisticsScreenState
                       data.tracks.length,
                       data.days.length,
                     ),
-                    style: mornye
+                    style: tango
                         ? null
                         : textTheme.bodyLarge?.copyWith(
                             color: colors.onPrimaryContainer,

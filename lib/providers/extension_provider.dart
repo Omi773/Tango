@@ -5,15 +5,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mornye/models/extension.dart';
-import 'package:mornye/models/settings.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/services/extension_storage_service.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/providers/settings_provider.dart';
+import 'package:tango/models/extension.dart';
+import 'package:tango/models/settings.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/services/extension_storage_service.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/providers/settings_provider.dart';
 
-export 'package:mornye/models/extension.dart';
+export 'package:tango/models/extension.dart';
 
 part 'extension_provider_priority.dart';
 
@@ -734,7 +734,7 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
     try {
       final tmp = await getTemporaryDirectory();
       destDir = await Directory(
-        '${tmp.path}/mornye_restore_ext',
+        '${tmp.path}/tango_restore_ext',
       ).create(recursive: true);
       await PlatformBridge.initExtensionRepo(destDir.path);
       if (registryUrl.isNotEmpty) {

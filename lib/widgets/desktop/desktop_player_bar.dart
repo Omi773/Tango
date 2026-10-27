@@ -5,29 +5,29 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/controllers/player_metadata_controller.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/player_artwork_theme.dart';
-import 'package:mornye/utils/lyrics_parser.dart';
-import 'package:mornye/utils/string_utils.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/audio_quality_badges.dart';
-import 'package:mornye/widgets/desktop/desktop_commands.dart';
-import 'package:mornye/widgets/desktop/desktop_downloads_button.dart';
-import 'package:mornye/widgets/desktop/desktop_inspector.dart';
-import 'package:mornye/widgets/desktop/desktop_window.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_playback_button.dart';
-import 'package:mornye/widgets/mornye_player_background.dart';
-import 'package:mornye/widgets/player_artwork.dart';
-import 'package:mornye/widgets/player_lyrics.dart';
-import 'package:mornye/widgets/player_volume_control.dart';
-import 'package:mornye/widgets/playback_seek_slider.dart';
+import 'package:tango/controllers/player_metadata_controller.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/player_artwork_theme.dart';
+import 'package:tango/utils/lyrics_parser.dart';
+import 'package:tango/utils/string_utils.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/audio_quality_badges.dart';
+import 'package:tango/widgets/desktop/desktop_commands.dart';
+import 'package:tango/widgets/desktop/desktop_downloads_button.dart';
+import 'package:tango/widgets/desktop/desktop_inspector.dart';
+import 'package:tango/widgets/desktop/desktop_window.dart';
+import 'package:tango/widgets/tango_chrome.dart';
+import 'package:tango/widgets/tango_playback_button.dart';
+import 'package:tango/widgets/tango_player_background.dart';
+import 'package:tango/widgets/player_artwork.dart';
+import 'package:tango/widgets/player_lyrics.dart';
+import 'package:tango/widgets/player_volume_control.dart';
+import 'package:tango/widgets/playback_seek_slider.dart';
 
 part 'desktop_mini_player.dart';
 
@@ -39,7 +39,7 @@ part 'desktop_mini_player.dart';
 ///
 /// Material docks an 80dp bar along the bottom of the window, on the
 /// `surfaceContainer` fill of the current artwork's scheme
-/// ([PlayerArtworkTheme]). Mornye draws a glass capsule that the shell
+/// ([PlayerArtworkTheme]). Tango draws a glass capsule that the shell
 /// floats over the bottom of the content pane, laid out like the Music
 /// player: shuffle and the transport, a center "LCD" with the track and its
 /// progress, then lyrics, Up Next, downloads and volume.
@@ -48,17 +48,17 @@ class DesktopPlayerBar extends ConsumerWidget {
 
   static const double materialHeight = 80;
 
-  /// Height of the Mornye capsule.
-  static const double mornyeHeight = 48;
+  /// Height of the Tango capsule.
+  static const double tangoHeight = 48;
 
-  /// Space between the Mornye capsule and the bottom of the window.
+  /// Space between the Tango capsule and the bottom of the window.
   static const double floatingMargin = 10;
 
   /// Bottom padding the content pane gives its pages, so their last rows
   /// scroll clear of the floating capsule with a margin above it.
-  static const double floatingInset = mornyeHeight + floatingMargin + 12;
+  static const double floatingInset = tangoHeight + floatingMargin + 12;
 
-  /// Width of the Mornye capsule in a content pane [paneWidth] wide: about
+  /// Width of the Tango capsule in a content pane [paneWidth] wide: about
   /// 70% of it, as in Music, from 520 to 900 and never closer than 12 to
   /// the pane's sides.
   static double floatingWidth(double paneWidth) => math.min(
@@ -69,8 +69,8 @@ class DesktopPlayerBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaItem = ref.watch(currentMediaItemProvider).value;
-    return context.isMornye
-        ? _MornyePlayerBar(mediaItem: mediaItem)
+    return context.isTango
+        ? _TangoPlayerBar(mediaItem: mediaItem)
         // The bar takes the track's artwork scheme; the downloads popover
         // it hosts keeps the app scheme.
         : PlayerArtworkTheme(
@@ -145,12 +145,12 @@ class _MaterialPlayerBar extends StatelessWidget {
   }
 }
 
-/// The Mornye capsule, laid out like the Music player: shuffle, the
+/// The Tango capsule, laid out like the Music player: shuffle, the
 /// transport and repeat, the LCD, then downloads, lyrics, Up Next and a
 /// volume button whose slider opens in a popover. Its buttons take macOS
 /// toolbar sizes rather than touch sizes.
-class _MornyePlayerBar extends StatelessWidget {
-  const _MornyePlayerBar({required this.mediaItem});
+class _TangoPlayerBar extends StatelessWidget {
+  const _TangoPlayerBar({required this.mediaItem});
 
   final MediaItem? mediaItem;
 
@@ -158,9 +158,9 @@ class _MornyePlayerBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final loaded = mediaItem != null;
     return SizedBox(
-      height: DesktopPlayerBar.mornyeHeight,
-      child: MornyeGlassPanel(
-        radius: DesktopPlayerBar.mornyeHeight / 2,
+      height: DesktopPlayerBar.tangoHeight,
+      child: TangoGlassPanel(
+        radius: DesktopPlayerBar.tangoHeight / 2,
         highlightBorder: true,
         child: IconButtonTheme(
           data: IconButtonThemeData(
@@ -176,11 +176,11 @@ class _MornyePlayerBar extends StatelessWidget {
             padding: const EdgeInsetsDirectional.fromSTEB(8, 4, 8, 4),
             child: Row(
               children: [
-                _MornyeModeButton(mode: _MornyeMode.shuffle, enabled: loaded),
+                _TangoModeButton(mode: _TangoMode.shuffle, enabled: loaded),
                 _Transport(enabled: loaded),
-                _MornyeModeButton(mode: _MornyeMode.repeat, enabled: loaded),
+                _TangoModeButton(mode: _TangoMode.repeat, enabled: loaded),
                 const SizedBox(width: 8),
-                Expanded(child: _MornyeLcd(mediaItem: mediaItem)),
+                Expanded(child: _TangoLcd(mediaItem: mediaItem)),
                 const SizedBox(width: 8),
                 _TrailingControls(enabled: loaded),
               ],
@@ -192,14 +192,14 @@ class _MornyePlayerBar extends StatelessWidget {
   }
 }
 
-enum _MornyeMode { shuffle, repeat }
+enum _TangoMode { shuffle, repeat }
 
 /// Shuffle or repeat in the capsule: small secondary glyphs, accent while
 /// on, as in Music, and dimmed while nothing is loaded.
-class _MornyeModeButton extends ConsumerWidget {
-  const _MornyeModeButton({required this.mode, required this.enabled});
+class _TangoModeButton extends ConsumerWidget {
+  const _TangoModeButton({required this.mode, required this.enabled});
 
-  final _MornyeMode mode;
+  final _TangoMode mode;
   final bool enabled;
 
   @override
@@ -212,7 +212,7 @@ class _MornyeModeButton extends ConsumerWidget {
     late final String tooltip;
     late final VoidCallback onPressed;
     switch (mode) {
-      case _MornyeMode.shuffle:
+      case _TangoMode.shuffle:
         selected = ref.watch(
           playbackStateProvider.select(
             (state) => state.value?.shuffleMode == AudioServiceShuffleMode.all,
@@ -223,7 +223,7 @@ class _MornyeModeButton extends ConsumerWidget {
             ? l10n.nowPlayingShuffleOn
             : l10n.nowPlayingPlayInOrder;
         onPressed = () => controller.setShuffle(!selected);
-      case _MornyeMode.repeat:
+      case _TangoMode.repeat:
         final repeatMode = ref.watch(
           playbackStateProvider.select(
             (state) => state.value?.repeatMode ?? AudioServiceRepeatMode.none,
@@ -255,7 +255,7 @@ class _MornyeModeButton extends ConsumerWidget {
         // A fill marks the active mode by more than its color.
         style: selected
             ? IconButton.styleFrom(
-                backgroundColor: MornyeTheme.controlFill(context),
+                backgroundColor: TangoTheme.controlFill(context),
               )
             : null,
         icon: AppIcon(icon),
@@ -408,11 +408,11 @@ class _Transport extends ConsumerWidget {
         ? () => controller.togglePlayPause(isPlaying)
         : null;
 
-    if (context.isMornye) {
+    if (context.isTango) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          MornyePlaybackButton(
+          TangoPlaybackButton(
             icon: CupertinoIcons.backward_fill,
             tooltip: previousTooltip,
             color: colorScheme.onSurface,
@@ -420,7 +420,7 @@ class _Transport extends ConsumerWidget {
             padding: const EdgeInsets.all(7),
             onPressed: enabled ? controller.previous : null,
           ),
-          MornyePlaybackButton(
+          TangoPlaybackButton(
             icon: isPlaying
                 ? CupertinoIcons.pause_fill
                 : CupertinoIcons.play_fill,
@@ -431,7 +431,7 @@ class _Transport extends ConsumerWidget {
             loading: isLoading,
             onPressed: onPlayPause,
           ),
-          MornyePlaybackButton(
+          TangoPlaybackButton(
             icon: CupertinoIcons.forward_fill,
             tooltip: nextTooltip,
             color: colorScheme.onSurface,
@@ -484,7 +484,7 @@ class _SeekRow extends ConsumerWidget {
 
   final MediaItem? mediaItem;
 
-  /// The Mornye LCD's thin bar with a small thumb.
+  /// The Tango LCD's thin bar with a small thumb.
   final bool dense;
 
   // Time runs left to right in right-to-left layouts too.
@@ -497,7 +497,7 @@ class _SeekRow extends ConsumerWidget {
   Widget _buildRow(BuildContext context, WidgetRef ref) {
     final item = mediaItem;
     final colorScheme = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final duration = item?.duration ?? Duration.zero;
     final position = item == null
         ? Duration.zero
@@ -513,10 +513,10 @@ class _SeekRow extends ConsumerWidget {
     final slider = SliderTheme(
       data: SliderTheme.of(context).copyWith(
         trackHeight: dense ? 3 : 4,
-        activeTrackColor: mornye
+        activeTrackColor: tango
             ? colorScheme.onSurface.withValues(alpha: 0.6)
             : colorScheme.primary,
-        inactiveTrackColor: mornye
+        inactiveTrackColor: tango
             ? colorScheme.onSurface.withValues(alpha: 0.12)
             : colorScheme.secondaryContainer,
         thumbColor: dense ? colorScheme.onSurface : colorScheme.primary,
@@ -541,7 +541,7 @@ class _SeekRow extends ConsumerWidget {
         Expanded(child: slider),
         const SizedBox(width: 8),
         Text(
-          mornye
+          tango
               ? '-${formatClock(duration.inSeconds - elapsed)}'
               : formatClock(duration.inSeconds),
           style: timeStyle,
@@ -551,12 +551,12 @@ class _SeekRow extends ConsumerWidget {
   }
 }
 
-/// The Mornye center display: artwork, then the title and artist centered
+/// The Tango center display: artwork, then the title and artist centered
 /// over a thin progress bar. Clicking the artwork or text opens Now
 /// Playing. With nothing loaded it shows a music glyph, like Music's idle
 /// display.
-class _MornyeLcd extends StatelessWidget {
-  const _MornyeLcd({required this.mediaItem});
+class _TangoLcd extends StatelessWidget {
+  const _TangoLcd({required this.mediaItem});
 
   static const double _artworkSize = 32;
 
@@ -606,7 +606,7 @@ class _MornyeLcd extends StatelessWidget {
                         alignment: AlignmentDirectional.centerStart,
                         child: SizedBox(
                           width: constraints.maxWidth,
-                          child: _MornyeLcdLines(mediaItem: item),
+                          child: _TangoLcdLines(mediaItem: item),
                         ),
                       ),
                     ),
@@ -629,8 +629,8 @@ class _MornyeLcd extends StatelessWidget {
 }
 
 /// The LCD's title and "artist · album" line, left-aligned like Music's.
-class _MornyeLcdLines extends StatelessWidget {
-  const _MornyeLcdLines({required this.mediaItem});
+class _TangoLcdLines extends StatelessWidget {
+  const _TangoLcdLines({required this.mediaItem});
 
   final MediaItem mediaItem;
 
@@ -668,7 +668,7 @@ class _MornyeLcdLines extends StatelessWidget {
 
 /// Lyrics and Up Next, which toggle the trailing inspector, downloads, and
 /// volume. Material fills its third of the bar, with downloads after Up
-/// Next and the volume slider last. The Mornye capsule leads with downloads
+/// Next and the volume slider last. The Tango capsule leads with downloads
 /// and ends with a volume button whose slider opens in a popover, as Music
 /// does.
 class _TrailingControls extends StatelessWidget {
@@ -684,14 +684,14 @@ class _TrailingControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final colorScheme = Theme.of(context).colorScheme;
     final l10n = context.l10n;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      mainAxisSize: mornye ? MainAxisSize.min : MainAxisSize.max,
+      mainAxisSize: tango ? MainAxisSize.min : MainAxisSize.max,
       children: [
-        if (mornye) const DesktopDownloadsButton(),
+        if (tango) const DesktopDownloadsButton(),
         ValueListenableBuilder<DesktopInspectorPanel?>(
           valueListenable: desktopInspectorPanel,
           builder: (context, panel, _) => Row(
@@ -707,7 +707,7 @@ class _TrailingControls extends StatelessWidget {
                   l10n.nowPlayingTabLyrics,
                   DesktopCommand.lyrics,
                 ),
-                icon: mornye
+                icon: tango
                     ? CupertinoIcons.quote_bubble
                     : Icons.lyrics_outlined,
               ),
@@ -721,7 +721,7 @@ class _TrailingControls extends StatelessWidget {
                   l10n.nowPlayingUpNext,
                   DesktopCommand.upNext,
                 ),
-                icon: mornye ? CupertinoIcons.list_bullet : Icons.queue_music,
+                icon: tango ? CupertinoIcons.list_bullet : Icons.queue_music,
               ),
             ],
           ),
@@ -734,16 +734,16 @@ class _TrailingControls extends StatelessWidget {
               l10n.desktopMenuMiniPlayer,
               DesktopCommand.miniPlayer,
             ),
-            color: mornye ? colorScheme.onSurface : null,
+            color: tango ? colorScheme.onSurface : null,
             icon: AppIcon(
-              mornye
+              tango
                   ? CupertinoIcons.rectangle_on_rectangle
                   : Icons.picture_in_picture_alt_outlined,
             ),
             onPressed: toggleDesktopMiniPlayer,
           ),
-        if (mornye)
-          const _MornyeVolumeButton()
+        if (tango)
+          const _TangoVolumeButton()
         else ...[
           Theme(
             data: appTheme ?? Theme.of(context),
@@ -770,17 +770,17 @@ class _TrailingControls extends StatelessWidget {
   }
 }
 
-/// The Mornye capsule's volume button. Its glyph follows the level, and a
+/// The Tango capsule's volume button. Its glyph follows the level, and a
 /// click opens the slider in a popover above the capsule.
-class _MornyeVolumeButton extends ConsumerStatefulWidget {
-  const _MornyeVolumeButton();
+class _TangoVolumeButton extends ConsumerStatefulWidget {
+  const _TangoVolumeButton();
 
   @override
-  ConsumerState<_MornyeVolumeButton> createState() =>
-      _MornyeVolumeButtonState();
+  ConsumerState<_TangoVolumeButton> createState() =>
+      _TangoVolumeButtonState();
 }
 
-class _MornyeVolumeButtonState extends ConsumerState<_MornyeVolumeButton> {
+class _TangoVolumeButtonState extends ConsumerState<_TangoVolumeButton> {
   final _menu = MenuController();
 
   @override
@@ -826,7 +826,7 @@ class _MornyeVolumeButtonState extends ConsumerState<_MornyeVolumeButton> {
   }
 }
 
-/// A toggle for one inspector panel. Mornye marks the open panel with a
+/// A toggle for one inspector panel. Tango marks the open panel with a
 /// fill as well as the accent color, so the state differs by more than
 /// color; Material uses the selected standard icon button.
 class _InspectorToggle extends StatelessWidget {
@@ -847,17 +847,17 @@ class _InspectorToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final colorScheme = Theme.of(context).colorScheme;
     return AppIconButton(
       tooltip: tooltip,
       isSelected: selected,
-      color: mornye
+      color: tango
           ? (selected ? colorScheme.primary : colorScheme.onSurface)
           : null,
-      style: mornye && selected
+      style: tango && selected
           ? IconButton.styleFrom(
-              backgroundColor: MornyeTheme.controlFill(context),
+              backgroundColor: TangoTheme.controlFill(context),
             )
           : null,
       icon: AppIcon(icon),

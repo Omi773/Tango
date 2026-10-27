@@ -6,26 +6,26 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart' show CupertinoButton, CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/controllers/player_metadata_controller.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/player_artwork_theme.dart';
-import 'package:mornye/utils/playback_seek_preview.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/desktop/desktop_inspector.dart';
-import 'package:mornye/widgets/desktop/desktop_window.dart';
-import 'package:mornye/widgets/material_player_backdrop.dart';
-import 'package:mornye/widgets/mornye_player_background.dart';
-import 'package:mornye/widgets/mornye_player_favorite_button.dart';
-import 'package:mornye/widgets/mornye_player_queue.dart';
-import 'package:mornye/widgets/no_scrollbars.dart';
-import 'package:mornye/widgets/player_artwork.dart';
-import 'package:mornye/widgets/player_lyrics_section.dart';
-import 'package:mornye/widgets/player_metadata_title.dart';
-import 'package:mornye/widgets/player_playback_controls.dart';
-import 'package:mornye/widgets/player_volume_control.dart';
+import 'package:tango/controllers/player_metadata_controller.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/player_artwork_theme.dart';
+import 'package:tango/utils/playback_seek_preview.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/desktop/desktop_inspector.dart';
+import 'package:tango/widgets/desktop/desktop_window.dart';
+import 'package:tango/widgets/material_player_backdrop.dart';
+import 'package:tango/widgets/tango_player_background.dart';
+import 'package:tango/widgets/tango_player_favorite_button.dart';
+import 'package:tango/widgets/tango_player_queue.dart';
+import 'package:tango/widgets/no_scrollbars.dart';
+import 'package:tango/widgets/player_artwork.dart';
+import 'package:tango/widgets/player_lyrics_section.dart';
+import 'package:tango/widgets/player_metadata_title.dart';
+import 'package:tango/widgets/player_playback_controls.dart';
+import 'package:tango/widgets/player_volume_control.dart';
 
 /// Now Playing on the desktop, covering the whole window as Music's player
 /// does: the cover, title and transport on the leading side, lyrics or Up
@@ -81,7 +81,7 @@ class _DesktopNowPlayingState extends ConsumerState<DesktopNowPlaying> {
   @override
   Widget build(BuildContext context) {
     final mediaItem = ref.watch(currentMediaItemProvider).value;
-    if (context.isMornye) return _buildPlayer(context, mediaItem);
+    if (context.isTango) return _buildPlayer(context, mediaItem);
     // Material takes the track's artwork scheme. Providers are read above,
     // so the scoped builder reads none.
     return PlayerArtworkTheme(
@@ -91,9 +91,9 @@ class _DesktopNowPlayingState extends ConsumerState<DesktopNowPlaying> {
   }
 
   Widget _buildPlayer(BuildContext context, MediaItem? mediaItem) {
-    final mornye = context.isMornye;
-    final theme = mornye
-        ? MornyeTheme.fromContext(context, brightness: Brightness.dark)
+    final tango = context.isTango;
+    final theme = tango
+        ? TangoTheme.fromContext(context, brightness: Brightness.dark)
         : Theme.of(context);
     final colorScheme = theme.colorScheme;
     return Theme(
@@ -103,8 +103,8 @@ class _DesktopNowPlayingState extends ConsumerState<DesktopNowPlaying> {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            if (mornye)
-              MornyePlayerBackground(artUri: mediaItem?.artUri)
+            if (tango)
+              TangoPlayerBackground(artUri: mediaItem?.artUri)
             else if (mediaItem != null)
               MaterialPlayerBackdrop(
                 mediaItem: mediaItem,
@@ -148,7 +148,7 @@ class _DesktopNowPlayingState extends ConsumerState<DesktopNowPlaying> {
               child: _RoundButton(
                 key: const ValueKey('desktop-now-playing-close'),
                 tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-                icon: mornye ? CupertinoIcons.xmark : Icons.close,
+                icon: tango ? CupertinoIcons.xmark : Icons.close,
                 onPressed: closeDesktopNowPlaying,
               ),
             ),
@@ -158,7 +158,7 @@ class _DesktopNowPlayingState extends ConsumerState<DesktopNowPlaying> {
               width: 260,
               child: _Capsule(
                 child: PlayerVolumeControl(
-                  foreground: mornye ? Colors.white : colorScheme.onSurface,
+                  foreground: tango ? Colors.white : colorScheme.onSurface,
                 ),
               ),
             ),
@@ -173,7 +173,7 @@ class _DesktopNowPlayingState extends ConsumerState<DesktopNowPlaying> {
                     children: [
                       _RoundButton(
                         tooltip: context.l10n.nowPlayingTabLyrics,
-                        icon: mornye
+                        icon: tango
                             ? CupertinoIcons.quote_bubble
                             : Icons.lyrics_outlined,
                         selected: panel == DesktopInspectorPanel.lyrics,
@@ -184,7 +184,7 @@ class _DesktopNowPlayingState extends ConsumerState<DesktopNowPlaying> {
                       const SizedBox(width: 4),
                       _RoundButton(
                         tooltip: context.l10n.nowPlayingUpNext,
-                        icon: mornye
+                        icon: tango
                             ? CupertinoIcons.list_bullet
                             : Icons.queue_music,
                         selected: panel == DesktopInspectorPanel.upNext,
@@ -341,8 +341,8 @@ class _DesktopNowPlayingState extends ConsumerState<DesktopNowPlaying> {
                                     'desktop-now-playing-upNext',
                                   ),
                                   child: NoScrollbars(
-                                    child: context.isMornye
-                                        ? MornyePlayerQueue(
+                                    child: context.isTango
+                                        ? TangoPlayerQueue(
                                             colorScheme: colorScheme,
                                           )
                                         : DesktopMaterialQueue(
@@ -386,9 +386,9 @@ class _PlayerColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final textTheme = Theme.of(context).textTheme;
-    final corners = BorderRadius.circular(mornye ? 12 : 28);
+    final corners = BorderRadius.circular(tango ? 12 : 28);
     final artwork = PlayerArtwork(
       artUri: mediaItem.artUri?.toString(),
       colorScheme: colorScheme,
@@ -416,7 +416,7 @@ class _PlayerColumn extends StatelessWidget {
                 ),
               ],
             ),
-            child: mornye
+            child: tango
                 ? ClipRSuperellipse(borderRadius: corners, child: artwork)
                 : ClipRRect(borderRadius: corners, child: artwork),
           ),
@@ -432,7 +432,7 @@ class _PlayerColumn extends StatelessWidget {
                     mediaItem: mediaItem,
                     metadata: metadata,
                     style:
-                        (mornye ? textTheme.titleMedium : textTheme.titleLarge)
+                        (tango ? textTheme.titleMedium : textTheme.titleLarge)
                             ?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: colorScheme.onSurface,
@@ -446,14 +446,14 @@ class _PlayerColumn extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style:
-                          (mornye ? textTheme.bodyMedium : textTheme.titleSmall)
+                          (tango ? textTheme.bodyMedium : textTheme.titleSmall)
                               ?.copyWith(color: colorScheme.onSurfaceVariant),
                     ),
                 ],
               ),
             ),
-            if (mornye)
-              MornyePlayerFavoriteButton(
+            if (tango)
+              TangoPlayerFavoriteButton(
                 mediaItem: mediaItem,
                 color: colorScheme.onSurface,
                 iconSize: 20,
@@ -483,7 +483,7 @@ class _Capsule extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final fill = context.isMornye
+    final fill = context.isTango
         ? Colors.white.withValues(alpha: 0.12)
         : scheme.surfaceContainerHigh.withValues(alpha: 0.72);
     return DecoratedBox(
@@ -511,7 +511,7 @@ class _RoundButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    if (context.isMornye) {
+    if (context.isTango) {
       return Tooltip(
         message: tooltip,
         child: Semantics(

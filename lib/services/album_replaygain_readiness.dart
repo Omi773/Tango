@@ -1,5 +1,5 @@
-import 'package:mornye/models/download_item.dart';
-import 'package:mornye/models/track.dart';
+import 'package:tango/models/download_item.dart';
+import 'package:tango/models/track.dart';
 
 String albumReplayGainKey(Track track) {
   if (track.albumId != null && track.albumId!.isNotEmpty) {

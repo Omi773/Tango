@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart' show CupertinoColors, CupertinoIcons;
 import 'package:flutter/material.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_icon.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_icon.dart';
 
 /// Removing a row affects the queue only, never the song on disk.
 class PlayerQueueDismissible extends StatefulWidget {
@@ -36,10 +36,10 @@ class _PlayerQueueDismissibleState extends State<PlayerQueueDismissible> {
     direction: widget.enabled
         ? DismissDirection.endToStart
         : DismissDirection.none,
-    dismissThresholds: context.isMornye
+    dismissThresholds: context.isTango
         ? const {DismissDirection.endToStart: 0.5}
         : const {},
-    onUpdate: context.isMornye
+    onUpdate: context.isTango
         ? (details) => _progress.value = details.progress
         : null,
     // Remove before collapsing so a concurrently playing row is never left
@@ -48,8 +48,8 @@ class _PlayerQueueDismissibleState extends State<PlayerQueueDismissible> {
       widget.onRemove();
       return false;
     },
-    background: context.isMornye
-        ? _buildMornyeBackground(context)
+    background: context.isTango
+        ? _buildTangoBackground(context)
         : Container(
             alignment: AlignmentDirectional.centerEnd,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -69,7 +69,7 @@ class _PlayerQueueDismissibleState extends State<PlayerQueueDismissible> {
     child: widget.child,
   );
 
-  Widget _buildMornyeBackground(BuildContext context) => DecoratedBox(
+  Widget _buildTangoBackground(BuildContext context) => DecoratedBox(
     decoration: BoxDecoration(
       color: CupertinoColors.systemRed.resolveFrom(context),
       borderRadius: BorderRadius.circular(12),

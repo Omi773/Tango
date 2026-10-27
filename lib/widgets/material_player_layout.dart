@@ -3,17 +3,17 @@ import 'dart:math' as math;
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/controllers/player_metadata_controller.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/routes/now_playing_route.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/utils/clickable_metadata.dart';
-import 'package:mornye/utils/playback_seek_preview.dart';
-import 'package:mornye/widgets/player_artwork.dart';
-import 'package:mornye/widgets/player_gesture_regions.dart';
-import 'package:mornye/widgets/player_metadata_title.dart';
-import 'package:mornye/widgets/player_playback_controls.dart';
-import 'package:mornye/widgets/player_volume_control.dart';
+import 'package:tango/controllers/player_metadata_controller.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/routes/now_playing_route.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/utils/clickable_metadata.dart';
+import 'package:tango/utils/playback_seek_preview.dart';
+import 'package:tango/widgets/player_artwork.dart';
+import 'package:tango/widgets/player_gesture_regions.dart';
+import 'package:tango/widgets/player_metadata_title.dart';
+import 'package:tango/widgets/player_playback_controls.dart';
+import 'package:tango/widgets/player_volume_control.dart';
 
 class MaterialPlayerLayout extends StatelessWidget {
   const MaterialPlayerLayout({

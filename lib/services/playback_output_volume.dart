@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:mornye/services/playback_deck.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/services/playback_deck.dart';
+import 'package:tango/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final _log = AppLogger('OutputVolume');

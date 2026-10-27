@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/metadata_separators.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/widgets/app_text_field.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/widgets/settings_group.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/metadata_separators.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_content_card.dart';
+import 'package:tango/widgets/app_text_field.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/settings_group.dart';
 
 class MetadataSeparatorSettingsPage extends ConsumerWidget {
   const MetadataSeparatorSettingsPage({super.key});

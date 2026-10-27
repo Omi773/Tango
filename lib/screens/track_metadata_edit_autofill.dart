@@ -540,8 +540,8 @@ extension _EditMetadataSheetAutoFill on _EditMetadataSheetState {
             runSpacing: 8,
             children: MetadataEditorController.fieldKeys.map((key) {
               final selected = _form.autoFillFields.contains(key);
-              if (context.isMornye) {
-                return MornyeFilterChip(
+              if (context.isTango) {
+                return TangoFilterChip(
                   label: _fieldLabel(key),
                   selected: selected,
                   glass: false,
@@ -651,10 +651,10 @@ extension _EditMetadataSheetAutoFill on _EditMetadataSheetState {
 
     return Container(
       width: double.infinity,
-      padding: context.isMornye
+      padding: context.isTango
           ? const EdgeInsets.symmetric(vertical: 12)
           : const EdgeInsets.all(12),
-      decoration: context.isMornye
+      decoration: context.isTango
           ? null
           : BoxDecoration(
               color: cs.surfaceContainerHighest.withValues(alpha: 0.45),
@@ -750,7 +750,7 @@ extension _EditMetadataSheetAutoFill on _EditMetadataSheetState {
           SizedBox(
             width: double.infinity,
             child: AppActionButton(
-              outlined: context.isMornye,
+              outlined: context.isTango,
               glass: false,
               onPressed: (_fetching || _saving) ? null : _applyAutoFillPreview,
               icon: const Icon(Icons.check),

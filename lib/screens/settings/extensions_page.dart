@@ -1,30 +1,30 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/app_switch.dart';
-import 'package:mornye/widgets/extension_row.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
+import 'package:tango/widgets/app_switch.dart';
+import 'package:tango/widgets/extension_row.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/settings.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/providers/explore_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/screens/settings/download_fallback_extensions_page.dart';
-import 'package:mornye/screens/settings/extension_detail_page.dart';
-import 'package:mornye/screens/settings/metadata_provider_priority_page.dart';
-import 'package:mornye/screens/settings/provider_priority_page.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_action_button.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/home_feed_region_setting.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/widgets/extension_health.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/settings.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/providers/explore_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/screens/settings/download_fallback_extensions_page.dart';
+import 'package:tango/screens/settings/extension_detail_page.dart';
+import 'package:tango/screens/settings/metadata_provider_priority_page.dart';
+import 'package:tango/screens/settings/provider_priority_page.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_action_button.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/tango_chrome.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/home_feed_region_setting.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/extension_health.dart';
 
 part 'extensions_page_widgets.dart';
 
@@ -63,7 +63,7 @@ class _ExtensionsPageState extends ConsumerState<ExtensionsPage> {
       onPressed: _installExtension,
       icon: const AppIcon(Icons.add),
       label: Text(context.l10n.extensionsInstallButton),
-      outlined: context.isMornye,
+      outlined: context.isTango,
       glass: false,
       style: FilledButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -215,8 +215,8 @@ class _ExtensionsPageState extends ConsumerState<ExtensionsPage> {
                     final inset = settingsHorizontalInset(constraints.maxWidth);
                     return Padding(
                       padding: EdgeInsets.fromLTRB(inset, 16, inset, 16),
-                      child: context.isMornye
-                          ? MornyeGlassPanel.overlay(
+                      child: context.isTango
+                          ? TangoGlassPanel.overlay(
                               radius: 28,
                               child: installButton,
                             )
@@ -248,7 +248,7 @@ class _ExtensionsPageState extends ConsumerState<ExtensionsPage> {
 
     final hasInvalidFile = selectedFiles.any((file) {
       final lowerName = file.name.toLowerCase();
-      return !lowerName.endsWith('.mornye-ext') &&
+      return !lowerName.endsWith('.tango-ext') &&
           !lowerName.endsWith('.spotiflac-ext') &&
           !lowerName.endsWith('.sflx');
     });
@@ -273,7 +273,7 @@ class _ExtensionsPageState extends ConsumerState<ExtensionsPage> {
         }
 
         materializedDir ??= await Directory.systemTemp.createTemp(
-          'mornye_extension_import_',
+          'tango_extension_import_',
         );
         final safeName = p.basename(selectedFile.name);
         final materializedFile = File(

@@ -5,24 +5,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderProxySliver;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/expressive_button_group.dart';
-import 'package:mornye/widgets/expressive_icon_button.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/desktop/detail_header.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/runtime_profile_provider.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/cover_palette.dart';
+import 'package:tango/theme/material_expressive.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/widgets/tango_chrome.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/expressive_button_group.dart';
+import 'package:tango/widgets/expressive_icon_button.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/widgets/desktop/context_menu.dart';
+import 'package:tango/widgets/desktop/detail_header.dart';
 
 /// Collapsing album-detail header shared by the album, local-album, and
 /// downloaded-album screens: full-bleed [background] (optionally blurred and
@@ -115,7 +115,7 @@ class AlbumDetailHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isDesktopPlatform ||
-        (context.isMornye && (coverBuilder != null || immersive))) {
+        (context.isTango && (coverBuilder != null || immersive))) {
       final scheme = Theme.of(context).colorScheme;
       return HeaderPalette(
         scheme: scheme,
@@ -135,7 +135,7 @@ class AlbumDetailHeader extends StatelessWidget {
   /// after the dynamically sized artwork and metadata have scrolled away.
   List<Widget> buildSlivers(BuildContext context) {
     if (isDesktopPlatform) return _buildDesktopSlivers(context);
-    if (!context.isMornye || (coverBuilder == null && !immersive)) {
+    if (!context.isTango || (coverBuilder == null && !immersive)) {
       return [this];
     }
     final scheme = Theme.of(context).colorScheme;
@@ -147,7 +147,7 @@ class AlbumDetailHeader extends StatelessWidget {
       screenSize.width.clamp(0.0, 440.0),
       math.max(240.0, screenSize.height * 0.55),
     );
-    final details = _buildMornyeDetails(context);
+    final details = _buildTangoDetails(context);
     Widget toolbar({bool collapsed = true}) => SliverAppBar(
       pinned: true,
       backgroundColor: collapsed ? scheme.surface : Colors.transparent,
@@ -266,7 +266,7 @@ class AlbumDetailHeader extends StatelessWidget {
         backgroundColor: backgroundColor,
       );
 
-  Widget _buildMornyeDetails(BuildContext context) => Padding(
+  Widget _buildTangoDetails(BuildContext context) => Padding(
     padding: EdgeInsets.fromLTRB(20, immersive ? 0 : 20, 20, 28),
     child: Column(
       children: [
@@ -320,7 +320,7 @@ class AlbumDetailHeader extends StatelessWidget {
 
   Widget _buildAppBar(BuildContext context, ColorScheme headerScheme) {
     final tokens = context.tokens;
-    final plainArtworkHeader = context.isMornye && coverBuilder != null;
+    final plainArtworkHeader = context.isTango && coverBuilder != null;
     // iOS does not add horizontal safe-area padding in portrait. Give toolbar
     // controls and header content an explicit inset so circular actions do not
     // sit against the glass edge on either iPhone or iPad. Android uses a
@@ -405,7 +405,7 @@ class AlbumDetailHeader extends StatelessWidget {
                       ),
                     );
                     // Material uses the expressive extra-large corner.
-                    final coverRadius = context.isMornye
+                    final coverRadius = context.isTango
                         ? tokens.radiusControl
                         : 28.0;
                     return Container(
@@ -523,7 +523,7 @@ class AlbumDetailHeader extends StatelessWidget {
               child: AppIconButton.filledTonal(
                 tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                 icon: AppIcon(
-                  context.isMornye ? Icons.chevron_left : Icons.arrow_back,
+                  context.isTango ? Icons.chevron_left : Icons.arrow_back,
                 ),
                 style: IconButton.styleFrom(
                   minimumSize: Size.square(tokens.minTouchTarget),
@@ -643,7 +643,7 @@ class AlbumPlayActions extends StatelessWidget {
     final tokens = context.tokens;
     final scheme = HeaderPalette.of(context);
     if (isDesktopPlatform) return _buildDesktop(context, scheme);
-    if (context.isMornye) {
+    if (context.isTango) {
       return Row(
         children: [
           Expanded(
@@ -657,7 +657,7 @@ class AlbumPlayActions extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: _MornyeHeaderButton(
+            child: _TangoHeaderButton(
               icon: CupertinoIcons.shuffle,
               label: shuffleTooltip,
               onPressed: onShuffle,
@@ -695,11 +695,11 @@ class AlbumPlayActions extends StatelessWidget {
   }
 
   /// Shuffle, Play and "+" at their own widths along the artwork's bottom
-  /// edge: round gray buttons around the Play capsule in Mornye, a filled
+  /// edge: round gray buttons around the Play capsule in Tango, a filled
   /// Play button with tonal icon buttons in Material.
   Widget _buildDesktop(BuildContext context, ColorScheme scheme) {
     final addLabel = context.l10n.collectionAddToPlaylist;
-    if (context.isMornye) {
+    if (context.isTango) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         spacing: 10,
@@ -710,7 +710,7 @@ class AlbumPlayActions extends StatelessWidget {
             tonal: true,
             onPressed: onShuffle,
           ),
-          _MornyeHeaderButton(
+          _TangoHeaderButton(
             icon: isPlaying
                 ? CupertinoIcons.pause_fill
                 : CupertinoIcons.play_fill,
@@ -773,9 +773,9 @@ class HeaderFilledButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = context.tokens;
     final scheme = HeaderPalette.of(context);
-    if (context.isMornye) {
-      return _MornyeHeaderButton(
-        icon: mornyeIconFor(icon),
+    if (context.isTango) {
+      return _TangoHeaderButton(
+        icon: tangoIconFor(icon),
         label: label,
         onPressed: onPressed,
         prominent: !tonal,
@@ -836,13 +836,13 @@ class HeaderCircleButton extends ConsumerWidget {
     // Desktop headers use pointer-sized controls.
     final desktop = isDesktopPlatform;
     final buttonSize =
-        this.buttonSize ?? (desktop ? (context.isMornye ? 36.0 : 40.0) : null);
+        this.buttonSize ?? (desktop ? (context.isTango ? 36.0 : 40.0) : null);
     final iconSize = desktop && this.iconSize == 22 ? 18.0 : this.iconSize;
-    if (context.isMornye && HeaderActionGroup.of(context)) {
+    if (context.isTango && HeaderActionGroup.of(context)) {
       return IconButton(
         onPressed: onPressed,
         tooltip: tooltip,
-        icon: AppIcon(mornyeIconFor(icon), size: iconSize),
+        icon: AppIcon(tangoIconFor(icon), size: iconSize),
         style: IconButton.styleFrom(
           minimumSize: Size.square(buttonSize ?? 36),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -850,7 +850,7 @@ class HeaderCircleButton extends ConsumerWidget {
         ),
       );
     }
-    if (context.isMornye) {
+    if (context.isTango) {
       if (tonal) {
         return Tooltip(
           message: tooltip,
@@ -865,7 +865,7 @@ class HeaderCircleButton extends ConsumerWidget {
               ),
               onPressed: onPressed,
               child: AppIcon(
-                mornyeIconFor(icon),
+                tangoIconFor(icon),
                 size: iconSize,
                 color: onPressed == null
                     ? scheme.onSurfaceVariant
@@ -875,11 +875,11 @@ class HeaderCircleButton extends ConsumerWidget {
           ),
         );
       }
-      final blurEnabled = ref.watch(mornyeBlurEnabledProvider);
+      final blurEnabled = ref.watch(tangoBlurEnabledProvider);
       final button = IconButton(
         onPressed: onPressed,
         tooltip: tooltip,
-        icon: AppIcon(mornyeIconFor(icon), size: iconSize),
+        icon: AppIcon(tangoIconFor(icon), size: iconSize),
         style: IconButton.styleFrom(
           minimumSize: Size.square(buttonSize ?? 44),
           // Keep the glass circle at the button's size for the pointer.
@@ -889,7 +889,7 @@ class HeaderCircleButton extends ConsumerWidget {
       );
       return Center(
         widthFactor: 1,
-        child: MornyeGlass.navigation(
+        child: TangoGlass.navigation(
           radius: (buttonSize ?? 48) / 2,
           tintColor:
               glassTintColor ??
@@ -915,8 +915,8 @@ class HeaderCircleButton extends ConsumerWidget {
   }
 }
 
-class _MornyeHeaderButton extends StatelessWidget {
-  const _MornyeHeaderButton({
+class _TangoHeaderButton extends StatelessWidget {
+  const _TangoHeaderButton({
     required this.icon,
     required this.label,
     required this.onPressed,
@@ -1027,10 +1027,10 @@ class HeaderMetaItem extends StatelessWidget {
     final scheme = HeaderPalette.of(context);
     final desktop = isDesktopPlatform;
     final textStyle = TextStyle(
-      color: context.isMornye || desktop
+      color: context.isTango || desktop
           ? scheme.onSurfaceVariant
           : scheme.onSurface,
-      fontSize: desktop && context.isMornye ? 12 : 13,
+      fontSize: desktop && context.isTango ? 12 : 13,
       fontWeight: desktop ? FontWeight.w600 : FontWeight.w500,
     );
     if (icon == null) return Text(label, style: textStyle);

@@ -1,8 +1,8 @@
-//! Built-in Apple Music and Zarz-LRC providers.
+//! Built-in Apple Music and Tango-LRC providers.
 
 use super::*;
 use crate::lyrics::http;
-use mornye_core::lyrics::payloads;
+use tango_core::lyrics::payloads;
 use regex::Regex;
 use std::sync::{LazyLock, MutexGuard, TryLockError};
 use std::time::Duration;
@@ -16,7 +16,7 @@ static TOKEN: LazyLock<Regex> =
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum AppleLyricsSource {
     Paxsenix,
-    ZarzLrc,
+    TangoLrc,
 }
 
 impl BuiltinLyricsClient {
@@ -108,13 +108,13 @@ impl BuiltinLyricsClient {
         self.apple_lyrics(&id, AppleLyricsSource::Paxsenix, request, check)
     }
 
-    pub(super) fn zarz_lrc_lyrics(
+    pub(super) fn tango_lrc_lyrics(
         &self,
         request: &SearchRequest,
         check: &Check<'_>,
     ) -> Result<LyricsResponse, LyricsError> {
         let id = self.apple_song_id(request, check)?;
-        self.apple_lyrics(&id, AppleLyricsSource::ZarzLrc, request, check)
+        self.apple_lyrics(&id, AppleLyricsSource::TangoLrc, request, check)
     }
 
     fn apple_song_id(
@@ -186,8 +186,8 @@ impl BuiltinLyricsClient {
                 get.params = pairs(&[("id", id)]);
                 get
             }
-            AppleLyricsSource::ZarzLrc => {
-                let mut get = Request::new("https://api.zarz.moe/apple-music/lyrics");
+            AppleLyricsSource::TangoLrc => {
+                let mut get = Request::new("https://invalid.invalid/apple-music/lyrics");
                 get.timeout = Duration::from_secs(65);
                 // Let the backup use its account's storefront, since lyric
                 // availability differs between catalog regions.
@@ -226,10 +226,10 @@ impl BuiltinLyricsClient {
                 };
                 (text, "Apple Music")
             }
-            AppleLyricsSource::ZarzLrc => (
-                payloads::format_zarz_lrc_apple(raw, multi_person, word_timing)
+            AppleLyricsSource::TangoLrc => (
+                payloads::format_tango_lrc_apple(raw, multi_person, word_timing)
                     .map_err(LyricsError::Unavailable)?,
-                "Zarz-LRC",
+                "Tango-LRC",
             ),
         };
         let mut lyrics = from_text(&text, name, name)?;
@@ -251,16 +251,16 @@ mod tests {
     }
 
     #[test]
-    fn zarz_lrc_lyrics_credit_never_names_the_proxy() {
-        let lyrics = LyricsResponse::from_text("[00:01.00]Example", "Zarz-LRC", "Zarz-LRC");
-        let saved = mornye_core::lyrics::lrc::with_metadata(&lyrics, "Track", "Artist");
-        assert!(saved.contains("source: Zarz-LRC"));
+    fn tango_lrc_lyrics_credit_never_names_the_proxy() {
+        let lyrics = LyricsResponse::from_text("[00:01.00]Example", "Tango-LRC", "Tango-LRC");
+        let saved = tango_core::lyrics::lrc::with_metadata(&lyrics, "Track", "Artist");
+        assert!(saved.contains("source: Tango-LRC"));
         assert!(!saved.contains("Paxsenix"));
     }
 
     #[test]
-    #[ignore = "requires live Apple catalog and Zarz-LRC access"]
-    fn live_zarz_lrc_lyrics_works_without_paxsenix() {
+    #[ignore = "requires live Apple catalog and Tango-LRC access"]
+    fn live_tango_lrc_lyrics_works_without_paxsenix() {
         let network = NetworkService::new().unwrap();
         let client = BuiltinLyricsClient::with_endpoints(
             &network,
@@ -278,11 +278,11 @@ mod tests {
             duration: 213.0,
             ..SearchRequest::default()
         };
-        let lyrics = client.zarz_lrc_lyrics(&request, &|| Ok(())).unwrap();
+        let lyrics = client.tango_lrc_lyrics(&request, &|| Ok(())).unwrap();
         assert!(lyrics.has_usable_text());
         assert!(lyrics.is_synced());
-        assert_eq!(lyrics.provider, "Zarz-LRC");
-        assert_eq!(lyrics.source, "Zarz-LRC");
+        assert_eq!(lyrics.provider, "Tango-LRC");
+        assert_eq!(lyrics.source, "Tango-LRC");
     }
 
     #[test]

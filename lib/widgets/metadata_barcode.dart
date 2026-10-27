@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/utils/retail_barcode.dart';
+import 'package:tango/utils/retail_barcode.dart';
 
 class MetadataBarcode extends StatelessWidget {
   final String value;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:tango/theme/material_expressive.dart';
+import 'package:tango/theme/tango_theme.dart';
 
 /// One inline surface, matching the metadata groups and dialog controls.
 class AppContentCard extends StatelessWidget {
@@ -16,7 +16,7 @@ class AppContentCard extends StatelessWidget {
     this.margin,
     this.onTap,
     this.onLongPress,
-    this.mornyeSurface = true,
+    this.tangoSurface = true,
   });
 
   final Widget child;
@@ -26,21 +26,21 @@ class AppContentCard extends StatelessWidget {
   final Clip clipBehavior;
   final bool preserveColor;
 
-  /// Outer margin; Material defaults to its card theme, Mornye to zero.
+  /// Outer margin; Material defaults to its card theme, Tango to zero.
   final EdgeInsetsGeometry? margin;
 
   /// Makes the whole card pressable, with the expressive press feedback.
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
 
-  /// False keeps a plain [Card] under Mornye for surfaces that carry their
-  /// own tinted color (errors, notices) rather than the Mornye control fill.
-  final bool mornyeSurface;
+  /// False keeps a plain [Card] under Tango for surfaces that carry their
+  /// own tinted color (errors, notices) rather than the Tango control fill.
+  final bool tangoSurface;
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isMornye || !mornyeSurface) {
-      if (!context.isMornye &&
+    if (!context.isTango || !tangoSurface) {
+      if (!context.isTango &&
           materialExpressiveEnabled(context) &&
           (shape == null || shape is RoundedRectangleBorder)) {
         final radius = shape is RoundedRectangleBorder
@@ -90,11 +90,11 @@ class AppContentCard extends StatelessWidget {
     final content = DividerTheme(
       data: DividerTheme.of(
         context,
-      ).copyWith(color: MornyeTheme.metadataDividerColor(context)),
+      ).copyWith(color: TangoTheme.metadataDividerColor(context)),
       child: child,
     );
     final surface = Material(
-      color: preserveColor ? color : MornyeTheme.controlFill(context),
+      color: preserveColor ? color : TangoTheme.controlFill(context),
       borderRadius: BorderRadius.circular(28),
       clipBehavior: Clip.antiAlias,
       child: onTap != null || onLongPress != null

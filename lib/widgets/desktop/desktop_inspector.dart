@@ -5,21 +5,21 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/controllers/player_metadata_controller.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/playback_seek_preview.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/desktop/desktop_window.dart'
+import 'package:tango/controllers/player_metadata_controller.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/playback_seek_preview.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/desktop/desktop_window.dart'
     show desktopWindowFullScreen;
-import 'package:mornye/widgets/mornye_player_background.dart';
-import 'package:mornye/widgets/mornye_player_queue.dart';
-import 'package:mornye/widgets/player_lyrics_section.dart';
-import 'package:mornye/widgets/player_queue_sheet.dart';
-import 'package:mornye/widgets/no_scrollbars.dart';
+import 'package:tango/widgets/tango_player_background.dart';
+import 'package:tango/widgets/tango_player_queue.dart';
+import 'package:tango/widgets/player_lyrics_section.dart';
+import 'package:tango/widgets/player_queue_sheet.dart';
+import 'package:tango/widgets/no_scrollbars.dart';
 
 /// A panel of the desktop trailing inspector.
 enum DesktopInspectorPanel { lyrics, upNext }
@@ -137,7 +137,7 @@ class DesktopInspector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final l10n = context.l10n;
     final mediaItem = ref.watch(currentMediaItemProvider).value;
     final title = switch (panel) {
@@ -168,7 +168,7 @@ class DesktopInspector extends ConsumerWidget {
               key: const ValueKey('desktop-inspector-close'),
               tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
               color: colorScheme.onSurfaceVariant,
-              icon: AppIcon(mornye ? CupertinoIcons.xmark : Icons.close),
+              icon: AppIcon(tango ? CupertinoIcons.xmark : Icons.close),
               onPressed: () => desktopInspectorPanel.value = null,
             ),
           ],
@@ -194,8 +194,8 @@ class DesktopInspector extends ConsumerWidget {
             colorScheme: colorScheme,
           ),
           DesktopInspectorPanel.upNext =>
-            mornye
-                ? MornyePlayerQueue(colorScheme: colorScheme)
+            tango
+                ? TangoPlayerQueue(colorScheme: colorScheme)
                 : DesktopMaterialQueue(colorScheme: colorScheme),
         };
       }
@@ -209,10 +209,10 @@ class DesktopInspector extends ConsumerWidget {
     }
 
     final Widget panelSurface;
-    if (mornye) {
+    if (tango) {
       // Lyrics and Up Next keep the player's dark artwork backdrop, as the
       // full player draws them in white over it.
-      final theme = MornyeTheme.fromContext(
+      final theme = TangoTheme.fromContext(
         context,
         brightness: Brightness.dark,
       );
@@ -221,7 +221,7 @@ class DesktopInspector extends ConsumerWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            MornyePlayerBackground(artUri: mediaItem?.artUri),
+            TangoPlayerBackground(artUri: mediaItem?.artUri),
             Material(
               type: MaterialType.transparency,
               child: Builder(builder: content),
@@ -238,8 +238,8 @@ class DesktopInspector extends ConsumerWidget {
     }
 
     final divider = BorderSide(
-      color: mornye
-          ? MornyeTheme.metadataDividerColor(context)
+      color: tango
+          ? TangoTheme.metadataDividerColor(context)
           : Theme.of(context).colorScheme.outlineVariant,
     );
     return Semantics(
@@ -274,7 +274,7 @@ class DesktopInspector extends ConsumerWidget {
 }
 
 /// Motion for opening the inspector: the Material spatial spring, or an
-/// iOS-like ease for Mornye.
+/// iOS-like ease for Tango.
 AppMotionSpec desktopInspectorMotion(BuildContext context) => AppMotion.spatial(
   context,
   const AppMotionSpec(Duration(milliseconds: 380), Curves.easeOutCubic),

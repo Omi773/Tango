@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/material_expressive.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/tango_chrome.dart';
 
 /// Dialog presentation follows the selected design, including on Android.
 Future<T?> showAppDialog<T>({
@@ -17,11 +17,11 @@ Future<T?> showAppDialog<T>({
   bool barrierDismissible = true,
   bool useRootNavigator = true,
 }) {
-  if (context.isMornye) {
+  if (context.isTango) {
     final navigator = Navigator.of(context, rootNavigator: useRootNavigator);
     final themes = InheritedTheme.capture(from: context, to: navigator.context);
     return navigator.push<T>(
-      _MornyeDialogRoute<T>(
+      _TangoDialogRoute<T>(
         context: context,
         builder: (context) => themes.wrap(Builder(builder: builder)),
         barrierDismissible: barrierDismissible,
@@ -84,11 +84,11 @@ class AppDialogSurface extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     return Dialog(
-      backgroundColor: mornye ? Colors.transparent : backgroundColor,
-      surfaceTintColor: mornye ? Colors.transparent : null,
-      elevation: mornye ? 0 : null,
+      backgroundColor: tango ? Colors.transparent : backgroundColor,
+      surfaceTintColor: tango ? Colors.transparent : null,
+      elevation: tango ? 0 : null,
       shape: shape,
       insetPadding: EdgeInsets.symmetric(
         horizontal: context.tokens.dialogInsetH,
@@ -96,8 +96,8 @@ class AppDialogSurface extends StatelessWidget {
       ),
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxWidth),
-        child: mornye
-            ? MornyeGlassPanel.overlay(
+        child: tango
+            ? TangoGlassPanel.overlay(
                 child: SingleChildScrollView(child: child),
               )
             : child,
@@ -106,8 +106,8 @@ class AppDialogSurface extends StatelessWidget {
   }
 }
 
-class _MornyeDialogRoute<T> extends RawDialogRoute<T> {
-  _MornyeDialogRoute({
+class _TangoDialogRoute<T> extends RawDialogRoute<T> {
+  _TangoDialogRoute({
     required BuildContext context,
     required WidgetBuilder builder,
     required super.barrierDismissible,
@@ -182,7 +182,7 @@ class AppAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isMornye) {
+    if (!context.isTango) {
       return AlertDialog(
         // M3 basic dialogs are 280 to 560dp wide; without a cap, a long
         // message stretches the dialog across a wide window. Desktop starts
@@ -218,7 +218,7 @@ class AppAlertDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 320),
-        child: MornyeGlassPanel.overlay(
+        child: TangoGlassPanel.overlay(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -298,7 +298,7 @@ class AppDialogAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
+    if (context.isTango) {
       final theme = Theme.of(context);
       final scheme = theme.colorScheme;
       final color = onPressed == null
@@ -308,8 +308,8 @@ class AppDialogAction extends StatelessWidget {
           : scheme.onSurface;
       return CupertinoButton(
         onPressed: onPressed,
-        color: MornyeTheme.controlFill(context),
-        disabledColor: MornyeTheme.controlFill(context, enabled: false),
+        color: TangoTheme.controlFill(context),
+        disabledColor: TangoTheme.controlFill(context, enabled: false),
         borderRadius: BorderRadius.circular(28),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: DefaultTextStyle(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_shape.dart';
-import 'package:mornye/widgets/expressive_button.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_content_card.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_shape.dart';
+import 'package:tango/widgets/expressive_button.dart';
 
 /// Error card shown by detail screens: a dedicated rate-limit presentation
 /// when the message looks like an HTTP 429, otherwise a generic error row.
@@ -48,7 +48,7 @@ class ErrorCard extends StatelessWidget {
     return AppContentCard(
       elevation: 0,
       color: background,
-      mornyeSurface: false,
+      tangoSurface: false,
       shape: RoundedRectangleBorder(borderRadius: tokens.borderRadiusCard),
       child: Padding(
         padding: EdgeInsets.all(tokens.gapLg),
@@ -126,7 +126,7 @@ class EmptyState extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (context.isMornye)
+            if (context.isTango)
               Icon(icon, size: 64, color: colorScheme.onSurfaceVariant)
             else
               AppShapeBadge(

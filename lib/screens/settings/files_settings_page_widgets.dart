@@ -130,7 +130,7 @@ class _FilenameFormatEditorSheetState
   }
 
   Widget _tagChip(ColorScheme colorScheme, String tag) {
-    if (context.isMornye) {
+    if (context.isTango) {
       return AppChoiceChip(
         label: Text(tag),
         selected: false,

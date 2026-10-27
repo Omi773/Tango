@@ -301,9 +301,9 @@ class _FilterChip extends ConsumerWidget {
       label: count == null ? label : '$label, $count',
       excludeSemantics: true,
       onTap: onTap,
-      child: MornyeGlass(
+      child: TangoGlass(
         radius: 22,
-        blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+        blurEnabled: ref.watch(tangoBlurEnabledProvider),
         child: Material(
           color: Colors.transparent,
           child: InkWell(

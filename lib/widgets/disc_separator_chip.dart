@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/theme/tango_theme.dart';
 
 /// "Disc N" chip with a trailing hairline, shown between disc groups in
 /// album track lists.
@@ -12,7 +12,7 @@ class DiscSeparatorChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    if (context.isMornye) {
+    if (context.isTango) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
         child: Text(

@@ -1,7 +1,7 @@
-import 'package:mornye/models/track.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/utils/string_utils.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/utils/string_utils.dart';
 
 final _log = AppLogger('DownloadAlbumMetadata');
 

@@ -1,4 +1,4 @@
-use mornye_core::cancellation as core;
+use tango_core::cancellation as core;
 use std::sync::Arc;
 
 #[derive(uniffi::Enum)]

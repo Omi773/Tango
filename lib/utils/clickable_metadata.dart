@@ -1,1 +1,1 @@
-export 'package:mornye/controllers/clickable_metadata.dart';
+export 'package:tango/controllers/clickable_metadata.dart';

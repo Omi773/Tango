@@ -1,6 +1,6 @@
-import 'package:mornye/models/settings.dart';
-import 'package:mornye/utils/audio_format_utils.dart';
-import 'package:mornye/utils/string_utils.dart';
+import 'package:tango/models/settings.dart';
+import 'package:tango/utils/audio_format_utils.dart';
+import 'package:tango/utils/string_utils.dart';
 
 const highQualityBadgeBitrateThresholdKbps = 900;
 

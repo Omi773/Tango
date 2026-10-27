@@ -1,6 +1,6 @@
-import 'package:mornye/services/library_database_models.dart';
-import 'package:mornye/services/sqlite_helpers.dart' as sqlite;
-import 'package:mornye/utils/audio_format_utils.dart';
+import 'package:tango/services/library_database_models.dart';
+import 'package:tango/services/sqlite_helpers.dart' as sqlite;
+import 'package:tango/utils/audio_format_utils.dart';
 
 /// Maps scan/domain metadata to storage rows without opening a database.
 abstract final class LibraryRowMapper {

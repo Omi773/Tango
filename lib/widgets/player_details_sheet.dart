@@ -1,15 +1,15 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
-import 'package:mornye/controllers/player_metadata_controller.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/isrc_utils.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/mornye_player_details_sheet.dart';
-import 'package:mornye/widgets/settings_group.dart';
+import 'package:tango/controllers/player_metadata_controller.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/isrc_utils.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/tango_player_details_sheet.dart';
+import 'package:tango/widgets/settings_group.dart';
 
 Future<void> showPlayerDetailsSheet(
   BuildContext context,
@@ -30,7 +30,7 @@ Future<void> showPlayerDetailsSheet(
           mediaItem: mediaItem,
         ),
       );
-  if (!context.isMornye) {
+  if (!context.isTango) {
     // The shared sheet supplies the handle, shape and header on phones, and
     // opens as a desktop dialog.
     final item = mediaItem;
@@ -45,12 +45,12 @@ Future<void> showPlayerDetailsSheet(
       builder: (context, scrollController) => details(scrollController),
     );
   }
-  // The Mornye details draw their own glass, handle and header.
+  // The Tango details draw their own glass, handle and header.
   if (isDesktopPlatform) {
     return showAppSheetDialog<void>(
       context: context,
       isScrollControlled: true,
-      mornyeGlass: false,
+      tangoGlass: false,
       builder: (context) => DraggableScrollableSheet(
         expand: false,
         initialChildSize: 1,
@@ -119,8 +119,8 @@ class _MetadataList extends StatelessWidget {
       ),
     ].where((r) => r.$2.trim().isNotEmpty && r.$2 != '0').toList();
 
-    if (context.isMornye) {
-      return MornyePlayerDetailsSheet(
+    if (context.isTango) {
+      return TangoPlayerDetailsSheet(
         rows: rows,
         scrollController: scrollController,
         mediaItem: mediaItem,

@@ -1,12 +1,12 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/theme_provider.dart';
-import 'package:mornye/services/custom_font_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/theme_provider.dart';
+import 'package:tango/services/custom_font_service.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
 
 class CustomFontSetting extends ConsumerStatefulWidget {
   const CustomFontSetting({super.key});
@@ -49,7 +49,7 @@ class _CustomFontSettingState extends ConsumerState<CustomFontSetting> {
   Widget build(BuildContext context) {
     final theme = ref.watch(themeProvider);
     return ListTile(
-      leading: context.isMornye ? null : const Icon(Icons.text_fields),
+      leading: context.isTango ? null : const Icon(Icons.text_fields),
       title: Text(context.l10n.appearanceCustomFont),
       subtitle: Text(
         theme.customFontId.isEmpty

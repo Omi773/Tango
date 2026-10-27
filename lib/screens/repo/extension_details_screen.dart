@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/repo_provider.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/nav_bar_inset.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/widgets/extension_repo_card.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/expressive_button.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/repo_provider.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/utils/nav_bar_inset.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/widgets/extension_repo_card.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/expressive_button.dart';
 
 class ExtensionDetailsScreen extends ConsumerStatefulWidget {
   final RepoExtension extension;
@@ -137,7 +137,7 @@ class _ExtensionDetailsScreenState
         padding: EdgeInsetsDirectional.only(start: edgeInset),
         child: AppIconButton(
           tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-          icon: Icon(context.isMornye ? CupertinoIcons.back : Icons.arrow_back),
+          icon: Icon(context.isTango ? CupertinoIcons.back : Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -152,8 +152,8 @@ class _ExtensionDetailsScreenState
     return Container(
       color: colorScheme.surfaceContainerHighest,
       child: Icon(
-        context.isMornye
-            ? mornyeIconFor(_getCategoryIcon(ext.category))
+        context.isTango
+            ? tangoIconFor(_getCategoryIcon(ext.category))
             : _getCategoryIcon(ext.category),
         size: size,
         color: colorScheme.onSurfaceVariant,
@@ -235,7 +235,7 @@ class _ExtensionDetailsScreenState
                     ExpressiveButton(
                       onPressed: () => _updateExtension(ext),
                       icon: Icon(
-                        context.isMornye
+                        context.isTango
                             ? CupertinoIcons.arrow_clockwise
                             : Icons.update,
                       ),
@@ -257,7 +257,7 @@ class _ExtensionDetailsScreenState
                             outlined: true,
                             onPressed: null,
                             icon: Icon(
-                              context.isMornye
+                              context.isTango
                                   ? CupertinoIcons.check_mark
                                   : Icons.check,
                             ),
@@ -274,7 +274,7 @@ class _ExtensionDetailsScreenState
                         AppIconButton.filled(
                           onPressed: () => _uninstallExtension(ext),
                           icon: Icon(
-                            context.isMornye
+                            context.isTango
                                 ? CupertinoIcons.trash
                                 : Icons.delete_outline,
                           ),
@@ -294,7 +294,7 @@ class _ExtensionDetailsScreenState
                     ExpressiveButton(
                       onPressed: () => _installExtension(ext),
                       icon: Icon(
-                        context.isMornye
+                        context.isTango
                             ? CupertinoIcons.arrow_down_circle
                             : Icons.download,
                       ),
@@ -383,7 +383,7 @@ class _ExtensionDetailsScreenState
           runSpacing: 8,
           children: ext.tags
               .map(
-                (tag) => context.isMornye
+                (tag) => context.isTango
                     ? ExtensionRepoCard(
                         margin: EdgeInsets.zero,
                         child: Padding(
@@ -723,8 +723,8 @@ class _MetadataRow extends StatelessWidget {
             ],
           ),
         ),
-        // Material groups rows by the card alone; dividers are Mornye's.
-        if (!isLast && context.isMornye)
+        // Material groups rows by the card alone; dividers are Tango's.
+        if (!isLast && context.isTango)
           Divider(
             height: 1,
             thickness: 1,
@@ -773,7 +773,7 @@ class _CapabilityRow extends StatelessWidget {
                 ),
               ),
               Icon(
-                context.isMornye
+                context.isTango
                     ? (enabled
                           ? CupertinoIcons.check_mark_circled
                           : CupertinoIcons.clear_circled)
@@ -784,7 +784,7 @@ class _CapabilityRow extends StatelessWidget {
             ],
           ),
         ),
-        if (!isLast && context.isMornye)
+        if (!isLast && context.isTango)
           Divider(
             height: 1,
             thickness: 1,

@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:material_3_expressive/material_3_expressive.dart'
     show M3EShapeKind;
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/utils/lyrics_parser.dart';
-import 'package:mornye/utils/widget_capture.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_shape.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/player_artwork.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/cover_palette.dart';
+import 'package:tango/utils/lyrics_parser.dart';
+import 'package:tango/utils/widget_capture.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_shape.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/player_artwork.dart';
 
 /// Story-sized lyric cards stay short, like quoting a song rather than
 /// reproducing its lyrics.
@@ -151,7 +151,7 @@ class _LyricsShareScreenState extends State<LyricsShareScreen> {
       final file = await captureBoundaryToPngFile(
         _cardKey,
         pixelRatio: 3,
-        fileName: 'mornye_lyrics.png',
+        fileName: 'tango_lyrics.png',
       );
       if (file == null) throw StateError('Card could not be captured');
       await SharePlus.instance.share(

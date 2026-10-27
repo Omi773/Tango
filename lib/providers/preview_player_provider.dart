@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/services/playback_deck.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/services/playback_deck.dart';
+import 'package:tango/utils/logger.dart';
 
 final _log = AppLogger('PreviewPlayer');
 

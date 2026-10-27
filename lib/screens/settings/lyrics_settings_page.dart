@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/screens/settings/lyrics_provider_priority_page.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_text_field.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/lyrics_provider_names.dart';
-import 'package:mornye/widgets/lyrics_size_setting.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/screens/settings/lyrics_provider_priority_page.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_text_field.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/lyrics_provider_names.dart';
+import 'package:tango/widgets/lyrics_size_setting.dart';
 
 class LyricsSettingsPage extends ConsumerWidget {
   const LyricsSettingsPage({super.key});
@@ -316,7 +316,7 @@ class LyricsSettingsPage extends ConsumerWidget {
                     child: Text(context.l10n.dialogSave),
                   ),
                 ];
-                return context.isMornye
+                return context.isTango
                     ? Wrap(
                         alignment: WrapAlignment.end,
                         spacing: 8,

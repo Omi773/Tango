@@ -3,63 +3,63 @@ import 'dart:io';
 import 'dart:ui' show ImageFilter;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/screens/upgrade_intro_screen.dart';
-import 'package:mornye/services/saf_migration_prompt_store.dart';
-import 'package:mornye/services/upgrade_intro_service.dart';
-import 'package:mornye/providers/download_queue_provider.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/providers/playback_notification_provider.dart';
-import 'package:mornye/providers/repo_provider.dart';
-import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/providers/track_provider.dart';
-import 'package:mornye/providers/user_profile_provider.dart';
-import 'package:mornye/providers/preview_player_provider.dart';
-import 'package:mornye/screens/home_tab.dart';
-import 'package:mornye/screens/library_tracks_folder_screen.dart';
-import 'package:mornye/screens/mornye_library_screen.dart';
-import 'package:mornye/screens/repo_tab.dart';
-import 'package:mornye/screens/queue_tab.dart';
-import 'package:mornye/screens/settings/profile_settings_page.dart';
-import 'package:mornye/screens/settings/settings_tab.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/services/share_intent_service.dart';
-import 'package:mornye/services/music_playback_deck.dart';
-import 'package:mornye/services/listening_statistics.dart';
-import 'package:mornye/services/discord_presence_service.dart';
-import 'package:mornye/services/notification_service.dart';
-import 'package:mornye/services/app_remote_config_service.dart';
-import 'package:mornye/services/update_checker.dart';
-import 'package:mornye/widgets/app_announcement_dialog.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/download_queue_feedback.dart';
-import 'package:mornye/widgets/update_dialog.dart';
-import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/widgets/nav_destination_icons.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/mini_player.dart';
-import 'package:mornye/widgets/lazy_tab_view.dart';
-import 'package:mornye/widgets/expressive_navigation_bar.dart';
-import 'package:mornye/widgets/mornye_bottom_bar.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/selection_bottom_bar.dart';
-import 'package:mornye/widgets/desktop/desktop_commands.dart';
-import 'package:mornye/widgets/desktop/desktop_inspector.dart';
-import 'package:mornye/widgets/desktop/desktop_navigation.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/saf_download_tree.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/screens/upgrade_intro_screen.dart';
+import 'package:tango/services/saf_migration_prompt_store.dart';
+import 'package:tango/services/upgrade_intro_service.dart';
+import 'package:tango/providers/download_queue_provider.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/providers/playback_notification_provider.dart';
+import 'package:tango/providers/repo_provider.dart';
+import 'package:tango/providers/runtime_profile_provider.dart';
+import 'package:tango/providers/track_provider.dart';
+import 'package:tango/providers/user_profile_provider.dart';
+import 'package:tango/providers/preview_player_provider.dart';
+import 'package:tango/screens/home_tab.dart';
+import 'package:tango/screens/library_tracks_folder_screen.dart';
+import 'package:tango/screens/tango_library_screen.dart';
+import 'package:tango/screens/repo_tab.dart';
+import 'package:tango/screens/queue_tab.dart';
+import 'package:tango/screens/settings/profile_settings_page.dart';
+import 'package:tango/screens/settings/settings_tab.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/services/shell_navigation_service.dart';
+import 'package:tango/services/share_intent_service.dart';
+import 'package:tango/services/music_playback_deck.dart';
+import 'package:tango/services/listening_statistics.dart';
+import 'package:tango/services/discord_presence_service.dart';
+import 'package:tango/services/notification_service.dart';
+import 'package:tango/services/app_remote_config_service.dart';
+import 'package:tango/services/update_checker.dart';
+import 'package:tango/widgets/app_announcement_dialog.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
+import 'package:tango/widgets/download_queue_feedback.dart';
+import 'package:tango/widgets/update_dialog.dart';
+import 'package:tango/widgets/animation_utils.dart';
+import 'package:tango/widgets/nav_destination_icons.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/mini_player.dart';
+import 'package:tango/widgets/lazy_tab_view.dart';
+import 'package:tango/widgets/expressive_navigation_bar.dart';
+import 'package:tango/widgets/tango_bottom_bar.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/tango_chrome.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/selection_bottom_bar.dart';
+import 'package:tango/widgets/desktop/desktop_commands.dart';
+import 'package:tango/widgets/desktop/desktop_inspector.dart';
+import 'package:tango/widgets/desktop/desktop_navigation.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/saf_download_tree.dart';
 
 part 'main_shell_startup_prompts.dart';
 
@@ -69,13 +69,13 @@ final _log = AppLogger('MainShell');
 @visibleForTesting
 ShellTab shellTabAt(
   int index, {
-  required bool mornye,
+  required bool tango,
   required bool showStore,
 }) {
   if (index == 0) return ShellTab.home;
   if (index == 1) return ShellTab.library;
   if (showStore && index == 2) return ShellTab.repository;
-  if (mornye && index == (showStore ? 3 : 2)) return ShellTab.search;
+  if (tango && index == (showStore ? 3 : 2)) return ShellTab.search;
   return ShellTab.settings;
 }
 
@@ -84,7 +84,7 @@ ShellTab shellTabAt(
 @visibleForTesting
 int? shellIndexOfTab(
   ShellTab tab, {
-  required bool mornye,
+  required bool tango,
   required bool showStore,
   required bool desktop,
 }) => switch (tab) {
@@ -92,10 +92,10 @@ int? shellIndexOfTab(
   ShellTab.library => 1,
   ShellTab.repository => showStore ? 2 : null,
   // Material searches from Home.
-  ShellTab.search => mornye ? (showStore ? 3 : 2) : 0,
-  // Mornye phones open Settings as a page, not a destination.
+  ShellTab.search => tango ? (showStore ? 3 : 2) : 0,
+  // Tango phones open Settings as a page, not a destination.
   ShellTab.settings =>
-    !mornye
+    !tango
         ? (showStore ? 3 : 2)
         : desktop
         ? (showStore ? 4 : 3)
@@ -112,7 +112,7 @@ class MainShell extends ConsumerStatefulWidget {
 class _MainShellState extends ConsumerState<MainShell>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   int _currentIndex = 0;
-  final _mornyeChrome = MornyeChromeController();
+  final _tangoChrome = TangoChromeController();
   // Preserves the tab view element (and its kept-alive tabs) when the body
   // structure swaps between rail and bottom-bar layouts on rotation.
   final GlobalKey _pageViewKey = GlobalKey();
@@ -149,35 +149,35 @@ class _MainShellState extends ConsumerState<MainShell>
   late final _PreviewStopNavigatorObserver _repoPreviewStopObserver;
   late final _PreviewStopNavigatorObserver _searchPreviewStopObserver;
 
-  /// Desktop: whether Library shows its root page, so the Mornye sidebar
+  /// Desktop: whether Library shows its root page, so the Tango sidebar
   /// returns to the Library root's link.
   late final _libraryDepthObserver = _PageDepthObserver(
     onRoot: () => desktopSidebarLink.value = null,
   );
 
   /// The style the current tab index was chosen under.
-  bool? _indexStyleMornye;
+  bool? _indexStyleTango;
 
   /// The two styles order their destinations differently, so switching
   /// styles keeps the same tab rather than the same index (Settings would
-  /// otherwise become Mornye's Search).
+  /// otherwise become Tango's Search).
   void _keepTabAcrossStyles() {
-    final mornye = context.isMornye;
-    final previous = _indexStyleMornye;
-    _indexStyleMornye = mornye;
-    if (previous == null || previous == mornye) return;
+    final tango = context.isTango;
+    final previous = _indexStyleTango;
+    _indexStyleTango = tango;
+    if (previous == null || previous == tango) return;
     final showStore = ref.read(
       settingsProvider.select((s) => s.showExtensionStore),
     );
     final tab = shellTabAt(
       _currentIndex,
-      mornye: previous,
+      tango: previous,
       showStore: showStore,
     );
     final index =
         shellIndexOfTab(
           tab,
-          mornye: mornye,
+          tango: tango,
           showStore: showStore,
           desktop: isDesktopPlatform,
         ) ??
@@ -320,7 +320,7 @@ class _MainShellState extends ConsumerState<MainShell>
 
     Navigator.of(context).popUntil((route) => route.isFirst);
     _onShellTabRequested(ShellTab.search);
-    final searchNavigator = context.isMornye
+    final searchNavigator = context.isTango
         ? _searchTabNavigatorKey
         : _homeTabNavigatorKey;
     searchNavigator.currentState?.popUntil((route) => route.isFirst);
@@ -371,7 +371,7 @@ class _MainShellState extends ConsumerState<MainShell>
     _pageController.dispose();
     _tabJumpOpacity.dispose();
     _tabJumpTransitionController.dispose();
-    _mornyeChrome.dispose();
+    _tangoChrome.dispose();
     _libraryDepthObserver.dispose();
     super.dispose();
   }
@@ -386,20 +386,20 @@ class _MainShellState extends ConsumerState<MainShell>
     // Unfocus BEFORE clear so _onTrackStateChanged can properly
     // clear _urlController (it checks !_searchFocusNode.hasFocus)
     FocusManager.instance.primaryFocus?.unfocus();
-    if (!context.isMornye) ref.read(trackProvider.notifier).clear();
+    if (!context.isTango) ref.read(trackProvider.notifier).clear();
   }
 
-  /// Mornye desktop windows show Settings as a destination after Search, in
+  /// Tango desktop windows show Settings as a destination after Search, in
   /// the content pane. Phones and tablets open it as a page instead.
-  bool get _mornyeSettingsTab => context.isMornye && isDesktopPlatform;
+  bool get _tangoSettingsTab => context.isTango && isDesktopPlatform;
 
   int _settingsIndex(bool showStore) =>
-      context.isMornye ? (showStore ? 4 : 3) : (showStore ? 3 : 2);
+      context.isTango ? (showStore ? 4 : 3) : (showStore ? 3 : 2);
 
   void _onShellTabRequested(ShellTab tab) {
     // Picking a destination returns from Now Playing to the content pane.
     if (isDesktopPlatform) desktopNowPlayingOpen.value = false;
-    if (tab == ShellTab.settings && context.isMornye && !_mornyeSettingsTab) {
+    if (tab == ShellTab.settings && context.isTango && !_tangoSettingsTab) {
       unawaited(_openProfileSettings());
       return;
     }
@@ -408,7 +408,7 @@ class _MainShellState extends ConsumerState<MainShell>
     );
     final index = switch (tab) {
       ShellTab.home => 0,
-      ShellTab.search => context.isMornye ? (showStore ? 3 : 2) : 0,
+      ShellTab.search => context.isTango ? (showStore ? 3 : 2) : 0,
       ShellTab.library => 1,
       ShellTab.repository => showStore ? 2 : null,
       ShellTab.settings => _settingsIndex(showStore),
@@ -438,8 +438,8 @@ class _MainShellState extends ConsumerState<MainShell>
     final showStore = ref.read(
       settingsProvider.select((s) => s.showExtensionStore),
     );
-    _mornyeChrome.expand();
-    if (index == 0 && resetHome && (context.isMornye || _currentIndex == 0)) {
+    _tangoChrome.expand();
+    if (index == 0 && resetHome && (context.isTango || _currentIndex == 0)) {
       _resetHomeToMain();
     }
     if (index == 0 && _currentIndex == 0) {
@@ -457,13 +457,13 @@ class _MainShellState extends ConsumerState<MainShell>
       ShellNavigationService.syncState(
         currentTabIndex: _currentIndex,
         showRepoTab: showStore,
-        showSearchTab: context.isMornye,
+        showSearchTab: context.isTango,
       );
       FocusManager.instance.primaryFocus?.unfocus();
       // Jump directly when skipping intermediate tabs to avoid
       // sliding through them. For those jumps, keep a short fade-in
       // so the transition still feels intentional.
-      if (context.isMornye) {
+      if (context.isTango) {
         // The glass pill owns the tab transition. Sliding/fading the whole
         // page at the same time continuously invalidates its live backdrop.
         _tabJumpTransitionController.value = 1;
@@ -481,7 +481,7 @@ class _MainShellState extends ConsumerState<MainShell>
   }
 
   void _onPageChanged(int index) {
-    _mornyeChrome.expand();
+    _tangoChrome.expand();
     if (_currentIndex != index) {
       ref.read(previewPlayerProvider.notifier).stop();
       setState(() => _currentIndex = index);
@@ -491,7 +491,7 @@ class _MainShellState extends ConsumerState<MainShell>
       ShellNavigationService.syncState(
         currentTabIndex: _currentIndex,
         showRepoTab: showStore,
-        showSearchTab: context.isMornye,
+        showSearchTab: context.isTango,
       );
       FocusManager.instance.primaryFocus?.unfocus();
     }
@@ -520,7 +520,7 @@ class _MainShellState extends ConsumerState<MainShell>
 
     final trackState = ref.read(trackProvider);
     final isSearchTab =
-        _currentIndex == (context.isMornye ? (showStore ? 3 : 2) : 0);
+        _currentIndex == (context.isTango ? (showStore ? 3 : 2) : 0);
 
     final isKeyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
 
@@ -590,10 +590,10 @@ class _MainShellState extends ConsumerState<MainShell>
     if (index == 0) return ShellTab.home;
     if (index == 1) return ShellTab.library;
     if (showStore && index == 2) return ShellTab.repository;
-    if (_mornyeSettingsTab && index == _settingsIndex(showStore)) {
+    if (_tangoSettingsTab && index == _settingsIndex(showStore)) {
       return ShellTab.settings;
     }
-    return context.isMornye ? ShellTab.search : ShellTab.settings;
+    return context.isTango ? ShellTab.search : ShellTab.settings;
   }
 
   List<DesktopDestination> _desktopDestinations({
@@ -602,25 +602,25 @@ class _MainShellState extends ConsumerState<MainShell>
     required int repoUpdatesCount,
   }) {
     final l10n = context.l10n;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     return [
       for (final tab in desktopDestinationTabs(
-        mornye: mornye,
+        tango: tango,
         showStore: showStore,
       ))
         switch (tab) {
           ShellTab.home => DesktopDestination(
             tab: tab,
-            icon: mornye ? CupertinoIcons.house : Icons.home_outlined,
-            selectedIcon: mornye ? CupertinoIcons.house_fill : Icons.home,
+            icon: tango ? CupertinoIcons.house : Icons.home_outlined,
+            selectedIcon: tango ? CupertinoIcons.house_fill : Icons.home,
             label: l10n.navHome,
           ),
           ShellTab.library => DesktopDestination(
             tab: tab,
-            icon: mornye
+            icon: tango
                 ? CupertinoIcons.square_stack
                 : Icons.library_music_outlined,
-            selectedIcon: mornye
+            selectedIcon: tango
                 ? CupertinoIcons.square_stack_fill
                 : Icons.library_music,
             label: l10n.navLibrary,
@@ -628,10 +628,10 @@ class _MainShellState extends ConsumerState<MainShell>
           ),
           ShellTab.repository => DesktopDestination(
             tab: tab,
-            icon: mornye
+            icon: tango
                 ? CupertinoIcons.square_grid_2x2
                 : Icons.extension_outlined,
-            selectedIcon: mornye
+            selectedIcon: tango
                 ? CupertinoIcons.square_grid_2x2_fill
                 : Icons.extension,
             label: l10n.navStore,
@@ -641,12 +641,12 @@ class _MainShellState extends ConsumerState<MainShell>
             tab: tab,
             icon: CupertinoIcons.search,
             selectedIcon: CupertinoIcons.search,
-            label: l10n.mornyeSearch,
+            label: l10n.tangoSearch,
           ),
           ShellTab.settings => DesktopDestination(
             tab: tab,
-            icon: mornye ? CupertinoIcons.gear_alt : Icons.settings_outlined,
-            selectedIcon: mornye
+            icon: tango ? CupertinoIcons.gear_alt : Icons.settings_outlined,
+            selectedIcon: tango
                 ? CupertinoIcons.gear_alt_fill
                 : Icons.settings,
             label: l10n.navSettings,
@@ -655,7 +655,7 @@ class _MainShellState extends ConsumerState<MainShell>
     ];
   }
 
-  /// The Library pages under the Mornye desktop sidebar's Library heading,
+  /// The Library pages under the Tango desktop sidebar's Library heading,
   /// as in Music. Recently Added is the Library root.
   List<DesktopSidebarLink> _desktopLibraryLinks({required int queueCount}) {
     final l10n = context.l10n;
@@ -689,7 +689,7 @@ class _MainShellState extends ConsumerState<MainShell>
     ];
   }
 
-  /// The page a Mornye desktop sidebar link opens in the Library tab, or
+  /// The page a Tango desktop sidebar link opens in the Library tab, or
   /// null for the Library root.
   Widget? _desktopLibraryPage(String id) {
     const playlistPrefix = 'playlist:';
@@ -702,14 +702,14 @@ class _MainShellState extends ConsumerState<MainShell>
     // Only the Library root links to sections from its own page.
     return switch (id) {
       'artists' => Scaffold(
-        body: MornyeLibraryScreen(
-          page: MornyeLibraryPage.artists,
+        body: TangoLibraryScreen(
+          page: TangoLibraryPage.artists,
           onOpenSection: (_) {},
         ),
       ),
       'albums' => Scaffold(
-        body: MornyeLibraryScreen(
-          page: MornyeLibraryPage.albums,
+        body: TangoLibraryScreen(
+          page: TangoLibraryPage.albums,
           onOpenSection: (_) {},
         ),
       ),
@@ -724,7 +724,7 @@ class _MainShellState extends ConsumerState<MainShell>
     };
   }
 
-  /// Shows a Library page or playlist picked in the Mornye desktop sidebar
+  /// Shows a Library page or playlist picked in the Tango desktop sidebar
   /// in the Library tab, in place of the page it showed.
   void _openDesktopLibraryLink(String id) {
     _onShellTabRequested(ShellTab.library);
@@ -744,15 +744,15 @@ class _MainShellState extends ConsumerState<MainShell>
     WidgetsBinding.instance.ensureVisualUpdate();
   }
 
-  /// Only the Mornye desktop sidebar has Library links; Material keeps a
+  /// Only the Tango desktop sidebar has Library links; Material keeps a
   /// plain Library tab request.
   bool _requestDesktopLibraryLink(String id) {
-    if (!mounted || !isDesktopPlatform || !context.isMornye) return false;
+    if (!mounted || !isDesktopPlatform || !context.isTango) return false;
     _openDesktopLibraryLink(id);
     return true;
   }
 
-  /// Opens the profile from the Mornye desktop sidebar's account row: in
+  /// Opens the profile from the Tango desktop sidebar's account row: in
   /// the Settings detail pane, or as a page when Settings shows only its
   /// list.
   void _openDesktopProfile() {
@@ -767,7 +767,7 @@ class _MainShellState extends ConsumerState<MainShell>
       unawaited(
         navigator.push(
           MaterialPageRoute<void>(
-            builder: (_) => MornyeSettingsTheme(
+            builder: (_) => TangoSettingsTheme(
               child: ProfileSettingsPage(profile: profile),
             ),
           ),
@@ -781,7 +781,7 @@ class _MainShellState extends ConsumerState<MainShell>
     if (index == 0) return _homeTabNavigatorKey.currentState;
     if (index == 1) return _libraryTabNavigatorKey.currentState;
     if (showStore && index == 2) return _repoTabNavigatorKey.currentState;
-    if (context.isMornye && index == (showStore ? 3 : 2)) {
+    if (context.isTango && index == (showStore ? 3 : 2)) {
       return _searchTabNavigatorKey.currentState;
     }
     return null;
@@ -822,7 +822,7 @@ class _MainShellState extends ConsumerState<MainShell>
     ShellNavigationService.syncState(
       currentTabIndex: _currentIndex,
       showRepoTab: showStore,
-      showSearchTab: context.isMornye,
+      showSearchTab: context.isTango,
     );
     final repoUpdatesCount = ref.watch(
       repoProvider.select((s) => s.updatesAvailableCount),
@@ -836,7 +836,7 @@ class _MainShellState extends ConsumerState<MainShell>
         heroAnimationsEnabled: heroAnimationsEnabled,
         child: Builder(
           builder: (context) => HomeTab(
-            mode: context.isMornye ? HomeTabMode.browse : HomeTabMode.combined,
+            mode: context.isTango ? HomeTabMode.browse : HomeTabMode.combined,
           ),
         ),
       ),
@@ -858,8 +858,8 @@ class _MainShellState extends ConsumerState<MainShell>
           heroAnimationsEnabled: heroAnimationsEnabled,
           child: const RepoTab(),
         ),
-      if (!context.isMornye) const SettingsTab(),
-      if (context.isMornye)
+      if (!context.isTango) const SettingsTab(),
+      if (context.isTango)
         _TabNavigator(
           key: const ValueKey('tab-search'),
           navigatorKey: _searchTabNavigatorKey,
@@ -867,21 +867,21 @@ class _MainShellState extends ConsumerState<MainShell>
           heroAnimationsEnabled: heroAnimationsEnabled,
           child: const HomeTab(mode: HomeTabMode.search),
         ),
-      if (_mornyeSettingsTab) const SettingsTab(key: ValueKey('tab-settings')),
+      if (_tangoSettingsTab) const SettingsTab(key: ValueKey('tab-settings')),
     ];
 
     final l10n = context.l10n;
     final destinations = <NavigationDestination>[
       NavigationDestination(
         icon: AppIcon(
-          context.isMornye ? CupertinoIcons.house_fill : Icons.home_outlined,
+          context.isTango ? CupertinoIcons.house_fill : Icons.home_outlined,
         ),
         selectedIcon: BouncingIcon(child: const AppIcon(Icons.home)),
         label: l10n.navHome,
       ),
       NavigationDestination(
-        icon: context.isMornye
-            ? MornyeNavigationIcon(
+        icon: context.isTango
+            ? TangoNavigationIcon(
                 icon: CupertinoIcons.square_stack_fill,
                 badgeCount: queueState,
               )
@@ -907,8 +907,8 @@ class _MainShellState extends ConsumerState<MainShell>
       ),
       if (showStore)
         NavigationDestination(
-          icon: context.isMornye
-              ? MornyeNavigationIcon(
+          icon: context.isTango
+              ? TangoNavigationIcon(
                   icon: CupertinoIcons.square_grid_2x2,
                   badgeCount: repoUpdatesCount,
                 )
@@ -932,16 +932,16 @@ class _MainShellState extends ConsumerState<MainShell>
           ),
           label: l10n.navStore,
         ),
-      if (!context.isMornye)
+      if (!context.isTango)
         NavigationDestination(
           icon: const AppIcon(Icons.settings_outlined),
           selectedIcon: SpinIcon(child: const AppIcon(Icons.settings)),
           label: l10n.navSettings,
         ),
-      if (context.isMornye)
+      if (context.isTango)
         NavigationDestination(
           icon: const Icon(CupertinoIcons.search),
-          label: l10n.mornyeSearch,
+          label: l10n.tangoSearch,
         ),
     ];
 
@@ -961,17 +961,17 @@ class _MainShellState extends ConsumerState<MainShell>
     final screenSize = MediaQuery.sizeOf(context);
     final isTablet = screenSize.shortestSide >= 600;
     // Material follows its expanded window class: landscape tablets get the
-    // rail, portrait tablets keep the bottom bar. Mornye keeps a bottom tab
+    // rail, portrait tablets keep the bottom bar. Tango keeps a bottom tab
     // bar on tablets, compact and centered once the window is expanded, and
     // reserves the rail for desktop-width windows.
-    final useNavigationRail = context.isMornye
+    final useNavigationRail = context.isTango
         ? useNavigationRailForWidth(screenSize.width)
         : useMaterialNavigationRailForWidth(screenSize.width);
-    final compactMornyeChrome =
-        context.isMornye && screenSize.width >= expandedLayoutBreakpoint;
+    final compactTangoChrome =
+        context.isTango && screenSize.width >= expandedLayoutBreakpoint;
     final canMinimizeChrome =
         !isDesktopPlatform &&
-        context.isMornye &&
+        context.isTango &&
         !useNavigationRail &&
         MediaQuery.viewInsetsOf(context).bottom == 0 &&
         MediaQuery.textScalerOf(context).scale(15) <= 20;
@@ -980,7 +980,7 @@ class _MainShellState extends ConsumerState<MainShell>
         NotificationListener<ScrollNotification>(
           onNotification: (notification) {
             if (canMinimizeChrome && index == _currentIndex) {
-              return _mornyeChrome.handleScroll(notification);
+              return _tangoChrome.handleScroll(notification);
             }
             return false;
           },
@@ -989,7 +989,7 @@ class _MainShellState extends ConsumerState<MainShell>
 
     final pageView = KeyedSubtree(
       key: _pageViewKey,
-      child: context.isMornye
+      child: context.isTango
           ? LazyTabView(
               index: selectedDestination,
               preloadKeys: {const ValueKey('tab-search')},
@@ -1026,14 +1026,14 @@ class _MainShellState extends ConsumerState<MainShell>
     );
 
     if (isDesktopPlatform) {
-      // Desktop windows: a rail (Material) or source-list sidebar (Mornye)
+      // Desktop windows: a rail (Material) or source-list sidebar (Tango)
       // with a persistent player; no bottom tabs or touch gestures.
-      final mornye = context.isMornye;
+      final tango = context.isTango;
       final selectedTab = _tabForIndex(selectedDestination, showStore);
       final destinations = _desktopDestinations(
         showStore: showStore,
-        // Mornye shows the queue on its Downloads link instead.
-        queueCount: mornye ? 0 : queueState,
+        // Tango shows the queue on its Downloads link instead.
+        queueCount: tango ? 0 : queueState,
         repoUpdatesCount: repoUpdatesCount,
       );
       return DownloadQueueFeedback(
@@ -1042,11 +1042,11 @@ class _MainShellState extends ConsumerState<MainShell>
             destinations: destinations,
             selected: selectedTab,
             onSelected: _onShellTabRequested,
-            libraryLinks: mornye
+            libraryLinks: tango
                 ? _desktopLibraryLinks(queueCount: queueState)
                 : const [],
-            onOpenLibraryLink: mornye ? _openDesktopLibraryLink : null,
-            onOpenProfile: mornye ? _openDesktopProfile : null,
+            onOpenLibraryLink: tango ? _openDesktopLibraryLink : null,
+            onOpenProfile: tango ? _openDesktopProfile : null,
             // The selection bar floats over the pages, not the sidebar.
             body: SelectionOverlayHost(child: pageView),
           ),
@@ -1105,7 +1105,7 @@ class _MainShellState extends ConsumerState<MainShell>
               : pageView,
           bottomNavigationBar: Builder(
             builder: (context) {
-              if (context.isMornye) {
+              if (context.isTango) {
                 return ListenableBuilder(
                   listenable: Listenable.merge([
                     ShellNavigationService.chromeBrightness,
@@ -1114,7 +1114,7 @@ class _MainShellState extends ConsumerState<MainShell>
                   builder: (context, child) => Theme(
                     data: ShellNavigationService.chromeBrightness.value == null
                         ? Theme.of(context)
-                        : MornyeTheme.fromContext(
+                        : TangoTheme.fromContext(
                             context,
                             brightness:
                                 ShellNavigationService.chromeBrightness.value!,
@@ -1132,14 +1132,14 @@ class _MainShellState extends ConsumerState<MainShell>
                       heightFactor: 1,
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
-                          maxWidth: compactMornyeChrome ? 600 : double.infinity,
+                          maxWidth: compactTangoChrome ? 600 : double.infinity,
                         ),
                         child: useNavigationRail
                             ? const MiniPlayer()
                             : ValueListenableBuilder<bool>(
-                                valueListenable: _mornyeChrome,
+                                valueListenable: _tangoChrome,
                                 builder: (context, collapsed, _) =>
-                                    MornyeBottomBar(
+                                    TangoBottomBar(
                                       collapsed: canMinimizeChrome && collapsed,
                                       destinations: destinations,
                                       selectedIndex: selectedDestination,
@@ -1148,7 +1148,7 @@ class _MainShellState extends ConsumerState<MainShell>
                                       onSearch:
                                           ShellNavigationService.requestSearch,
                                       blurEnabled: ref.watch(
-                                        mornyeBlurEnabledProvider,
+                                        tangoBlurEnabledProvider,
                                       ),
                                     ),
                               ),

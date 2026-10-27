@@ -222,7 +222,7 @@ extension _QueueTabSections on _QueueTabState {
 
   /// Sort, filter and, given a [viewMode], the list/grid switch of a Library
   /// page. Material 3 Expressive joins them in one connected button group
-  /// with the labels and tooltips of the separate buttons, which Mornye and
+  /// with the labels and tooltips of the separate buttons, which Tango and
   /// reduced motion keep.
   List<Widget> _buildLibraryTools(BuildContext context, {String? viewMode}) {
     if (!materialExpressiveEnabled(context)) {
@@ -309,7 +309,7 @@ extension _QueueTabSections on _QueueTabState {
           child: SettingsGroup(
             children: [
               for (final mode in _librarySortModes)
-                if (sheetContext.isMornye)
+                if (sheetContext.isTango)
                   SettingsItem(
                     title: _sortLabel(sheetContext, mode),
                     selected: mode == _sortMode,
@@ -419,8 +419,8 @@ extension _QueueTabSections on _QueueTabState {
         void openArtist(String artist) => Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) => Scaffold(
-              body: MornyeLibraryScreen(
-                page: MornyeLibraryPage.albums,
+              body: TangoLibraryScreen(
+                page: TangoLibraryPage.albums,
                 artist: artist,
                 onOpenSection: (_) {},
               ),

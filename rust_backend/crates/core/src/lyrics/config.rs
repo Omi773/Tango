@@ -5,7 +5,7 @@ use std::collections::HashSet;
 pub const DEFAULT_PROVIDERS: &[&str] = &[
     "apple_music",
     "lrcred",
-    "mornye_lyrics",
+    "tango_lyrics",
     "lyricsplus",
     "lrclib",
 ];
@@ -14,7 +14,7 @@ pub const BUILTIN_PROVIDERS: &[&str] = &[
     "netease",
     "musixmatch",
     "apple_music",
-    "mornye_lyrics",
+    "tango_lyrics",
     "qqmusic",
     "spotify",
     "deezer",
@@ -115,10 +115,10 @@ pub fn available_providers() -> Vec<AvailableProvider> {
             "Apple Music synced lyrics via Paxsenix",
         ),
         (
-            "mornye_lyrics",
-            "Zarz-LRC",
+            "tango_lyrics",
+            "Tango-LRC",
             false,
-            "Word-by-word Apple Music lyrics from Zarz-LRC",
+            "Word-by-word Apple Music lyrics from Tango-LRC",
         ),
         (
             "qqmusic",
@@ -181,7 +181,7 @@ pub fn normalize_provider_order(providers: &[String]) -> Vec<String> {
         .map(|name| lowercase(name.trim()))
         .map(|name| {
             if name == "spotiflac_lyrics" {
-                "mornye_lyrics".into()
+                "tango_lyrics".into()
             } else {
                 name
             }
@@ -205,7 +205,7 @@ pub fn resolve_order(configured: &[String], extensions: &[String]) -> Vec<String
         .iter()
         .map(|name| {
             if name == "spotiflac_lyrics" {
-                "mornye_lyrics"
+                "tango_lyrics"
             } else {
                 name.as_str()
             }
@@ -250,21 +250,21 @@ mod tests {
     fn legacy_lyrics_provider_id_resolves_to_current_id_without_duplicates() {
         let configured = vec![
             " SPOTIFLAC_LYRICS ".into(),
-            "mornye_lyrics".into(),
+            "tango_lyrics".into(),
             "lrclib".into(),
         ];
         assert_eq!(
             normalize_provider_order(&configured),
-            ["mornye_lyrics", "lrclib"]
+            ["tango_lyrics", "lrclib"]
         );
         assert_eq!(
             resolve_order(&["spotiflac_lyrics".into()], &[]),
-            ["mornye_lyrics"]
+            ["tango_lyrics"]
         );
         assert!(
             available_providers()
                 .iter()
-                .any(|p| p.id == "mornye_lyrics")
+                .any(|p| p.id == "tango_lyrics")
         );
     }
 }

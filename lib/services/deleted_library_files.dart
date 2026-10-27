@@ -1,1 +1,1 @@
-export 'package:mornye/providers/deleted_library_files.dart';
+export 'package:tango/providers/deleted_library_files.dart';

@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/unified_library_item.dart';
-import 'package:mornye/providers/library_search_provider.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/playback_provider.dart';
-import 'package:mornye/screens/downloaded_album_screen.dart';
-import 'package:mornye/screens/library_tracks_folder_screen.dart';
-import 'package:mornye/screens/local_album_screen.dart';
-import 'package:mornye/screens/track_metadata_screen.dart';
-import 'package:mornye/services/batch_track_actions.dart';
-import 'package:mornye/services/library_database.dart';
-import 'package:mornye/services/library_search.dart';
-import 'package:mornye/services/local_track_batch_actions.dart';
-import 'package:mornye/services/local_track_redownload_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_choice_chip.dart';
-import 'package:mornye/widgets/cached_cover_image.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/desktop/library_track_menu.dart';
-import 'package:mornye/widgets/library_track_selection_bar.dart';
-import 'package:mornye/widgets/library_selection_playback_actions.dart';
-import 'package:mornye/widgets/selection_bottom_bar.dart';
-import 'package:mornye/widgets/track_card.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/expressive_button.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/unified_library_item.dart';
+import 'package:tango/providers/library_search_provider.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/providers/playback_provider.dart';
+import 'package:tango/screens/downloaded_album_screen.dart';
+import 'package:tango/screens/library_tracks_folder_screen.dart';
+import 'package:tango/screens/local_album_screen.dart';
+import 'package:tango/screens/track_metadata_screen.dart';
+import 'package:tango/services/batch_track_actions.dart';
+import 'package:tango/services/library_database.dart';
+import 'package:tango/services/library_search.dart';
+import 'package:tango/services/local_track_batch_actions.dart';
+import 'package:tango/services/local_track_redownload_service.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_choice_chip.dart';
+import 'package:tango/widgets/cached_cover_image.dart';
+import 'package:tango/widgets/desktop/context_menu.dart';
+import 'package:tango/widgets/desktop/library_track_menu.dart';
+import 'package:tango/widgets/library_track_selection_bar.dart';
+import 'package:tango/widgets/library_selection_playback_actions.dart';
+import 'package:tango/widgets/selection_bottom_bar.dart';
+import 'package:tango/widgets/track_card.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/expressive_button.dart';
 
-/// Slivers shared by Material's Library and Mornye's Library/Songs screens.
+/// Slivers shared by Material's Library and Tango's Library/Songs screens.
 /// Only the current query's provider families are watched; late results from
 /// an earlier query cannot replace what the user is currently searching for.
 class LibrarySearchResults extends ConsumerStatefulWidget {
@@ -409,7 +409,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
     final key = ValueKey('${hit.kind.name}:${hit.source}:${hit.id}');
     Widget card({MediaPlaybackUi? playback}) => TrackCard(
       key: playback == null ? key : null,
-      style: hit.kind == LibrarySearchKind.songs && !context.isMornye
+      style: hit.kind == LibrarySearchKind.songs && !context.isTango
           ? TrackCardStyle.filled
           : TrackCardStyle.flat,
       leading: ClipRRect(
@@ -458,9 +458,9 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
       onLongPress: song ? () => _toggleSelection(hit) : null,
       onContextMenu: (position) => _showHitMenu(hit, position),
     );
-    if (!song || context.isMornye) return card();
+    if (!song || context.isTango) return card();
     // Material song rows follow the file they play, so a track change
-    // rebuilds only the rows involved. Mornye rows show no current-track
+    // rebuilds only the rows involved. Tango rows show no current-track
     // state.
     return Consumer(
       key: key,

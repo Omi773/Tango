@@ -73,7 +73,7 @@ Future<void> _toggleMiniPlayerLyrics() async {
 /// floats above other apps while it shows; dragging anywhere but a control
 /// moves it.
 ///
-/// Material takes the track's artwork scheme on `surfaceContainer`; Mornye
+/// Material takes the track's artwork scheme on `surfaceContainer`; Tango
 /// uses the dark Now Playing background.
 class DesktopMiniPlayer extends ConsumerStatefulWidget {
   const DesktopMiniPlayer({super.key, this.metadataControllerFactory});
@@ -114,7 +114,7 @@ class _DesktopMiniPlayerState extends ConsumerState<DesktopMiniPlayer> {
   @override
   Widget build(BuildContext context) {
     final mediaItem = ref.watch(currentMediaItemProvider).value;
-    if (context.isMornye) return _buildPanel(context, mediaItem);
+    if (context.isTango) return _buildPanel(context, mediaItem);
     return PlayerArtworkTheme(
       artUri: mediaItem?.artUri?.toString(),
       child: Builder(builder: (context) => _buildPanel(context, mediaItem)),
@@ -122,9 +122,9 @@ class _DesktopMiniPlayerState extends ConsumerState<DesktopMiniPlayer> {
   }
 
   Widget _buildPanel(BuildContext context, MediaItem? mediaItem) {
-    final mornye = context.isMornye;
-    final theme = mornye
-        ? MornyeTheme.fromContext(context, brightness: Brightness.dark)
+    final tango = context.isTango;
+    final theme = tango
+        ? TangoTheme.fromContext(context, brightness: Brightness.dark)
         : Theme.of(context);
     final colorScheme = theme.colorScheme;
     return Theme(
@@ -134,8 +134,8 @@ class _DesktopMiniPlayerState extends ConsumerState<DesktopMiniPlayer> {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            if (mornye)
-              MornyePlayerBackground(artUri: mediaItem?.artUri)
+            if (tango)
+              TangoPlayerBackground(artUri: mediaItem?.artUri)
             else
               ColoredBox(color: colorScheme.surfaceContainer),
             // Behind the content, so empty space and text drag the window
@@ -168,7 +168,7 @@ class _DesktopMiniPlayerState extends ConsumerState<DesktopMiniPlayer> {
     MediaItem? mediaItem, {
     required bool lyrics,
   }) {
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final colorScheme = Theme.of(context).colorScheme;
     final l10n = context.l10n;
     final buttonStyle = IconButton.styleFrom(
@@ -183,7 +183,7 @@ class _DesktopMiniPlayerState extends ConsumerState<DesktopMiniPlayer> {
           height: 88,
           child: Row(
             children: [
-              _Artwork(mediaItem: mediaItem, size: 72, radius: mornye ? 8 : 12),
+              _Artwork(mediaItem: mediaItem, size: 72, radius: tango ? 8 : 12),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -219,7 +219,7 @@ class _DesktopMiniPlayerState extends ConsumerState<DesktopMiniPlayer> {
                     style: buttonStyle,
                     color: colorScheme.onSurfaceVariant,
                     icon: AppIcon(
-                      mornye
+                      tango
                           ? CupertinoIcons.arrow_up_left_arrow_down_right
                           : Icons.open_in_full,
                     ),
@@ -235,7 +235,7 @@ class _DesktopMiniPlayerState extends ConsumerState<DesktopMiniPlayer> {
                         ? colorScheme.primary
                         : colorScheme.onSurfaceVariant,
                     icon: AppIcon(
-                      mornye
+                      tango
                           ? CupertinoIcons.quote_bubble
                           : Icons.lyrics_outlined,
                     ),
@@ -253,7 +253,7 @@ class _DesktopMiniPlayerState extends ConsumerState<DesktopMiniPlayer> {
           height: 16,
           child: OverflowBox(
             minHeight: 0,
-            maxHeight: mornye ? 10 : 48,
+            maxHeight: tango ? 10 : 48,
             child: _SeekRow(mediaItem: mediaItem, dense: true),
           ),
         ),

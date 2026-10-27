@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/models/album_track_order.dart';
-import 'package:mornye/models/download_history.dart';
-import 'package:mornye/providers/playback_provider.dart';
-import 'package:mornye/services/history_database.dart';
-import 'package:mornye/services/library_database.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
+import 'package:tango/models/album_track_order.dart';
+import 'package:tango/models/download_history.dart';
+import 'package:tango/providers/playback_provider.dart';
+import 'package:tango/services/history_database.dart';
+import 'package:tango/services/library_database.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/desktop_platform.dart';
 
 /// A play button that appears over artwork while the pointer is on it, on
 /// desktop. Place it in the artwork's [Stack]; it fills the stack to track
@@ -41,14 +41,14 @@ class _DesktopHoverPlayButtonState extends State<DesktopHoverPlayButton> {
       return const SizedBox.shrink();
     }
     final colorScheme = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final visible = _hovered || _focused;
-    // Mornye follows Apple Music's light disc; Material uses its primary FAB
+    // Tango follows Apple Music's light disc; Material uses its primary FAB
     // colors.
-    final background = mornye
+    final background = tango
         ? Colors.white.withValues(alpha: 0.92)
         : colorScheme.primaryContainer;
-    final foreground = mornye ? Colors.black : colorScheme.onPrimaryContainer;
+    final foreground = tango ? Colors.black : colorScheme.onPrimaryContainer;
     return Positioned.fill(
       child: MouseRegion(
         opaque: false,
@@ -93,8 +93,8 @@ class _DesktopHoverPlayButtonState extends State<DesktopHoverPlayButton> {
                         ],
                       ),
                       child: Icon(
-                        mornye
-                            ? mornyeIconFor(Icons.play_arrow)
+                        tango
+                            ? tangoIconFor(Icons.play_arrow)
                             : Icons.play_arrow_rounded,
                         size: 22,
                         color: foreground,

@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:mornye/services/ffmpeg_service.dart';
-import 'package:mornye/services/music_player_service.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/services/ffmpeg_service.dart';
+import 'package:tango/services/music_player_service.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/utils/file_access.dart';
+import 'package:tango/utils/logger.dart';
 
 /// ReplayGain scanning and tag removal for existing audio files.
 ///

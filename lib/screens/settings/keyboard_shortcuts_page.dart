@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/widgets/desktop/desktop_commands.dart';
-import 'package:mornye/widgets/settings_group.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/services/shell_navigation_service.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/desktop/desktop_commands.dart';
+import 'package:tango/widgets/settings_group.dart';
 
 /// Lists the desktop keyboard shortcuts, read from the same bindings the app
 /// registers, so the page cannot drift from what the keys do.
@@ -23,7 +23,7 @@ class KeyboardShortcutsPage extends ConsumerWidget {
       settingsProvider.select((s) => s.showExtensionStore),
     );
     final tabs = desktopDestinationTabs(
-      mornye: context.isMornye,
+      tango: context.isTango,
       showStore: showStore,
     );
 
@@ -42,7 +42,7 @@ class KeyboardShortcutsPage extends ConsumerWidget {
       ShellTab.home => l10n.navHome,
       ShellTab.library => l10n.navLibrary,
       ShellTab.repository => l10n.navStore,
-      ShellTab.search => l10n.mornyeSearch,
+      ShellTab.search => l10n.tangoSearch,
       ShellTab.settings => l10n.navSettings,
     };
 
@@ -62,7 +62,7 @@ class KeyboardShortcutsPage extends ConsumerWidget {
         [
           for (final tab in tabs) (tabLabel(tab), tabKeys(tab)),
           if (!tabs.contains(ShellTab.search))
-            (l10n.mornyeSearch, keys(DesktopCommand.search)),
+            (l10n.tangoSearch, keys(DesktopCommand.search)),
           (
             MaterialLocalizations.of(context).backButtonTooltip,
             keys(DesktopCommand.back),

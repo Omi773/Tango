@@ -11,11 +11,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:html/parser.dart' as html;
-import 'package:mornye/services/local_network_access.dart';
-import 'package:mornye/services/network_certificate.dart';
-import 'package:mornye/services/network_smb_client.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/services/secure_storage_options.dart';
+import 'package:tango/services/local_network_access.dart';
+import 'package:tango/services/network_certificate.dart';
+import 'package:tango/services/network_smb_client.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/services/secure_storage_options.dart';
 import 'package:xml/xml.dart';
 
 part 'network_storage_upload.dart';

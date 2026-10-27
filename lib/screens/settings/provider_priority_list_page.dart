@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/widgets/discard_changes_dialog.dart';
-import 'package:mornye/widgets/priority_settings_scaffold.dart';
-import 'package:mornye/widgets/reorderable_priority_item.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/widgets/discard_changes_dialog.dart';
+import 'package:tango/widgets/priority_settings_scaffold.dart';
+import 'package:tango/widgets/reorderable_priority_item.dart';
 
 /// Reorderable priority list shared by the download- and metadata-provider
 /// priority pages; the two differ only in which provider list they read/write

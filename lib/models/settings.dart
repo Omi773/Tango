@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mornye/models/automix_options.dart';
-import 'package:mornye/models/metadata_separators.dart';
-import 'package:mornye/utils/artist_utils.dart';
+import 'package:tango/models/automix_options.dart';
+import 'package:tango/models/metadata_separators.dart';
+import 'package:tango/utils/artist_utils.dart';
 
 part 'settings.g.dart';
 
@@ -285,7 +285,7 @@ class AppSettings {
     this.lyricsProviders = const [
       'apple_music',
       'lrcred',
-      'mornye_lyrics',
+      'tango_lyrics',
       'lyricsplus',
       'lrclib',
     ],
@@ -573,7 +573,7 @@ class AppSettings {
     return settings.copyWith(
       lyricsProviders: {
         for (final provider in settings.lyricsProviders)
-          provider == 'spotiflac_lyrics' ? 'mornye_lyrics' : provider,
+          provider == 'spotiflac_lyrics' ? 'tango_lyrics' : provider,
       }.toList(),
     );
   }

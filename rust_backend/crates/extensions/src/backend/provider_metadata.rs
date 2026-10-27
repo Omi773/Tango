@@ -1,9 +1,9 @@
 //! Backend entry points for provider metadata: URL handling, custom search, home feeds, and lookups.
 
 use super::{Backend, ManagerError};
-use mornye_core::cancellation::{CancellationDomain, CancellationRegistry, RequestLease};
-use mornye_core::matching::lowercase;
-use mornye_providers::resolver::{Check, ResolverError};
+use tango_core::cancellation::{CancellationDomain, CancellationRegistry, RequestLease};
+use tango_core::matching::lowercase;
+use tango_providers::resolver::{Check, ResolverError};
 use serde_json::{Map, Value, json};
 use std::sync::{Arc, mpsc};
 use std::time::Duration;

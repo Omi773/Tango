@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:material_ui/material_ui.dart' as material_ui;
-import 'package:mornye/providers/theme_provider.dart';
-import 'package:mornye/providers/custom_font_provider.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/models/theme_settings.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:tango/providers/theme_provider.dart';
+import 'package:tango/providers/custom_font_provider.dart';
+import 'package:tango/theme/app_theme.dart';
+import 'package:tango/models/theme_settings.dart';
+import 'package:tango/theme/tango_theme.dart';
 
 class DynamicColorWrapper extends ConsumerWidget {
   final Widget Function(ThemeData light, ThemeData dark, ThemeMode mode)
@@ -24,23 +24,23 @@ class DynamicColorWrapper extends ConsumerWidget {
     // app, losing its state and briefly mounting a second macOS menu bar.
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
-        if (themeSettings.style == AppThemeStyle.mornye) {
+        if (themeSettings.style == AppThemeStyle.tango) {
           return builder(
-            MornyeTheme.build(
+            TangoTheme.build(
               Brightness.light,
-              accent: themeSettings.mornyeAccent,
+              accent: themeSettings.tangoAccent,
               useSystemFont: themeSettings.useSystemFont,
               fontFamily: fontFamily,
-              glassClarity: themeSettings.mornyeGlassClarity,
-              glassOutlines: themeSettings.mornyeGlassOutlines,
+              glassClarity: themeSettings.tangoGlassClarity,
+              glassOutlines: themeSettings.tangoGlassOutlines,
             ),
-            MornyeTheme.build(
+            TangoTheme.build(
               Brightness.dark,
-              accent: themeSettings.mornyeAccent,
+              accent: themeSettings.tangoAccent,
               useSystemFont: themeSettings.useSystemFont,
               fontFamily: fontFamily,
-              glassClarity: themeSettings.mornyeGlassClarity,
-              glassOutlines: themeSettings.mornyeGlassOutlines,
+              glassClarity: themeSettings.tangoGlassClarity,
+              glassOutlines: themeSettings.tangoGlassOutlines,
             ),
             themeSettings.themeMode,
           );

@@ -1631,14 +1631,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "mornye-bindgen"
+name = "tango-bindgen"
 version = "0.1.0"
 dependencies = [
  "uniffi",
 ]
 
 [[package]]
-name = "mornye-core"
+name = "tango-core"
 version = "0.1.0"
 dependencies = [
  "base64",
@@ -1658,12 +1658,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "mornye-desktop"
+name = "tango-desktop"
 version = "0.1.0"
 dependencies = [
  "chrono",
  "getrandom 0.4.3",
- "mornye-mobile",
+ "tango-mobile",
  "notify",
  "serde_json",
  "sha2",
@@ -1673,7 +1673,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "mornye-extensions"
+name = "tango-extensions"
 version = "0.1.0"
 dependencies = [
  "aes",
@@ -1687,9 +1687,9 @@ dependencies = [
  "httpdate",
  "libc",
  "md-5",
- "mornye-core",
- "mornye-network",
- "mornye-providers",
+ "tango-core",
+ "tango-network",
+ "tango-providers",
  "rcgen",
  "regex",
  "rquickjs",
@@ -1708,16 +1708,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "mornye-mobile"
+name = "tango-mobile"
 version = "0.1.0"
 dependencies = [
  "base64",
  "chrono",
  "libc",
  "libusb1-sys",
- "mornye-core",
- "mornye-extensions",
- "mornye-network",
+ "tango-core",
+ "tango-extensions",
+ "tango-network",
  "regex",
  "roxmltree",
  "rusqlite",
@@ -1735,7 +1735,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "mornye-network"
+name = "tango-network"
 version = "0.1.0"
 dependencies = [
  "async-compression",
@@ -1760,14 +1760,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "mornye-providers"
+name = "tango-providers"
 version = "0.1.0"
 dependencies = [
  "base64",
  "html5ever",
  "httpdate",
- "mornye-core",
- "mornye-network",
+ "tango-core",
+ "tango-network",
  "regex",
  "scraper",
  "serde",

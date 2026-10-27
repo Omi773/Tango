@@ -5,16 +5,16 @@ import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mornye/models/settings.dart';
-import 'package:mornye/models/metadata_separators.dart';
-import 'package:mornye/models/automix_options.dart';
-import 'package:mornye/constants/app_info.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/services/secure_storage_options.dart';
-import 'package:mornye/utils/artist_utils.dart';
-import 'package:mornye/utils/audio_format_utils.dart';
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/models/settings.dart';
+import 'package:tango/models/metadata_separators.dart';
+import 'package:tango/models/automix_options.dart';
+import 'package:tango/constants/app_info.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/services/secure_storage_options.dart';
+import 'package:tango/utils/artist_utils.dart';
+import 'package:tango/utils/audio_format_utils.dart';
+import 'package:tango/utils/file_access.dart';
+import 'package:tango/utils/logger.dart';
 
 const _settingsKey = 'app_settings';
 const _settingsCorruptBackupKey = 'app_settings_corrupt_backup';
@@ -318,7 +318,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
           libraryQualityLabelMode: AppSettings.libraryQualityLabelBitDepthOnly,
         );
       }
-      // Migration 13: Zarz-LRC left Apple Music's Paxsenix
+      // Migration 13: Tango-LRC left Apple Music's Paxsenix
       // fallback chain. Untouched defaults move to the new defaults; a custom
       // order keeps the former fallback right after Apple Music.
       if (lastMigration < 13) {
@@ -328,12 +328,12 @@ class SettingsNotifier extends Notifier<AppSettings> {
             lyricsProviders: const AppSettings().lyricsProviders,
           );
         } else if (providers.contains('apple_music') &&
-            !providers.contains('mornye_lyrics')) {
+            !providers.contains('tango_lyrics')) {
           state = state.copyWith(
             lyricsProviders: [
               for (final provider in providers) ...[
                 provider,
-                if (provider == 'apple_music') 'mornye_lyrics',
+                if (provider == 'apple_music') 'tango_lyrics',
               ],
             ],
           );

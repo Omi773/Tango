@@ -2,18 +2,18 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:mornye/models/settings.dart';
-import 'package:mornye/models/metadata_separators.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/models/extension.dart';
-import 'package:mornye/services/download_metadata_resolver.dart';
-import 'package:mornye/services/ffmpeg_service.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/services/replaygain_service.dart';
-import 'package:mornye/utils/artist_utils.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/utils/lyrics_metadata_helper.dart';
-import 'package:mornye/utils/string_utils.dart';
+import 'package:tango/models/settings.dart';
+import 'package:tango/models/metadata_separators.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/models/extension.dart';
+import 'package:tango/services/download_metadata_resolver.dart';
+import 'package:tango/services/ffmpeg_service.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/services/replaygain_service.dart';
+import 'package:tango/utils/artist_utils.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/utils/lyrics_metadata_helper.dart';
+import 'package:tango/utils/string_utils.dart';
 
 /// Embeds tags into a local working file; the queue owns publication and state.
 class DownloadMetadataEmbedding {

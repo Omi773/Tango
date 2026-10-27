@@ -1,14 +1,14 @@
 import 'package:flutter/foundation.dart';
-import 'package:mornye/services/ffmpeg_conversion.dart';
-import 'package:mornye/services/ffmpeg_decryption.dart';
-import 'package:mornye/services/ffmpeg_metadata.dart';
-import 'package:mornye/services/ffmpeg_models.dart';
-import 'package:mornye/services/ffmpeg_probe.dart';
-import 'package:mornye/services/ffmpeg_replaygain.dart';
-import 'package:mornye/utils/artist_utils.dart';
-import 'package:mornye/utils/audio_conversion_utils.dart';
+import 'package:tango/services/ffmpeg_conversion.dart';
+import 'package:tango/services/ffmpeg_decryption.dart';
+import 'package:tango/services/ffmpeg_metadata.dart';
+import 'package:tango/services/ffmpeg_models.dart';
+import 'package:tango/services/ffmpeg_probe.dart';
+import 'package:tango/services/ffmpeg_replaygain.dart';
+import 'package:tango/utils/artist_utils.dart';
+import 'package:tango/utils/audio_conversion_utils.dart';
 
-export 'package:mornye/services/ffmpeg_models.dart';
+export 'package:tango/services/ffmpeg_models.dart';
 
 /// Compatibility entry point for callers; feature modules own the operations.
 class FFmpegService {

@@ -127,7 +127,7 @@ class _EqualizerOverview extends StatelessWidget {
   final EqualizerSettings settings;
   final String presetName;
 
-  /// Shows the master switch beside the title; Mornye keeps it in its own
+  /// Shows the master switch beside the title; Tango keeps it in its own
   /// row above.
   final ValueChanged<bool>? onEnabledChanged;
 
@@ -369,10 +369,10 @@ class _BandEditor extends StatelessWidget {
     final count = settings.gains.length;
     const counts = EqualizerSettings.bandCounts;
     void select(int index) => onChanged(settings.withBandCount(counts[index]));
-    if (context.isMornye) {
+    if (context.isTango) {
       return Semantics(
         label: context.l10n.equalizerBands,
-        child: MornyeSegmentedControl(
+        child: TangoSegmentedControl(
           labels: [for (final value in counts) '$value'],
           selectedIndex: counts.indexOf(count),
           onChanged: select,
@@ -516,14 +516,14 @@ class _BandFader extends StatelessWidget {
     final colors = theme.colorScheme;
     final tokens = context.tokens;
     final active = gain != 0;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final hz = _frequency(frequency);
     final valueStyle = theme.textTheme.labelMedium?.copyWith(
       fontWeight: FontWeight.w600,
       fontFeatures: const [FontFeature.tabularFigures()],
       color: !active
           ? colors.onSurfaceVariant
-          : mornye
+          : tango
           ? colors.primary
           : colors.onSecondaryContainer,
     );
@@ -539,7 +539,7 @@ class _BandFader extends StatelessWidget {
             child: Center(
               child: Material(
                 // iOS shows the gain as plain tinted text, Material as a badge.
-                color: active && !mornye
+                color: active && !tango
                     ? colors.secondaryContainer
                     : Colors.transparent,
                 shape: const StadiumBorder(),
@@ -565,8 +565,8 @@ class _BandFader extends StatelessWidget {
         const SizedBox(height: 4),
         SizedBox(
           height: height,
-          child: mornye
-              ? MornyeLevelSlider(
+          child: tango
+              ? TangoLevelSlider(
                   vertical: true,
                   value: gain,
                   min: -15,
@@ -637,7 +637,7 @@ class _SliderTile extends StatelessWidget {
   /// Aligns an icon-less sub-setting with the text of the rows above it.
   final bool indented;
 
-  /// Ends a Mornye group, which separates rows with hairlines.
+  /// Ends a Tango group, which separates rows with hairlines.
   final bool last;
   final ValueChanged<double> onChanged;
 
@@ -654,13 +654,13 @@ class _SliderTile extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final tokens = context.tokens;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final content = Padding(
       padding: EdgeInsetsDirectional.fromSTEB(
-        tokens.rowPaddingH + (indented && !mornye ? 24 + tokens.rowIconGap : 0),
+        tokens.rowPaddingH + (indented && !tango ? 24 + tokens.rowIconGap : 0),
         tokens.rowPaddingVCompact,
         tokens.rowPaddingH,
-        mornye ? 0 : tokens.gapXs,
+        tango ? 0 : tokens.gapXs,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -669,8 +669,8 @@ class _SliderTile extends StatelessWidget {
             title: title,
             subtitle: subtitle,
             value: _format(value),
-            // Mornye rows, like iOS Settings, carry no leading glyphs.
-            leading: icon == null || mornye
+            // Tango rows, like iOS Settings, carry no leading glyphs.
+            leading: icon == null || tango
                 ? null
                 : AppIcon.adaptive(
                     icon!,
@@ -678,8 +678,8 @@ class _SliderTile extends StatelessWidget {
                     size: 24,
                   ),
           ),
-          if (mornye)
-            MornyeLevelSlider(
+          if (tango)
+            TangoLevelSlider(
               value: value.clamp(min, max),
               min: min,
               max: max,
@@ -704,7 +704,7 @@ class _SliderTile extends StatelessWidget {
     );
     return SettingsSearchTarget(
       label: title,
-      child: mornye && !last
+      child: tango && !last
           ? Column(
               mainAxisSize: MainAxisSize.min,
               children: [

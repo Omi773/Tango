@@ -7,30 +7,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/equalizer_settings.dart';
-import 'package:mornye/providers/equalizer_provider.dart';
-import 'package:mornye/services/playback_equalizer.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_choice_chip.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_menu_button.dart';
-import 'package:mornye/widgets/app_slider.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/widgets/app_switch.dart';
-import 'package:mornye/widgets/app_text_field.dart';
-import 'package:mornye/widgets/beta_badge.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/expressive_icon_button.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_level_slider.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/slider_value_header.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/equalizer_settings.dart';
+import 'package:tango/providers/equalizer_provider.dart';
+import 'package:tango/services/playback_equalizer.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/material_expressive.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_choice_chip.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_menu_button.dart';
+import 'package:tango/widgets/app_slider.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/app_switch.dart';
+import 'package:tango/widgets/app_text_field.dart';
+import 'package:tango/widgets/beta_badge.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/expressive_icon_button.dart';
+import 'package:tango/widgets/tango_chrome.dart';
+import 'package:tango/widgets/tango_level_slider.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/slider_value_header.dart';
 
 part 'equalizer_widgets.dart';
 part 'equalizer_curve.dart';
@@ -99,7 +99,7 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
               mimeType: 'application/json',
             ),
           ],
-          fileNameOverrides: ['mornye-equalizer.json'],
+          fileNameOverrides: ['tango-equalizer.json'],
           sharePositionOrigin: box == null
               ? null
               : box.localToGlobal(Offset.zero) & box.size,
@@ -119,7 +119,7 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
       builder: (context, ref, _) {
         final state = ref.watch(equalizerProvider);
         final selected = _matchingPreset(state);
-        final mornye = context.isMornye;
+        final tango = context.isTango;
         return SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -132,18 +132,18 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
                   title: Text(preset.name),
                   selected: preset == selected,
                   // iOS lists mark the choice with a trailing checkmark.
-                  leading: mornye
+                  leading: tango
                       ? null
                       : preset == selected
                       ? const AppIcon(Icons.check)
                       : const AppIcon(Icons.graphic_eq),
                   trailing:
-                      (mornye && preset == selected) ||
+                      (tango && preset == selected) ||
                           state.presets.contains(preset)
                       ? Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            if (mornye && preset == selected)
+                            if (tango && preset == selected)
                               AppIcon(
                                 Icons.check,
                                 color: Theme.of(context).colorScheme.primary,
@@ -198,9 +198,9 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => MornyeSettingsTheme(
+  Widget build(BuildContext context) => TangoSettingsTheme(
     // Reached from Playback and Now Playing alike, so the page brings its own
-    // inset grouped surfaces in Mornye.
+    // inset grouped surfaces in Tango.
     child: Builder(builder: _buildPage),
   );
 
@@ -209,7 +209,7 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
     final settings = state.settings;
     final notifier = ref.read(equalizerProvider.notifier);
     final l10n = context.l10n;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final selectedPreset = _matchingPreset(state);
     final presetName = selectedPreset?.name ?? l10n.equalizerCustom;
     void update(EqualizerSettings next) => notifier.update(next);
@@ -235,7 +235,7 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
       body: CustomScrollView(
         slivers: [
           AppSliverHeader.page(title: l10n.equalizerTitle),
-          if (mornye) ...[
+          if (tango) ...[
             // iOS order: the master switch, its footnote, then the response.
             section(
               SettingsGroup(
@@ -461,7 +461,7 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
               ],
             ),
           ),
-          if (mornye) ...[
+          if (tango) ...[
             // iOS keeps a destructive command in its own group at the end.
             const SliverToBoxAdapter(child: SizedBox(height: 28)),
             section(

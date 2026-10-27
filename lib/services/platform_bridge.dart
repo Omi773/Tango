@@ -5,14 +5,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mornye/services/backend/backend_channel.dart';
-import 'package:mornye/services/desktop_diagnostics.dart';
-import 'package:mornye/services/download_request_payload.dart';
-import 'package:mornye/utils/audio_format_utils.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/utils/hash_utils.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/services/backend/backend_channel.dart';
+import 'package:tango/services/desktop_diagnostics.dart';
+import 'package:tango/services/download_request_payload.dart';
+import 'package:tango/utils/audio_format_utils.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/file_access.dart';
+import 'package:tango/utils/hash_utils.dart';
+import 'package:tango/utils/logger.dart';
 
 part 'platform_bridge/bridge_codec.dart';
 part 'platform_bridge/bridge_events.dart';
@@ -227,7 +227,7 @@ class PlatformBridge {
   static Future<void> processPendingExtensionCallbacks() =>
       _channel.invokeMethod<void>('processPendingExtensionCallbacks');
 
-  /// Desktop only: hands a `mornye://` URL the OS delivered to the backend.
+  /// Desktop only: hands a `tango://` URL the OS delivered to the backend.
   /// Returns false when it is not an extension callback. The backend then
   /// raises `extensionAuthCallbackReceived`, as the mobile hosts do.
   static Future<bool> queueExtensionCallbackUrl(String url) async {
@@ -898,7 +898,7 @@ class PlatformBridge {
   /// exactly like an OS deep link.
   static Future<bool> startIosWebAuthSession(
     String url, {
-    String callbackScheme = 'mornye',
+    String callbackScheme = 'tango',
   }) async {
     final result = await _channel.invokeMethod('startWebAuthSession', {
       'url': url,

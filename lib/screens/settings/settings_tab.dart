@@ -4,42 +4,42 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:mornye/constants/app_info.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/user_profile_provider.dart';
-import 'package:mornye/screens/settings/profile_settings_page.dart';
-import 'package:mornye/screens/settings/about_page.dart';
-import 'package:mornye/screens/settings/app_settings_page.dart';
-import 'package:mornye/screens/settings/appearance_settings_page.dart';
-import 'package:mornye/screens/settings/backup_restore_page.dart';
-import 'package:mornye/screens/settings/cache_management_page.dart';
-import 'package:mornye/screens/settings/donate_page.dart';
-import 'package:mornye/screens/settings/download_settings_page.dart';
-import 'package:mornye/screens/settings/extensions_page.dart';
-import 'package:mornye/screens/settings/files_settings_page.dart';
-import 'package:mornye/screens/settings/keyboard_shortcuts_page.dart';
-import 'package:mornye/screens/settings/library_settings_page.dart';
-import 'package:mornye/screens/network_storage_screen.dart';
-import 'package:mornye/screens/settings/log_screen.dart';
-import 'package:mornye/screens/settings/lyrics_settings_page.dart';
-import 'package:mornye/screens/settings/metadata_settings_page.dart';
-import 'package:mornye/screens/settings/playback_settings_page.dart';
-import 'package:mornye/utils/settings_search_catalog.dart';
-import 'package:mornye/services/app_remote_config_service.dart';
-import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/nav_bar_inset.dart';
-import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_progress_indicator.dart';
-import 'package:mornye/widgets/app_search_field.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/profile_avatar.dart';
-import 'package:mornye/widgets/no_scrollbars.dart';
+import 'package:tango/constants/app_info.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/user_profile_provider.dart';
+import 'package:tango/screens/settings/profile_settings_page.dart';
+import 'package:tango/screens/settings/about_page.dart';
+import 'package:tango/screens/settings/app_settings_page.dart';
+import 'package:tango/screens/settings/appearance_settings_page.dart';
+import 'package:tango/screens/settings/backup_restore_page.dart';
+import 'package:tango/screens/settings/cache_management_page.dart';
+import 'package:tango/screens/settings/donate_page.dart';
+import 'package:tango/screens/settings/download_settings_page.dart';
+import 'package:tango/screens/settings/extensions_page.dart';
+import 'package:tango/screens/settings/files_settings_page.dart';
+import 'package:tango/screens/settings/keyboard_shortcuts_page.dart';
+import 'package:tango/screens/settings/library_settings_page.dart';
+import 'package:tango/screens/network_storage_screen.dart';
+import 'package:tango/screens/settings/log_screen.dart';
+import 'package:tango/screens/settings/lyrics_settings_page.dart';
+import 'package:tango/screens/settings/metadata_settings_page.dart';
+import 'package:tango/screens/settings/playback_settings_page.dart';
+import 'package:tango/utils/settings_search_catalog.dart';
+import 'package:tango/services/app_remote_config_service.dart';
+import 'package:tango/services/shell_navigation_service.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/nav_bar_inset.dart';
+import 'package:tango/widgets/animation_utils.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_progress_indicator.dart';
+import 'package:tango/widgets/app_search_field.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/profile_avatar.dart';
+import 'package:tango/widgets/no_scrollbars.dart';
 
 /// One entry on the Settings tab.
 class _Destination {
@@ -322,7 +322,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
         : SettingsSearchHighlightScope(targetLabel: targetLabel, child: page);
     await Navigator.of(
       context,
-    ).push(slidePageRoute<void>(page: MornyeSettingsTheme(child: destination)));
+    ).push(slidePageRoute<void>(page: TangoSettingsTheme(child: destination)));
     if (!mounted) return;
 
     if (page is DonatePage) {
@@ -340,7 +340,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
     });
   }
 
-  Color _iconColorFor(_Destination destination) => context.isMornye
+  Color _iconColorFor(_Destination destination) => context.isTango
       ? destination.iconColor[Theme.of(context).brightness == Brightness.dark
             ? 300
             : 800]!
@@ -351,9 +351,9 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
     return SettingsItem(
       icon: destination.icon,
       iconColor: _iconColorFor(destination),
-      showIconInMornye: true,
+      showIconInTango: true,
       title: destination.title,
-      subtitle: context.isMornye ? null : destination.subtitle,
+      subtitle: context.isTango ? null : destination.subtitle,
       footer: destination.showDonationProgress && goal?.isVisible == true
           ? _DonationGoalProgress(goal: goal!)
           : null,
@@ -374,7 +374,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
       ),
       icon: entry.icon,
       iconColor: _iconColorFor(result.destination),
-      showIconInMornye: true,
+      showIconInTango: true,
       title: entry.title,
       subtitle: result.destination.title,
       showDivider: showDivider,
@@ -435,7 +435,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
           .pageBuilder();
     }
     final target = _selectedTarget;
-    return MornyeSettingsTheme(
+    return TangoSettingsTheme(
       child: target == null
           ? page
           : SettingsSearchHighlightScope(targetLabel: target, child: page),
@@ -444,11 +444,11 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
 
   /// Desktop Settings: categories on the leading side and the selected page
   /// beside them, whose own links open inside the detail pane. Material
-  /// follows the M3 list-detail layout; Mornye follows the System Settings
+  /// follows the M3 list-detail layout; Tango follows the System Settings
   /// sidebar.
   Widget _buildListDetail(BuildContext context) {
-    final mornye = context.isMornye;
-    return MornyeSettingsTheme(
+    final tango = context.isTango;
+    return TangoSettingsTheme(
       child: Builder(
         builder: (context) {
           final theme = Theme.of(context);
@@ -457,19 +457,19 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
             children: [
               SizedBox(
                 key: const ValueKey('settings-category-list'),
-                width: mornye ? 260 : 320,
+                width: tango ? 260 : 320,
                 child: Material(
-                  color: mornye
+                  color: tango
                       ? theme.scaffoldBackgroundColor
                       : theme.colorScheme.surfaceContainerLow,
                   child: _buildCategoryList(context),
                 ),
               ),
-              if (mornye)
+              if (tango)
                 VerticalDivider(
                   width: 1,
                   thickness: 1,
-                  color: MornyeTheme.metadataDividerColor(context),
+                  color: TangoTheme.metadataDividerColor(context),
                 ),
               Expanded(
                 child: ClipRect(
@@ -514,7 +514,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
   }
 
   Widget _buildCategoryList(BuildContext context) {
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final theme = Theme.of(context);
     final query = SettingsSearchQuery(_query);
     final groups = _groups(context);
@@ -546,7 +546,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
     }
 
     final children = <Widget>[
-      if (!mornye)
+      if (!tango)
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 20, 12, 12),
           child: Semantics(
@@ -558,7 +558,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
           ),
         ),
       Padding(
-        padding: EdgeInsets.only(top: mornye ? 12 : 0, bottom: 12),
+        padding: EdgeInsets.only(top: tango ? 12 : 0, bottom: 12),
         child: AppSearchField(
           controller: _searchController,
           focusNode: _searchFocusNode,
@@ -578,7 +578,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
             leading: ProfileAvatar(
               name: profile?.name ?? '',
               photoPath: profile?.photoPath,
-              size: mornye ? 36 : 40,
+              size: tango ? 36 : 40,
             ),
             title: named ? profile!.name : context.l10n.profileSetUp,
             subtitle: context.l10n.profileEdit,
@@ -591,7 +591,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
 
     if (query.isEmpty) {
       for (final group in groups) {
-        children.add(SizedBox(height: mornye ? 16 : 12));
+        children.add(SizedBox(height: tango ? 16 : 12));
         final last = group.destinations.length - 1;
         for (final (index, destination) in group.destinations.indexed) {
           children.add(
@@ -667,9 +667,9 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
 
     final margin = EdgeInsets.fromLTRB(
       tokens.gapLg + wideInset,
-      context.isMornye ? 12 : tokens.gapSm,
+      context.isTango ? 12 : tokens.gapSm,
       tokens.gapLg + wideInset,
-      context.isMornye ? 12 : tokens.gapSm,
+      context.isTango ? 12 : tokens.gapSm,
     );
 
     final List<Widget> body;
@@ -725,7 +725,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
             ];
     }
 
-    return MornyeSettingsTheme(
+    return TangoSettingsTheme(
       child: CustomScrollView(
         slivers: [
           if (widget.asPage)
@@ -848,7 +848,7 @@ class _DonationGoalProgress extends StatelessWidget {
 /// A category in the desktop settings list. Material lays each group out as
 /// an expressive connected list, like the settings pages beside it, and
 /// marks the selected row with a fully rounded `secondaryContainer` tile;
-/// Mornye fills it with a quiet gray like the System Settings sidebar.
+/// Tango fills it with a quiet gray like the System Settings sidebar.
 class _CategoryRow extends StatelessWidget {
   const _CategoryRow({
     super.key,
@@ -877,47 +877,47 @@ class _CategoryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final radius = mornye
+    final radius = tango
         ? BorderRadius.circular(8)
         : selected
         ? BorderRadius.circular(context.tokens.radiusCard)
         : connectedRowRadius(context, first: first, last: last);
-    // Mornye selects with the app sidebar's quiet gray fill, so the colored
+    // Tango selects with the app sidebar's quiet gray fill, so the colored
     // category tiles keep their own color.
     final dark = colorScheme.brightness == Brightness.dark;
-    final mornyeFill = colorScheme.onSurface.withValues(
+    final tangoFill = colorScheme.onSurface.withValues(
       alpha: dark ? 0.12 : 0.08,
     );
-    final foreground = selected && !mornye
+    final foreground = selected && !tango
         ? colorScheme.onSecondaryContainer
         : colorScheme.onSurface;
     final secondary = selected
         ? foreground.withValues(alpha: 0.8)
         : colorScheme.onSurfaceVariant;
     return Padding(
-      padding: EdgeInsets.only(bottom: mornye || !last ? 2 : 0),
+      padding: EdgeInsets.only(bottom: tango || !last ? 2 : 0),
       child: Semantics(
         button: true,
         selected: selected,
         child: Material(
           color: selected
-              ? (mornye ? mornyeFill : colorScheme.secondaryContainer)
-              : (mornye ? Colors.transparent : settingsGroupColor(context)),
+              ? (tango ? tangoFill : colorScheme.secondaryContainer)
+              : (tango ? Colors.transparent : settingsGroupColor(context)),
           borderRadius: radius,
           child: InkWell(
             borderRadius: radius,
-            hoverColor: mornye
+            hoverColor: tango
                 ? colorScheme.onSurface.withValues(alpha: 0.05)
                 : null,
             onTap: onTap,
             child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: mornye ? 36 : 56),
+              constraints: BoxConstraints(minHeight: tango ? 36 : 56),
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: mornye ? 8 : 16,
+                  horizontal: tango ? 8 : 16,
                   vertical: 4,
                 ),
                 child: Row(
@@ -926,7 +926,7 @@ class _CategoryRow extends StatelessWidget {
                       data: IconThemeData(color: foreground),
                       child: leading,
                     ),
-                    SizedBox(width: mornye ? 10 : 12),
+                    SizedBox(width: tango ? 10 : 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -935,13 +935,13 @@ class _CategoryRow extends StatelessWidget {
                           Text(
                             title,
                             style:
-                                (mornye
+                                (tango
                                         ? textTheme.bodyMedium
                                         : textTheme.labelLarge)
                                     ?.copyWith(
                                       color: foreground,
                                       fontWeight: selected
-                                          ? (mornye
+                                          ? (tango
                                                 ? FontWeight.w600
                                                 : FontWeight.w700)
                                           : null,
@@ -976,7 +976,7 @@ class _CategoryRow extends StatelessWidget {
   }
 }
 
-/// A category glyph: Material's plain icon, or Mornye's white symbol on a
+/// A category glyph: Material's plain icon, or Tango's white symbol on a
 /// tile in the category's color, as in System Settings.
 class _CategoryIcon extends StatelessWidget {
   const _CategoryIcon({
@@ -992,7 +992,7 @@ class _CategoryIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    if (!context.isMornye) {
+    if (!context.isTango) {
       return AppIcon.adaptive(
         icon,
         size: 24,

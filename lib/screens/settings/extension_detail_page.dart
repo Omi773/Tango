@@ -2,27 +2,27 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons, CupertinoTextField;
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_text_field.dart';
-import 'package:mornye/widgets/app_switch.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_text_field.dart';
+import 'package:tango/widgets/app_switch.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
+import 'package:tango/widgets/tango_chrome.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/providers/repo_provider.dart';
-import 'package:mornye/utils/extension_auth_launcher.dart';
-import 'package:mornye/controllers/extension_action_forms.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/utils/extension_country_name.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/widgets/extension_health.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/providers/repo_provider.dart';
+import 'package:tango/utils/extension_auth_launcher.dart';
+import 'package:tango/controllers/extension_action_forms.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/utils/extension_country_name.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/extension_health.dart';
 
 part 'extension_detail_page_widgets.dart';
 
@@ -127,8 +127,8 @@ class _ExtensionDetailPageState extends ConsumerState<ExtensionDetailPage> {
                               width: 56,
                               height: 56,
                               decoration: BoxDecoration(
-                                color: context.isMornye
-                                    ? MornyeTheme.controlFill(context)
+                                color: context.isTango
+                                    ? TangoTheme.controlFill(context)
                                     : hasError
                                     ? colorScheme.errorContainer
                                     : colorScheme.primaryContainer,
@@ -150,7 +150,7 @@ class _ExtensionDetailPageState extends ConsumerState<ExtensionDetailPage> {
                                               error,
                                               stackTrace,
                                             ) => AppIcon(
-                                              context.isMornye
+                                              context.isTango
                                                   ? (hasError
                                                         ? CupertinoIcons
                                                               .exclamationmark_circle
@@ -168,7 +168,7 @@ class _ExtensionDetailPageState extends ConsumerState<ExtensionDetailPage> {
                                       ),
                                     )
                                   : AppIcon(
-                                      context.isMornye
+                                      context.isTango
                                           ? (hasError
                                                 ? CupertinoIcons
                                                       .exclamationmark_circle
@@ -230,15 +230,15 @@ class _ExtensionDetailPageState extends ConsumerState<ExtensionDetailPage> {
                           ),
                         ],
                         const SizedBox(height: 16),
-                        if (context.isMornye)
+                        if (context.isTango)
                           Divider(
-                            color: MornyeTheme.metadataDividerColor(context),
+                            color: TangoTheme.metadataDividerColor(context),
                           ),
                         _InfoRow(
                           label: context.l10n.extensionId,
                           value: extension.id,
                         ),
-                        if (!context.isMornye)
+                        if (!context.isTango)
                           _InfoRow(
                             label: context.l10n.extensionsVersion(
                               extension.version,
@@ -514,7 +514,7 @@ class _ExtensionDetailPageState extends ConsumerState<ExtensionDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       AppIcon(
-                        context.isMornye
+                        context.isTango
                             ? CupertinoIcons.trash
                             : Icons.delete_outline,
                       ),

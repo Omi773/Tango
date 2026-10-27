@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/providers/settings_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
 
 /// True on low-end hardware (arm32-only or low-RAM, resolved at startup in
 /// main.dart via a ProviderScope override). UI uses it to skip expensive
@@ -25,14 +25,14 @@ final backdropBlurEnabledProvider = Provider<bool>((ref) {
 /// Flutter also reports Android's medium contrast as high contrast. Respect
 /// that request unless the user explicitly forces glass; this only controls
 /// decorative surfaces, never the inherited text or reduced-motion settings.
-final mornyeGlassContrastBlockedProvider = Provider.family<bool, bool>(
+final tangoGlassContrastBlockedProvider = Provider.family<bool, bool>(
   (ref, highContrast) =>
       highContrast &&
       !ref.watch(settingsProvider.select((s) => s.forceBackdropBlur)),
 );
 
-/// How much of Mornye's glass the device renders.
-enum MornyeGlassLevel {
+/// How much of Tango's glass the device renders.
+enum TangoGlassLevel {
   /// Opaque surfaces; no backdrop sampling.
   flat,
 
@@ -43,22 +43,22 @@ enum MornyeGlassLevel {
   liquid,
 }
 
-final mornyeGlassLevelProvider = Provider<MornyeGlassLevel>((ref) {
+final tangoGlassLevelProvider = Provider<TangoGlassLevel>((ref) {
   final lowEnd = ref.watch(lowEndDeviceProvider);
   if (!lowEnd && ref.watch(deviceSupportsLiquidGlassProvider)) {
-    return MornyeGlassLevel.liquid;
+    return TangoGlassLevel.liquid;
   }
   // The user's "always use blur effects" override restores the full material.
-  if (ref.watch(backdropBlurEnabledProvider)) return MornyeGlassLevel.liquid;
-  return lowEnd ? MornyeGlassLevel.flat : MornyeGlassLevel.frosted;
+  if (ref.watch(backdropBlurEnabledProvider)) return TangoGlassLevel.liquid;
+  return lowEnd ? TangoGlassLevel.flat : TangoGlassLevel.frosted;
 });
 
-/// Backdrop blur for Mornye surfaces (frosted or liquid).
-final mornyeBlurEnabledProvider = Provider<bool>(
-  (ref) => ref.watch(mornyeGlassLevelProvider) != MornyeGlassLevel.flat,
+/// Backdrop blur for Tango surfaces (frosted or liquid).
+final tangoBlurEnabledProvider = Provider<bool>(
+  (ref) => ref.watch(tangoGlassLevelProvider) != TangoGlassLevel.flat,
 );
 
 /// Higher-quality glass and continuously filtered artwork / lyric effects.
-final mornyeLiquidGlassProvider = Provider<bool>(
-  (ref) => ref.watch(mornyeGlassLevelProvider) == MornyeGlassLevel.liquid,
+final tangoLiquidGlassProvider = Provider<bool>(
+  (ref) => ref.watch(tangoGlassLevelProvider) == TangoGlassLevel.liquid,
 );

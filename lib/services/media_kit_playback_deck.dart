@@ -4,13 +4,13 @@ import 'dart:math' as math;
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:mornye/models/equalizer_settings.dart';
-import 'package:mornye/services/media_kit_audio_filters.dart';
-import 'package:mornye/services/music_playback_deck.dart'
+import 'package:tango/models/equalizer_settings.dart';
+import 'package:tango/services/media_kit_audio_filters.dart';
+import 'package:tango/services/music_playback_deck.dart'
     show UsbDsdUnavailable;
-import 'package:mornye/services/playback_deck.dart';
-import 'package:mornye/services/playback_equalizer.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/services/playback_deck.dart';
+import 'package:tango/services/playback_equalizer.dart';
+import 'package:tango/utils/logger.dart';
 
 final _log = AppLogger('MediaKitDeck');
 
@@ -47,12 +47,12 @@ abstract interface class MpvEngine {
 class MediaKitEngine implements MpvEngine {
   MediaKitEngine()
     : _player = NativePlayer(
-        configuration: const PlayerConfiguration(title: 'Mornye'),
+        configuration: const PlayerConfiguration(title: 'Tango'),
       ) {
     _configured = Future.wait([
       // Names the PulseAudio and PipeWire stream. The app applies ReplayGain
       // itself, so mpv's stays at its default (off).
-      setProperty('audio-client-name', 'Mornye'),
+      setProperty('audio-client-name', 'Tango'),
       // media_kit caches streams on disk, which fails where the cache folder
       // is not writable and reports a load error. Memory is enough for audio.
       setProperty('cache-on-disk', 'no'),
@@ -468,7 +468,7 @@ class MediaKitPlaybackDeck implements PlaybackDeck {
   /// first deck probes once while it has no source.
   Future<void> _probeFilters() => _probe ??= () async {
     for (final name in MpvAudioFilterChain.optionalFilters) {
-      if (await _engine.setProperty('af', '@mornye_probe:lavfi-$name') < 0) {
+      if (await _engine.setProperty('af', '@tango_probe:lavfi-$name') < 0) {
         _missingFilters.add(name);
       }
     }

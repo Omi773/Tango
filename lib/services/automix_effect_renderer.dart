@@ -3,9 +3,9 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:mornye/models/automix_options.dart';
-import 'package:mornye/services/audio_analysis_jobs.dart';
-import 'package:mornye/services/ffmpeg_support.dart';
+import 'package:tango/models/automix_options.dart';
+import 'package:tango/services/audio_analysis_jobs.dart';
+import 'package:tango/services/ffmpeg_support.dart';
 
 /// Keep the beginning dry for the live deck handover, then ease in the FX.
 String autoMixEffectFilters(AutoMixOptions options, Duration duration) {

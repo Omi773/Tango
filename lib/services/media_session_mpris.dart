@@ -5,8 +5,8 @@ import 'package:audio_service_platform_interface/audio_service_platform_interfac
 import 'package:audio_service_platform_interface/no_op_audio_service.dart';
 import 'package:dbus/dbus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mornye/services/playback_deck.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/services/playback_deck.dart';
+import 'package:tango/utils/logger.dart';
 
 final _log = AppLogger('Mpris');
 
@@ -31,13 +31,13 @@ class MprisAudioService extends NoOpAudioService {
       final client = _connect();
       await client.registerObject(player);
       final reply = await client.requestName(
-        'org.mpris.MediaPlayer2.mornye',
+        'org.mpris.MediaPlayer2.tango',
         flags: {DBusRequestNameFlag.doNotQueue},
       );
       if (reply != DBusRequestNameReply.primaryOwner) {
         // A second instance still gets controls, under its own name.
         await client.requestName(
-          'org.mpris.MediaPlayer2.mornye.instance$pid',
+          'org.mpris.MediaPlayer2.tango.instance$pid',
           flags: {DBusRequestNameFlag.doNotQueue},
         );
       }
@@ -85,7 +85,7 @@ class MprisPlayerObject extends DBusObject {
 
   DBusObjectPath get _trackId => _item == null
       ? _noTrack
-      : DBusObjectPath('/com/zarz/mornye/track/$_track');
+      : DBusObjectPath('/app/tango/track/$_track');
 
   /// The position now, advanced from the last state at its speed.
   Duration get position {
@@ -146,8 +146,8 @@ class MprisPlayerObject extends DBusObject {
     'CanQuit': DBusBoolean(false),
     'CanRaise': DBusBoolean(false),
     'HasTrackList': DBusBoolean(false),
-    'Identity': DBusString('Mornye'),
-    'DesktopEntry': DBusString('com.zarz.mornye'),
+    'Identity': DBusString('Tango'),
+    'DesktopEntry': DBusString('app.tango'),
     'SupportedUriSchemes': DBusArray(DBusSignature('s')),
     'SupportedMimeTypes': DBusArray(DBusSignature('s')),
   };

@@ -1,22 +1,22 @@
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/utils/audio_format_utils.dart';
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/services/history_database.dart';
-import 'package:mornye/services/library_queue_store.dart';
-import 'package:mornye/services/library_cleanup.dart';
-import 'package:mornye/services/library_search.dart';
-import 'package:mornye/services/library_database_models.dart';
-import 'package:mornye/services/library_duplicates.dart';
-import 'package:mornye/services/network_storage_service.dart';
-import 'package:mornye/services/library_ingestion_store.dart';
-import 'package:mornye/services/library_native_adapter.dart';
-import 'package:mornye/services/library_row_mapper.dart';
-import 'package:mornye/services/library_schema.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/services/sqlite_helpers.dart' as sqlite;
+import 'package:tango/utils/logger.dart';
+import 'package:tango/utils/audio_format_utils.dart';
+import 'package:tango/utils/file_access.dart';
+import 'package:tango/services/history_database.dart';
+import 'package:tango/services/library_queue_store.dart';
+import 'package:tango/services/library_cleanup.dart';
+import 'package:tango/services/library_search.dart';
+import 'package:tango/services/library_database_models.dart';
+import 'package:tango/services/library_duplicates.dart';
+import 'package:tango/services/network_storage_service.dart';
+import 'package:tango/services/library_ingestion_store.dart';
+import 'package:tango/services/library_native_adapter.dart';
+import 'package:tango/services/library_row_mapper.dart';
+import 'package:tango/services/library_schema.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/services/sqlite_helpers.dart' as sqlite;
 
 export 'library_database_models.dart';
 

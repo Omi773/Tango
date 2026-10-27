@@ -1,21 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:mornye/services/backend/backend_channel.dart';
+import 'package:tango/services/backend/backend_channel.dart';
 
 /// The Android and iOS backend: the host platform channels, unchanged.
 class MethodChannelBackend extends BackendChannel {
   const MethodChannelBackend(
     this.channel, {
     this.downloadProgressChannel = const EventChannel(
-      'com.zarz.mornye/download_progress_stream',
+      'app.tango/download_progress_stream',
     ),
     this.libraryScanProgressChannel = const EventChannel(
-      'com.zarz.mornye/library_scan_progress_stream',
+      'app.tango/library_scan_progress_stream',
     ),
   });
 
   static const shared = MethodChannelBackend(
-    MethodChannel('com.zarz.mornye/backend'),
+    MethodChannel('app.tango/backend'),
   );
 
   final MethodChannel channel;

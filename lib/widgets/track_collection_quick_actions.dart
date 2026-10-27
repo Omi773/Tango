@@ -1,26 +1,26 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:tango/theme/tango_theme.dart';
 import 'package:flutter/services.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/providers/library_collections_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/services/cover_cache_manager.dart';
-import 'package:mornye/controllers/local_playback.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/playlist_picker_sheet.dart';
-import 'package:mornye/widgets/mornye_context_menu.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/providers/library_collections_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/services/cover_cache_manager.dart';
+import 'package:tango/controllers/local_playback.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/widgets/desktop/context_menu.dart';
+import 'package:tango/widgets/playlist_picker_sheet.dart';
+import 'package:tango/widgets/tango_context_menu.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/track_collection_action_policy.dart';
-import 'package:mornye/widgets/track_detail_actions.dart';
-import 'package:mornye/utils/clickable_metadata.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/track_collection_action_policy.dart';
+import 'package:tango/widgets/track_detail_actions.dart';
+import 'package:tango/utils/clickable_metadata.dart';
 
 class TrackCollectionQuickActions extends ConsumerWidget {
   final Track track;
@@ -36,7 +36,7 @@ class TrackCollectionQuickActions extends ConsumerWidget {
     this.dense = false,
   });
 
-  /// Track options: a bottom sheet (Material) or popover (Mornye) on phones
+  /// Track options: a bottom sheet (Material) or popover (Tango) on phones
   /// and tablets, a context menu at [position] or under [context] on
   /// desktop.
   static void showTrackOptionsSheet(
@@ -63,8 +63,8 @@ class TrackCollectionQuickActions extends ConsumerWidget {
       );
       return;
     }
-    if (context.isMornye) {
-      showMornyeContextMenu<void>(
+    if (context.isTango) {
+      showTangoContextMenu<void>(
         context: context,
         builder: (_) => _TrackOptionsSheet(
           track: track,
@@ -91,7 +91,7 @@ class TrackCollectionQuickActions extends ConsumerWidget {
     return AppIconButton(
       tooltip: MaterialLocalizations.of(context).showMenuTooltip,
       icon: AppIcon(
-        context.isMornye ? CupertinoIcons.ellipsis : Icons.more_vert,
+        context.isTango ? CupertinoIcons.ellipsis : Icons.more_vert,
         color: colorScheme.onSurfaceVariant,
         size: 20,
       ),
@@ -265,11 +265,11 @@ class _TrackOptionsSheet extends ConsumerWidget {
       hasLocalPlaybackCandidate: hasLocalPlaybackCandidate,
     );
 
-    if (context.isMornye) {
+    if (context.isTango) {
       final l10n = context.l10n;
-      return MornyeContextMenu(
+      return TangoContextMenu(
         quickActions: [
-          MornyeMenuAction(
+          TangoMenuAction(
             icon: CupertinoIcons.arrow_down_circle_fill,
             label: l10n.dialogDownload,
             onPressed: () {
@@ -278,18 +278,18 @@ class _TrackOptionsSheet extends ConsumerWidget {
               downloadSingleTrack(root, ref, track);
             },
           ),
-          MornyeMenuAction(
+          TangoMenuAction(
             icon: CupertinoIcons.star_fill,
-            label: isLoved ? l10n.mornyeFavorited : l10n.mornyeFavorite,
+            label: isLoved ? l10n.tangoFavorited : l10n.tangoFavorite,
             selected: isLoved,
             onPressed: () => _toggleCollection(context, ref, wishlist: false),
           ),
-          MornyeMenuAction(
+          TangoMenuAction(
             icon: CupertinoIcons.share_solid,
             label: l10n.trackMetadataShare,
             onPressed: () {
               final origin =
-                  mornyeMenuAnchor(context) ??
+                  tangoMenuAnchor(context) ??
                   Rect.fromCenter(
                     center: MediaQuery.sizeOf(context).center(Offset.zero),
                     width: 1,
@@ -308,26 +308,26 @@ class _TrackOptionsSheet extends ConsumerWidget {
         groups: [
           [
             if (qualityVariantAction == QualityVariantMenuAction.playLocal)
-              MornyeMenuAction(
+              TangoMenuAction(
                 icon: CupertinoIcons.play,
                 label: l10n.trackMetadataPlay,
                 onPressed: () => _playLocal(context, ref),
               ),
             if (qualityVariantAction ==
                 QualityVariantMenuAction.downloadAnotherQuality)
-              MornyeMenuAction(
+              TangoMenuAction(
                 icon: CupertinoIcons.arrow_down_circle,
                 label: l10n.trackOptionDownloadQualityVariant,
                 onPressed: () => _downloadQualityVariant(context, ref),
               ),
-            MornyeMenuAction(
+            TangoMenuAction(
               icon: CupertinoIcons.square_stack,
               label: l10n.homeGoToAlbum,
               onPressed: () => _goToAlbum(context),
             ),
           ],
           [
-            MornyeMenuAction(
+            TangoMenuAction(
               icon: CupertinoIcons.text_badge_plus,
               label: l10n.collectionAddToPlaylist,
               onPressed: () {
@@ -336,7 +336,7 @@ class _TrackOptionsSheet extends ConsumerWidget {
                 showAddTrackToPlaylistSheet(root, ref, track);
               },
             ),
-            MornyeMenuAction(
+            TangoMenuAction(
               icon: isInWishlist
                   ? CupertinoIcons.checkmark_circle
                   : CupertinoIcons.add_circled,
@@ -347,17 +347,17 @@ class _TrackOptionsSheet extends ConsumerWidget {
             ),
           ],
           [
-            MornyeMenuAction(
+            TangoMenuAction(
               icon: CupertinoIcons.doc_on_doc,
               label: l10n.trackOptionCopyTrackName,
               onPressed: () => _copyText(context, track.name),
             ),
-            MornyeMenuAction(
+            TangoMenuAction(
               icon: CupertinoIcons.person,
               label: l10n.trackOptionCopyArtist,
               onPressed: () => _copyText(context, track.artistName),
             ),
-            MornyeMenuAction(
+            TangoMenuAction(
               icon: CupertinoIcons.doc_on_doc,
               label: l10n.trackOptionCopyTrackAndArtist,
               onPressed: () =>
@@ -452,7 +452,7 @@ class _TrackOptionsSheet extends ConsumerWidget {
                   ),
                 ],
               ),
-              if (context.isMornye)
+              if (context.isTango)
                 Divider(
                   height: 1,
                   color: colorScheme.outlineVariant.withValues(alpha: 0.5),

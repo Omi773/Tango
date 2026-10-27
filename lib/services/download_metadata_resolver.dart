@@ -1,11 +1,11 @@
-import 'package:mornye/models/settings.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/models/extension.dart';
-import 'package:mornye/services/download_album_metadata.dart';
-import 'package:mornye/services/download_track_metadata.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/utils/string_utils.dart';
+import 'package:tango/models/settings.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/models/extension.dart';
+import 'package:tango/services/download_album_metadata.dart';
+import 'package:tango/services/download_track_metadata.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/utils/string_utils.dart';
 
 class DownloadMetadataLookup {
   final Track track;

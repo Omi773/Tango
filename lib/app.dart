@@ -4,24 +4,24 @@ import 'package:material_ui/material_ui.dart' as material_ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mornye/constants/app_info.dart';
-import 'package:mornye/screens/main_shell.dart';
-import 'package:mornye/screens/setup_screen.dart';
-import 'package:mornye/screens/tutorial_screen.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/providers/equalizer_provider.dart';
-import 'package:mornye/services/app_navigation_service.dart';
-import 'package:mornye/services/app_orientation.dart';
-import 'package:mornye/theme/dynamic_color_wrapper.dart';
-import 'package:mornye/l10n/app_localizations.dart';
-import 'package:mornye/l10n/supported_locales.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/desktop/desktop_shortcuts.dart';
-import 'package:mornye/widgets/desktop/library_drop_target.dart';
-import 'package:mornye/widgets/mornye_glass_preparation.dart';
-import 'package:mornye/widgets/playback_feedback.dart';
+import 'package:tango/constants/app_info.dart';
+import 'package:tango/screens/main_shell.dart';
+import 'package:tango/screens/setup_screen.dart';
+import 'package:tango/screens/tutorial_screen.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/providers/equalizer_provider.dart';
+import 'package:tango/services/app_navigation_service.dart';
+import 'package:tango/services/app_orientation.dart';
+import 'package:tango/theme/dynamic_color_wrapper.dart';
+import 'package:tango/l10n/app_localizations.dart';
+import 'package:tango/l10n/supported_locales.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
+import 'package:tango/widgets/desktop/desktop_shortcuts.dart';
+import 'package:tango/widgets/desktop/library_drop_target.dart';
+import 'package:tango/widgets/tango_glass_preparation.dart';
+import 'package:tango/widgets/playback_feedback.dart';
 
 String initialLocationForAppState({
   required bool isFirstLaunch,
@@ -194,10 +194,10 @@ class _OrientationFadeState extends State<_OrientationFade>
   }
 }
 
-class MornyeApp extends ConsumerWidget {
+class TangoApp extends ConsumerWidget {
   final bool disableOverscrollEffects;
 
-  const MornyeApp({super.key, this.disableOverscrollEffects = false});
+  const TangoApp({super.key, this.disableOverscrollEffects = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -265,7 +265,7 @@ class MornyeApp extends ConsumerWidget {
             }
             return MediaQuery(
               data: mediaQuery.copyWith(displayFeatures: const []),
-              child: MornyeGlassPreparation(
+              child: TangoGlassPreparation(
                 child: AdaptiveUiScaler(child: appContent),
               ),
             );

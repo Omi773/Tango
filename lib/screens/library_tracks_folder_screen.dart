@@ -4,48 +4,48 @@ import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/collection_scaffold.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/desktop/desktop_selection.dart';
-import 'package:mornye/widgets/desktop/track_list_table.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/expressive_button_group.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/widgets/track_card.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/collection_scaffold.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/widgets/desktop/context_menu.dart';
+import 'package:tango/widgets/desktop/desktop_selection.dart';
+import 'package:tango/widgets/desktop/track_list_table.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/expressive_button_group.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/widgets/track_card.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/tango_icons.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
-import 'package:mornye/widgets/album_detail_header.dart';
-import 'package:mornye/widgets/cached_cover_image.dart';
+import 'package:tango/widgets/album_detail_header.dart';
+import 'package:tango/widgets/cached_cover_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/services/m3u_playlist_service.dart';
-import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/providers/download_queue_provider.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/providers/library_collections_provider.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/playback_provider.dart';
-import 'package:mornye/providers/local_library_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/cover_art_utils.dart';
-import 'package:mornye/screens/collapsing_header_scroll_mixin.dart';
-import 'package:mornye/screens/selection_mode_mixin.dart';
-import 'package:mornye/controllers/library_tracks_folder_data.dart';
-import 'package:mornye/screens/track_metadata_screen.dart';
-import 'package:mornye/widgets/selection_action_button.dart';
-import 'package:mornye/widgets/selection_bottom_bar.dart';
-import 'package:mornye/widgets/in_library_badge.dart';
-import 'package:mornye/widgets/playlist_picker_sheet.dart';
-import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/widgets/track_detail_actions.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/services/m3u_playlist_service.dart';
+import 'package:tango/services/downloaded_embedded_cover_resolver.dart';
+import 'package:tango/utils/file_access.dart';
+import 'package:tango/providers/download_queue_provider.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/providers/library_collections_provider.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/providers/playback_provider.dart';
+import 'package:tango/providers/local_library_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/utils/cover_art_utils.dart';
+import 'package:tango/screens/collapsing_header_scroll_mixin.dart';
+import 'package:tango/screens/selection_mode_mixin.dart';
+import 'package:tango/controllers/library_tracks_folder_data.dart';
+import 'package:tango/screens/track_metadata_screen.dart';
+import 'package:tango/widgets/selection_action_button.dart';
+import 'package:tango/widgets/selection_bottom_bar.dart';
+import 'package:tango/widgets/in_library_badge.dart';
+import 'package:tango/widgets/playlist_picker_sheet.dart';
+import 'package:tango/widgets/animation_utils.dart';
+import 'package:tango/widgets/track_detail_actions.dart';
 
 String? _resolveRawCoverUrl(Track track) {
   final rawCover = track.coverUrl?.trim();
@@ -610,7 +610,7 @@ class _LibraryTracksFolderScreenState
       var sourcePath = picked.path;
       if (sourcePath == null || sourcePath.isEmpty) {
         materializedDir = await Directory.systemTemp.createTemp(
-          'mornye_playlist_cover_',
+          'tango_playlist_cover_',
         );
         final pickedExtension = p.extension(picked.name);
         final materializedFile = File(
@@ -947,9 +947,9 @@ class _LibraryTracksFolderScreenState
                 horizontal: 24,
                 vertical: 4,
               ),
-              leading: context.isMornye
+              leading: context.isTango
                   ? Icon(
-                      mornyeIconFor(Icons.image_outlined),
+                      tangoIconFor(Icons.image_outlined),
                       color: colorScheme.primary,
                     )
                   : Container(
@@ -976,9 +976,9 @@ class _LibraryTracksFolderScreenState
                   horizontal: 24,
                   vertical: 4,
                 ),
-                leading: context.isMornye
+                leading: context.isTango
                     ? Icon(
-                        mornyeIconFor(Icons.delete_outline),
+                        tangoIconFor(Icons.delete_outline),
                         color: colorScheme.primary,
                       )
                     : Container(
@@ -1113,9 +1113,9 @@ class _CollectionTrackTile extends ConsumerWidget {
     final heroTag = inMemoryHistoryItem != null
         ? 'cover_${inMemoryHistoryItem.id}'
         : null;
-    // Material rows mark the current track; Mornye rows show no
+    // Material rows mark the current track; Tango rows show no
     // current-track state.
-    final playback = context.isMornye
+    final playback = context.isTango
         ? null
         : ref.watch(catalogTrackPlaybackUiProvider(catalogTrackKey(track)));
     final isCurrent = playback?.isCurrent ?? false;

@@ -1,5 +1,5 @@
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/artist_utils.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/utils/artist_utils.dart';
 
 class CrossExtensionShareResult {
   final String extensionId;

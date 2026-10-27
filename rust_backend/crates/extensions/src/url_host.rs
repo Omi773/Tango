@@ -1,5 +1,5 @@
 use crate::host::decode_go_utf8;
-use mornye_network::{
+use tango_network::{
     query,
     url::{UrlParts, unescape_path},
 };

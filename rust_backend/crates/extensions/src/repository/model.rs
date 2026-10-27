@@ -2,8 +2,8 @@
 
 use super::{RepositoryError, error};
 use crate::environment::compare_versions;
-use mornye_core::json::field_name;
-use mornye_core::matching::lowercase;
+use tango_core::json::field_name;
+use tango_core::matching::lowercase;
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::{Value, json};
 use std::cmp::Ordering;

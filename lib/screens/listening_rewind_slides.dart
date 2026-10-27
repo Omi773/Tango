@@ -1,7 +1,7 @@
 part of 'listening_rewind_screen.dart';
 
 /// Colors of one slide. Material cycles through the tonal containers;
-/// Mornye stays dark over blurred artwork.
+/// Tango stays dark over blurred artwork.
 class _RewindPalette {
   const _RewindPalette(this.background, this.foreground, this.accent);
 
@@ -10,7 +10,7 @@ class _RewindPalette {
     int index,
     ListeningRewind rewind,
   ) {
-    if (context.isMornye) {
+    if (context.isTango) {
       return _RewindPalette(
         Colors.black,
         Colors.white,
@@ -412,7 +412,7 @@ class _RewindSlide extends StatelessWidget {
   }
 }
 
-/// Artwork the Mornye backdrop shows behind [slide].
+/// Artwork the Tango backdrop shows behind [slide].
 String? _slideArtwork(_Slide slide, ListeningRewind rewind) => switch (slide) {
   _Slide.topArtist ||
   _Slide.artists ||
@@ -429,7 +429,7 @@ String? _slideArtwork(_Slide slide, ListeningRewind rewind) => switch (slide) {
 /// One background behind every slide, so colors blend while swiping.
 ///
 /// Material floats large expressive shapes that drift, turn and follow the
-/// swipe. Mornye cross-fades the slides' blurred artwork while it slowly
+/// swipe. Tango cross-fades the slides' blurred artwork while it slowly
 /// zooms. Reduced motion keeps the shapes and artwork still.
 class _RewindBackdrop extends StatefulWidget {
   const _RewindBackdrop({
@@ -489,8 +489,8 @@ class _RewindBackdropState extends State<_RewindBackdrop>
           final to = math.min(from + 1, last);
           final blend = page - from;
           final t = _ambient.value * 2 * math.pi;
-          return context.isMornye
-              ? _mornye(from, to, blend, t)
+          return context.isTango
+              ? _tango(from, to, blend, t)
               : _material(from, to, blend, page, t);
         },
       ),
@@ -579,7 +579,7 @@ class _RewindBackdropState extends State<_RewindBackdrop>
     );
   }
 
-  Widget _mornye(int from, int to, double blend, double t) {
+  Widget _tango(int from, int to, double blend, double t) {
     Widget artwork(String? uri, double opacity) => uri == null || opacity <= 0
         ? const SizedBox.shrink()
         : Opacity(

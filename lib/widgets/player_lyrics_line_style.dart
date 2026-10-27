@@ -14,14 +14,14 @@ Iterable<(String, TextStyle, List<LyricWord>, bool)> _lyricSupplements(
       text,
       base.copyWith(
         fontSize:
-            (context.isMornye
+            (context.isTango
                 ? (translation ? 18.0 : 22.0)
                 : isDesktopPlatform
                 ? (translation ? 18.0 : 20.0)
                 : (translation ? 14.0 : 16.0)) *
             (line.isBackground ? 0.8 : 1),
         height: 1.35,
-        fontWeight: context.isMornye
+        fontWeight: context.isTango
             ? (translation ? FontWeight.w600 : FontWeight.bold)
             : FontWeight.w500,
       ),
@@ -34,8 +34,8 @@ Iterable<(String, TextStyle, List<LyricWord>, bool)> _lyricSupplements(
 TextStyle _primaryLyricStyle(BuildContext context, {bool background = false}) =>
     DefaultTextStyle.of(context).style.merge(
       (Theme.of(context).textTheme.headlineSmall ?? const TextStyle()).copyWith(
-        fontSize: context.isMornye
-            ? _mornyeLyricFontSize * (background ? 0.68 : 1)
+        fontSize: context.isTango
+            ? _tangoLyricFontSize * (background ? 0.68 : 1)
             : background
             ? _materialBackgroundLyricFontSize
             : _materialLyricFontSize,
@@ -47,7 +47,7 @@ TextStyle _primaryLyricStyle(BuildContext context, {bool background = false}) =>
 TextAlign _lyricTextAlign(BuildContext context, LyricLine line) {
   final voice = line.voice;
   if (voice == null) {
-    return context.isMornye ? TextAlign.start : TextAlign.center;
+    return context.isTango ? TextAlign.start : TextAlign.center;
   }
   // The lead voice keeps the reading start, so duets mirror in right-to-left
   // layouts.
@@ -107,7 +107,7 @@ Widget _withLyricSupplements(
           ),
     ],
   );
-  if (!context.isMornye ||
+  if (!context.isTango ||
       line.romanizationWords.isEmpty ||
       line.romanization?.trim().isNotEmpty != true) {
     return withSupplements(primary);

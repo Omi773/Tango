@@ -6,37 +6,37 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart' show compute;
 import 'package:flutter/widgets.dart'
     show AppLifecycleState, WidgetsBinding, WidgetsBindingObserver;
-import 'package:mornye/services/playback_notification.dart';
+import 'package:tango/services/playback_notification.dart';
 import 'package:audio_session/audio_session.dart'
     show
         AudioDevice,
         AudioSession,
         AudioSessionConfiguration,
         AudioInterruptionType;
-import 'package:mornye/services/listening_statistics.dart' show ListeningTrack;
-import 'package:mornye/services/library_database.dart';
-import 'package:mornye/services/sqlite_helpers.dart' show normalizeLookupText;
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/services/playback_normalization.dart';
-import 'package:mornye/services/playback_automation.dart';
-import 'package:mornye/services/playback_session_writer.dart';
-import 'package:mornye/services/content_uri_playback_cache.dart';
-import 'package:mornye/services/music_player_runtime.dart';
-import 'package:mornye/services/music_playback_deck.dart';
-import 'package:mornye/services/playback_deck.dart';
-import 'package:mornye/services/automix_analysis.dart';
-import 'package:mornye/services/autoplay_personalization.dart';
-import 'package:mornye/services/automix_analyzer.dart';
-import 'package:mornye/models/settings.dart';
-import 'package:mornye/services/automix_effect_renderer.dart';
-import 'package:mornye/services/automix_status.dart';
-import 'package:mornye/services/music_haptics.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/int_utils.dart';
-import 'package:mornye/utils/playback_artwork.dart';
-import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/services/playable_media.dart';
+import 'package:tango/services/listening_statistics.dart' show ListeningTrack;
+import 'package:tango/services/library_database.dart';
+import 'package:tango/services/sqlite_helpers.dart' show normalizeLookupText;
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/services/playback_normalization.dart';
+import 'package:tango/services/playback_automation.dart';
+import 'package:tango/services/playback_session_writer.dart';
+import 'package:tango/services/content_uri_playback_cache.dart';
+import 'package:tango/services/music_player_runtime.dart';
+import 'package:tango/services/music_playback_deck.dart';
+import 'package:tango/services/playback_deck.dart';
+import 'package:tango/services/automix_analysis.dart';
+import 'package:tango/services/autoplay_personalization.dart';
+import 'package:tango/services/automix_analyzer.dart';
+import 'package:tango/models/settings.dart';
+import 'package:tango/services/automix_effect_renderer.dart';
+import 'package:tango/services/automix_status.dart';
+import 'package:tango/services/music_haptics.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/int_utils.dart';
+import 'package:tango/utils/playback_artwork.dart';
+import 'package:tango/services/downloaded_embedded_cover_resolver.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/services/playable_media.dart';
 
 export 'music_player_runtime.dart';
 export 'playable_media.dart';

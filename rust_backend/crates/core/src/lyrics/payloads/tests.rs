@@ -1,7 +1,7 @@
 use super::*;
 
 #[test]
-fn zarz_lrc_apple_preserves_syllables_and_separate_background_groups() {
+fn tango_lrc_apple_preserves_syllables_and_separate_background_groups() {
     let raw = serde_json::json!({
         "type": "Syllable",
         "elrcMultiPerson": "[00:01.00]Lead\n[00:02.00]Echo",
@@ -23,10 +23,10 @@ fn zarz_lrc_apple_preserves_syllables_and_separate_background_groups() {
     })
     .to_string();
     for words in [false, true] {
-        let text = format_zarz_lrc_apple(&raw, true, words).unwrap();
+        let text = format_tango_lrc_apple(&raw, true, words).unwrap();
         assert!(text.starts_with("[00:01.009]v1:"));
         assert_eq!(text.matches("[bg:").count(), 2);
-        let lyrics = LyricsResponse::from_text(&text, "Zarz-LRC", "Zarz-LRC");
+        let lyrics = LyricsResponse::from_text(&text, "Tango-LRC", "Tango-LRC");
         assert_eq!(lyrics.lines().len(), 1);
         assert_eq!(lyrics.lines()[0].start_time_ms, 1009);
         if words {
@@ -34,26 +34,26 @@ fn zarz_lrc_apple_preserves_syllables_and_separate_background_groups() {
         } else {
             assert!(text.contains("Together"));
         }
-        let solo = format_zarz_lrc_apple(&raw, false, words).unwrap();
+        let solo = format_tango_lrc_apple(&raw, false, words).unwrap();
         assert!(!solo.contains("[bg:"));
         assert!(!solo.contains("v1:"));
     }
 }
 
 #[test]
-fn zarz_lrc_apple_handles_line_only_unsynced_and_invalid_responses() {
+fn tango_lrc_apple_handles_line_only_unsynced_and_invalid_responses() {
     let mut raw = serde_json::json!({
         "type": "Line", "content": [{
             "timestamp": 1500, "text": [{"text": "Whole"}, {"text": "line"}]
         }]
     });
     assert_eq!(
-        format_zarz_lrc_apple(&raw.to_string(), false, true).unwrap(),
+        format_tango_lrc_apple(&raw.to_string(), false, true).unwrap(),
         "[00:01.50]Whole line"
     );
     raw["type"] = "Unsynced".into();
     raw["content"][0]["timestamp"] = serde_json::Value::Null;
-    let text = format_zarz_lrc_apple(&raw.to_string(), true, true).unwrap();
+    let text = format_tango_lrc_apple(&raw.to_string(), true, true).unwrap();
     assert_eq!(text, "Whole line");
     assert_eq!(
         LyricsResponse::from_text(&text, "Example", "Example").sync_type,
@@ -64,7 +64,7 @@ fn zarz_lrc_apple_handles_line_only_unsynced_and_invalid_responses() {
         r#"{"error":{"code":"APPLE_AUTH_REQUIRED"}}"#,
         "{}",
     ] {
-        assert!(format_zarz_lrc_apple(raw, true, true).is_err());
+        assert!(format_tango_lrc_apple(raw, true, true).is_err());
     }
 }
 

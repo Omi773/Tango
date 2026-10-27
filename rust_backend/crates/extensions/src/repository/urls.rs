@@ -1,5 +1,5 @@
 use super::{RepositoryError, error};
-use mornye_network::url::UrlParts;
+use tango_network::url::UrlParts;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum RegistryLocation {

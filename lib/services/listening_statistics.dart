@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:mornye/services/sqlite_helpers.dart' as sqlite;
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/utils/string_utils.dart';
+import 'package:tango/services/sqlite_helpers.dart' as sqlite;
+import 'package:tango/utils/logger.dart';
+import 'package:tango/utils/string_utils.dart';
 import 'package:sqflite/sqflite.dart';
 
 final _log = AppLogger('ListeningStatistics');

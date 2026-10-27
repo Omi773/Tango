@@ -113,7 +113,7 @@
 			<string>app.tango.music</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>mornye</string>
+				<string>tango</string>
 				<string>discord-1564320165863366676</string>
 			</array>
 		</dict>

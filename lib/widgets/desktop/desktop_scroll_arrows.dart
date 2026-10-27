@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/desktop_platform.dart';
 
 /// Builds a horizontal list that scrolls with [controller].
 typedef DesktopScrollArrowsBuilder =
@@ -87,11 +87,11 @@ class _DesktopScrollArrowsState extends State<DesktopScrollArrows> {
 
   Widget _arrow(BuildContext context, {required bool forward}) {
     final l10n = context.l10n;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final colorScheme = Theme.of(context).colorScheme;
     final icon = forward
-        ? (mornye ? CupertinoIcons.forward : Icons.chevron_right)
-        : (mornye ? CupertinoIcons.back : Icons.chevron_left);
+        ? (tango ? CupertinoIcons.forward : Icons.chevron_right)
+        : (tango ? CupertinoIcons.back : Icons.chevron_left);
     return PositionedDirectional(
       start: forward ? null : 8,
       end: forward ? 8 : null,
@@ -101,7 +101,7 @@ class _DesktopScrollArrowsState extends State<DesktopScrollArrows> {
         child: Tooltip(
           message: forward ? l10n.desktopScrollForward : l10n.desktopScrollBack,
           child: Material(
-            color: mornye
+            color: tango
                 ? colorScheme.surface.withValues(alpha: 0.86)
                 : colorScheme.secondaryContainer,
             shape: const CircleBorder(),
@@ -114,8 +114,8 @@ class _DesktopScrollArrowsState extends State<DesktopScrollArrows> {
                 dimension: 40,
                 child: Icon(
                   icon,
-                  size: mornye ? 20 : 24,
-                  color: mornye
+                  size: tango ? 20 : 24,
+                  color: tango
                       ? colorScheme.onSurface
                       : colorScheme.onSecondaryContainer,
                 ),

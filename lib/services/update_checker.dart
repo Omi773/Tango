@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mornye/constants/app_info.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/constants/app_info.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/logger.dart';
 
 final _log = AppLogger('UpdateChecker');
 

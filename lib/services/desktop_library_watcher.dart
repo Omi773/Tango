@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:mornye/models/library_database_models.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/models/library_database_models.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/utils/logger.dart';
 
 final _log = AppLogger('LibraryWatcher');
 

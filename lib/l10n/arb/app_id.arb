@@ -15,7 +15,7 @@
   "networkErrorTimeout": "Server tidak merespons tepat waktu. Periksa koneksi lalu coba lagi.",
   "networkErrorAuthentication": "Server menolak login. Periksa nama pengguna, kata sandi, dan domain. Kosongkan domain kecuali server memerlukannya.",
   "networkErrorPermission": "Akun ini tidak diizinkan membuka share atau folder tersebut. Periksa izin bacanya di server.",
-  "networkErrorLocalPermission": "Akses jaringan lokal belum diizinkan. Izinkan Perangkat di sekitar untuk Mornye di pengaturan aplikasi Android, lalu coba lagi.",
+  "networkErrorLocalPermission": "Akses jaringan lokal belum diizinkan. Izinkan Perangkat di sekitar untuk Tango di pengaturan aplikasi Android, lalu coba lagi.",
   "networkErrorShare": "Share atau folder tidak ditemukan. Untuk SMB, gunakan nama folder yang dibagikan server setelah alamatnya, misalnya smb://server/Music/.",
   "networkErrorProtocol": "Server dan klien SMB ini tidak menemukan protokol yang cocok. Aktifkan SMB2 atau SMB3 di server. SMB1 tidak didukung.",
   "networkErrorAddress": "Periksa alamat server. Gunakan smb://server/share/ untuk SMB, atau alamat http:// maupun https:// untuk WebDAV dan HTTP.",
@@ -197,7 +197,7 @@
   "usbBitPerfectDescription": "Pertahankan kualitas audio di perangkat output yang didukung. Pilih Direct USB atau AAudio Exclusive di bawah; juga, output USB Android butuh Android 14+. Berlaku di lagu selanjutnya, tanpa AutoMix & normalisasi. Mungkin Anda tidak dapat mengatur volume.",
   "usbHardwareVolume": "Volume hardware DAC",
   "usbVolumeWarningTitle": "Periksa volume Anda",
-  "usbVolumeWarning": "Memutar dengan Direct USB akan membuat suara lebih keras dari biasanya, dan tombol volume mungkin tidak akan berfungsi. Pelankan volume DAC atau amplifier Anda sebelum mendengar. Bila mendukung, Mornye mengatur volume DAC pada -40dB saat terhubung; tapi ini tidak menjamin suara akan berada di batas aman.",
+  "usbVolumeWarning": "Memutar dengan Direct USB akan membuat suara lebih keras dari biasanya, dan tombol volume mungkin tidak akan berfungsi. Pelankan volume DAC atau amplifier Anda sebelum mendengar. Bila mendukung, Tango mengatur volume DAC pada -40dB saat terhubung; tapi ini tidak menjamin suara akan berada di batas aman.",
   "usbVolumeAccept": "Saya paham",
   "usbVolumeUnavailable": "Pemutaran dijeda karena kontrol volume pada hardware DAC tidak dapat diverifikasi. Turunkan volume DAC atau Amplifier, lalu hidupkan volume output tetap bila dibutuhkan lalu putar lagi.",
   "usbFixedVolume": "Izinkan volume tetap output USB",
@@ -218,40 +218,40 @@
   "usbBitPerfectRouteChanged": "Rute audio USB berubah. Pemutaran dijeda; pilih lagu untuk menghubungkan ulang.",
   "upgradeIntroThemeTitle": "Pilih \ntampilan Anda.",
   "upgradeIntroThemeBody": "Pilih tampilan yang Anda suka. Pilihan langsung diterapkan dan Anda dapat mengubahnya lewat Tampilan.",
-  "upgradeIntroThemeMornyeBody": "Tampilan Liquid Glass, Koleksi yang didesain ulang dengan pemutar yang cantik.",
+  "upgradeIntroThemeTangoBody": "Tampilan Liquid Glass, Koleksi yang didesain ulang dengan pemutar yang cantik.",
   "upgradeIntroSkip": "Lewati",
   "upgradeIntroContinue": "Lanjut",
   "upgradeIntroDone": "Mulai mendengarkan",
   "whatsNewThemeMaterialBody": "Material 3 Expressive, dengan warna aksen pilihanmu, bentuk membulat, dan gerakan yang hidup.",
-  "rebrandTourReplay": "Kenalan dengan Mornye",
-  "rebrandWelcomeTitle": "Pagi yang baru,\nselamat datang Mornye.",
+  "rebrandTourReplay": "Kenalan dengan Tango",
+  "rebrandWelcomeTitle": "Pagi yang baru,\nselamat datang Tango.",
   "rebrandWelcomeBody": "Setiap pagi adalah awal yang baru, begitu juga hari ini. Aplikasi yang kamu kenal kini punya nama baru, tampilan baru, dan cinta yang sama untuk musikmu.",
   "rebrandNameTitle": "Nama baru",
-  "rebrandNameBody": "Aplikasi ini kini bernama Mornye, terinspirasi dari pagi: awal yang tenang dan cerah untuk setiap lagu.",
+  "rebrandNameBody": "Aplikasi ini kini bernama Tango, terinspirasi dari pagi: awal yang tenang dan cerah untuk setiap lagu.",
   "rebrandLogoTitle": "Logo baru",
   "rebrandLogoBody": "Ikon baru di layar utama, di notifikasi, dan di seluruh aplikasi.",
   "rebrandSameAppTitle": "Hatinya tetap sama",
   "rebrandSameAppBody": "Ekstensi, pemutar, lirik, dan koleksimu tetap bekerja seperti biasa.",
   "rebrandMoveTitle": "Bawa koleksimu\nikut pindah.",
-  "rebrandMoveBody": "Mornye terpasang sebagai aplikasi baru di samping aplikasi lama, jadi datamu dipindahkan lewat backup.",
+  "rebrandMoveBody": "Tango terpasang sebagai aplikasi baru di samping aplikasi lama, jadi datamu dipindahkan lewat backup.",
   "rebrandMoveBackupTitle": "Backup di aplikasi lama",
   "rebrandMoveBackupBody": "Buka Setelan → Cadangan & Pemulihan, lalu buat file backup.",
-  "rebrandMoveRestoreTitle": "Pulihkan di Mornye",
+  "rebrandMoveRestoreTitle": "Pulihkan di Tango",
   "rebrandMoveRestoreBody": "Pilih file itu di Setelan → Cadangan & Pemulihan di sini, lalu pasang ulang ekstensimu dari Repo.",
   "rebrandMoveGoodbyeTitle": "Lalu ucapkan selamat tinggal",
-  "rebrandMoveGoodbyeBody": "Setelah koleksi dan unduhanmu ada di Mornye, kamu boleh menghapus aplikasi lama.",
+  "rebrandMoveGoodbyeBody": "Setelah koleksi dan unduhanmu ada di Tango, kamu boleh menghapus aplikasi lama.",
   "rebrandCommunityTitle": "Komunitas sama,\nalamat baru.",
-  "rebrandCommunityBody": "Dokumentasi, kabar update, dan komunitas kini memakai nama Mornye. Ketuk salah satu link di bawah untuk membukanya.",
+  "rebrandCommunityBody": "Dokumentasi, kabar update, dan komunitas kini memakai nama Tango. Ketuk salah satu link di bawah untuk membukanya.",
   "rebrandWebsiteBody": "Dokumentasi ekstensi dan kabar terbaru.",
   "rebrandUpdatesTitle": "Kanal update",
-  "rebrandUpdatesBody": "Kabar rilis di Telegram lewat @mornyeupdates.",
+  "rebrandUpdatesBody": "Kabar rilis di Telegram lewat @tangoupdates.",
   "rebrandCommunityChatTitle": "Komunitas",
-  "rebrandCommunityChatBody": "Bantuan dan obrolan di Telegram lewat @mornyecommunity.",
+  "rebrandCommunityChatBody": "Bantuan dan obrolan di Telegram lewat @tangocommunity.",
   "cacheMotionArtwork": "Cover bergerak offline",
   "cacheMotionArtworkDesc": "Video album yang didownload. Menghapusnya tidak akan menghapus file musik dan cover biasa.",
   "nowPlayingVolume": "Volume",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Tango player"
   },
   "appearanceStyle": "Gaya Aplikasi",
   "appearanceAccentRed": "Merah (default)",
@@ -263,13 +263,13 @@
   "appearanceAccentPink": "Merah muda",
   "appearanceGlassClarity": "Kebeningan kaca",
   "appearanceGlassOutlines": "Garis tepi kaca",
-  "appearanceGlassOutlinesSubtitle": "Tampilkan garis dekoratif di tepi kaca Mornye. Mematikannya tetap mempertahankan blur dan pembiasan.",
-  "appearanceGlassClaritySubtitle": "Atur kebeningan kaca menu dan navigasi Mornye. Kontras teks tetap terjaga.",
+  "appearanceGlassOutlinesSubtitle": "Tampilkan garis dekoratif di tepi kaca Tango. Mematikannya tetap mempertahankan blur dan pembiasan.",
+  "appearanceGlassClaritySubtitle": "Atur kebeningan kaca menu dan navigasi Tango. Kontras teks tetap terjaga.",
   "appearanceGlassTinted": "Berwarna",
   "appearanceGlassClear": "Bening",
   "appearanceGlassClarityBlurOff": "Efek kaca mati di perangkat ini. Hidupkan \"{setting}\" untuk atur kebeningan kaca.",
   "@appearanceGlassClarityBlurOff": {
-    "description": "Shown under the disabled glass clarity slider when the device renders Mornye glass without blur. The placeholder is the name of the force-blur toggle.",
+    "description": "Shown under the disabled glass clarity slider when the device renders Tango glass without blur. The placeholder is the name of the force-blur toggle.",
     "placeholders": {
       "setting": {
         "type": "String"
@@ -287,7 +287,7 @@
   },
   "@@locale": "id",
   "@@last_modified": "2026-04-28",
-  "appName": "Mornye",
+  "appName": "Tango",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
   },
@@ -941,7 +941,7 @@
   "@setupStorageRequired": {
     "description": "Title when storage permission needed"
   },
-  "setupStorageDescription": "Mornye butuh akses penyimpanan untuk menyimpan hasil download Anda.",
+  "setupStorageDescription": "Tango butuh akses penyimpanan untuk menyimpan hasil download Anda.",
   "@setupStorageDescription": {
     "description": "Explanation for storage permission"
   },
@@ -1298,7 +1298,7 @@
   "@snackbarFileNotFound": {
     "description": "Snackbar - file doesn't exist"
   },
-  "snackbarSelectExtFile": "Harap pilih file .mornye-ext",
+  "snackbarSelectExtFile": "Harap pilih file .tango-ext",
   "@snackbarSelectExtFile": {
     "description": "Snackbar - wrong file type selected"
   },
@@ -2237,7 +2237,7 @@
   "@extensionsNoExtensions": {
     "description": "Empty state - no extensions"
   },
-  "extensionsNoExtensionsSubtitle": "Pasang file .mornye-ext untuk menambahkan provider baru",
+  "extensionsNoExtensionsSubtitle": "Pasang file .tango-ext untuk menambahkan provider baru",
   "@extensionsNoExtensionsSubtitle": {
     "description": "Empty state subtitle"
   },
@@ -2869,7 +2869,7 @@
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
-  "libraryRemoveFolderMessage": "Hapus folder ini dan lagu di dalamnya dari Mornye? File audio di perangkat tidak akan dihapus.",
+  "libraryRemoveFolderMessage": "Hapus folder ini dan lagu di dalamnya dari Tango? File audio di perangkat tidak akan dihapus.",
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
@@ -3029,13 +3029,13 @@
   "@libraryStorageAccessRequired": {
     "description": "Dialog title for storage permission"
   },
-  "libraryStorageAccessMessage": "Mornye butuh akses penyimpanan untuk memindai Koleksi musik Anda. Mohon berikan perizinan di Setelan.",
+  "libraryStorageAccessMessage": "Tango butuh akses penyimpanan untuk memindai Koleksi musik Anda. Mohon berikan perizinan di Setelan.",
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
   "librarySourceDownloaded": "Didownload",
   "@librarySourceDownloaded": {
-    "description": "Badge for tracks downloaded via Mornye"
+    "description": "Badge for tracks downloaded via Tango"
   },
   "librarySourceLocal": "Lokal",
   "@librarySourceLocal": {
@@ -3163,11 +3163,11 @@
       }
     }
   },
-  "tutorialWelcomeTitle": "Selamat datang di Mornye!",
+  "tutorialWelcomeTitle": "Selamat datang di Tango!",
   "@tutorialWelcomeTitle": {
     "description": "Tutorial welcome page title"
   },
-  "tutorialWelcomeDesc": "Pelajari cara menemukan musik dengan ekstensi, pilih kualitas yang Anda inginkan, dan atur download-nya di Mornye.",
+  "tutorialWelcomeDesc": "Pelajari cara menemukan musik dengan ekstensi, pilih kualitas yang Anda inginkan, dan atur download-nya di Tango.",
   "@tutorialWelcomeDesc": {
     "description": "Tutorial welcome page description"
   },
@@ -4276,9 +4276,9 @@
   "@lyricsProviderLyricsPlusDesc": {
     "description": "Description for LyricsPlus provider"
   },
-  "lyricsProviderZarzLrcDesc": "Lirik Apple Music per kata dari Zarz-LRC",
-  "@lyricsProviderZarzLrcDesc": {
-    "description": "Description for the first-party Zarz-LRC provider"
+  "lyricsProviderTangoLrcDesc": "Lirik Apple Music per kata dari Tango-LRC",
+  "@lyricsProviderTangoLrcDesc": {
+    "description": "Description for the first-party Tango-LRC provider"
   },
   "lyricsProviderLrcRedDesc": "Lirik Apple Music per kata, dicocokkan per rekaman",
   "@lyricsProviderLrcRedDesc": {
@@ -4296,7 +4296,7 @@
   "@safMigrationTitle": {
     "description": "Title of SAF migration dialog"
   },
-  "safMigrationMessage1": "Mornye kini menggunakan Android Storage Access (SAF) untuk mendownload. Ini memperbaiki eror \"izin ditolak\" di Android 10+.",
+  "safMigrationMessage1": "Tango kini menggunakan Android Storage Access (SAF) untuk mendownload. Ini memperbaiki eror \"izin ditolak\" di Android 10+.",
   "@safMigrationMessage1": {
     "description": "First paragraph of SAF migration dialog"
   },
@@ -4376,7 +4376,7 @@
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
-  "backupInvalidFile": "File ini bukan cadangan Mornye yang valid",
+  "backupInvalidFile": "File ini bukan cadangan Tango yang valid",
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
@@ -4560,9 +4560,9 @@
     "description": "Subtitle shown in the download location picker sheet"
   },
   "storageAutomaticFolder": "Folder bawaan",
-  "storageAutomaticDownloadFolder": "Menyimpan di folder Download/Mornye, atau di data aplikasi",
+  "storageAutomaticDownloadFolder": "Menyimpan di folder Download/Tango, atau di data aplikasi",
   "storageSafRecommended": "Pilih folder (Disarankan)",
-  "storageDownloadFolderHint": "Begitu pemilih folder Android terbuka, buka folder Download dan pilih Mornye. Jika belum ada, buat folder baru, lalu ketuk Gunakan folder ini untuk memberi akses.",
+  "storageDownloadFolderHint": "Begitu pemilih folder Android terbuka, buka folder Download dan pilih Tango. Jika belum ada, buat folder baru, lalu ketuk Gunakan folder ini untuk memberi akses.",
   "downloadFolderAccessLostTitle": "Akses folder download hilang",
   "@downloadFolderAccessLostTitle": {
     "description": "Title of the warning banner shown in Files settings when the saved SAF folder grant is no longer valid"
@@ -5524,7 +5524,7 @@
       }
     }
   },
-  "notifDownloadingUpdate": "Mendownload Mornye v{version}",
+  "notifDownloadingUpdate": "Mendownload Tango v{version}",
   "@notifDownloadingUpdate": {
     "description": "Notification title while downloading an app update",
     "placeholders": {
@@ -5552,7 +5552,7 @@
   "@notifUpdateReady": {
     "description": "Notification title when app update download is complete"
   },
-  "notifUpdateReadyBody": "Mornye v{version} didownload. Ketuk untuk instal.",
+  "notifUpdateReadyBody": "Tango v{version} didownload. Ketuk untuk instal.",
   "@notifUpdateReadyBody": {
     "description": "Notification body when app update is ready to install",
     "placeholders": {
@@ -6320,7 +6320,7 @@
   "@extensionCustomUrlHandlingSubtitle": {
     "description": "Extension detail subtitle for custom URL handling"
   },
-  "extensionCustomUrlHandlingShareHint": "Bagikan link dari situs ini ke Mornye dan ekstensi ini akan menanganinya.",
+  "extensionCustomUrlHandlingShareHint": "Bagikan link dari situs ini ke Tango dan ekstensi ini akan menanganinya.",
   "@extensionCustomUrlHandlingShareHint": {
     "description": "Extension detail hint explaining share-to-app URL handling"
   },
@@ -6530,7 +6530,7 @@
   "@libraryBuiltInPreviewPlayer": {
     "description": "Setting option to use the built-in preview player"
   },
-  "libraryBuiltInPreviewPlayerSubtitle": "Putar musik langsung di Mornye",
+  "libraryBuiltInPreviewPlayerSubtitle": "Putar musik langsung di Tango",
   "@libraryBuiltInPreviewPlayerSubtitle": {
     "description": "Subtitle for built-in preview player option"
   },
@@ -7007,11 +7007,11 @@
   "@extensionVerificationHelpTitleWaiting": {
     "description": "Dialog title when verification is taking longer than expected"
   },
-  "extensionVerificationHelpMessageManual": "Mornye tidak dapat membuka browser secara otomatis. Buka link ini di browser Anda, atau salin manual.",
+  "extensionVerificationHelpMessageManual": "Tango tidak dapat membuka browser secara otomatis. Buka link ini di browser Anda, atau salin manual.",
   "@extensionVerificationHelpMessageManual": {
     "description": "Dialog message when automatic browser launch for verification fails"
   },
-  "extensionVerificationHelpMessageWaiting": "Jika browser tidak terbuka, atau verifikasi berhasil tapi tidak langsung kembali ke Mornye, buka link ini lagu atau salin manual.",
+  "extensionVerificationHelpMessageWaiting": "Jika browser tidak terbuka, atau verifikasi berhasil tapi tidak langsung kembali ke Tango, buka link ini lagu atau salin manual.",
   "@extensionVerificationHelpMessageWaiting": {
     "description": "Dialog message when verification may need manual browser help"
   },
@@ -7080,8 +7080,8 @@
   "@metadataCopyField": {
     "description": "Metadata menu action that copies the selected key and value"
   },
-  "mornyeSearch": "Telusuri",
-  "mornyeContinuePlaying": "Lanjut Memutar",
+  "tangoSearch": "Telusuri",
+  "tangoContinuePlaying": "Lanjut Memutar",
   "metadataCopyAll": "Salin semua metadata",
   "@metadataCopyAll": {
     "description": "Metadata menu action that copies every visible key and value"
@@ -7094,13 +7094,13 @@
   "@optionsEmbeddedCoverSizeDescription": {
     "description": "Description shown in the embedded cover size picker"
   },
-  "mornyeFavorite": "Favorit",
-  "mornyeGoToArtist": "Buka Artis",
-  "@mornyeFavorite": {
+  "tangoFavorite": "Favorit",
+  "tangoGoToArtist": "Buka Artis",
+  "@tangoFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeFavorited": "Terfavorit",
-  "@mornyeFavorited": {
+  "tangoFavorited": "Terfavorit",
+  "@tangoFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Padukan musik dengan pencocokan bit dan penyesuaian tempo. Menggunakan crossfade bila beat tidak dapat dicocokkan.",
@@ -7120,7 +7120,7 @@
   "@playerCoverStyleFullScreen": {
     "description": "Cover art style: artwork fills the top of the player"
   },
-  "playerCoverStyleFullScreenDescription": "Artwork memenuhi bagian atas player lalu memudar menjadi blur. Artwork bergerak di Mornye selalu layar penuh",
+  "playerCoverStyleFullScreenDescription": "Artwork memenuhi bagian atas player lalu memudar menjadi blur. Artwork bergerak di Tango selalu layar penuh",
   "@playerCoverStyleFullScreenDescription": {
     "description": "Subtitle of the full screen cover art style"
   },
@@ -7214,7 +7214,7 @@
   "equalizerPresetName": "Nama preset",
   "equalizerImport": "Impor preset",
   "equalizerExport": "Bagikan preset",
-  "equalizerImportInvalid": "Pilih preset equalizer Mornye yang valid (JSON, maksimal 64 KB).",
+  "equalizerImportInvalid": "Pilih preset equalizer Tango yang valid (JSON, maksimal 64 KB).",
   "equalizerSaved": "Preset disimpan",
   "equalizerResetTitle": "Reset equalizer?",
   "equalizerResetDescription": "Kembalikan kurva datar serta pengaturan nada dan dinamika bawaan. Preset tersimpan tetap disimpan.",
@@ -7274,7 +7274,7 @@
   "audioInfoOff": "Nonaktif",
   "audioInfoBypassed": "Dilewati oleh output langsung",
   "audioInfoPlayer": "Pemutar",
-  "audioInfoPlayerValue": "Pemutar bawaan Mornye",
+  "audioInfoPlayerValue": "Pemutar bawaan Tango",
   "audioInfoSignalPath": "Jalur sinyal",
   "audioInfoPathSystem": "Mixer sistem",
   "audioInfoPathDirect": "USB langsung, melewati mixer sistem",

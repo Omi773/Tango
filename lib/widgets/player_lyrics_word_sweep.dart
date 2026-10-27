@@ -253,7 +253,7 @@ class _WordHighlightedLyricLineState
 
   void _updateVisualEnd() {
     final decorativeMotion =
-        context.isMornye && !MediaQuery.disableAnimationsOf(context);
+        context.isTango && !MediaQuery.disableAnimationsOf(context);
     var end = Duration.zero;
     for (final words in [widget.line.words, widget.line.romanizationWords]) {
       for (var index = 0; index < words.length; index++) {
@@ -333,8 +333,8 @@ class _WordHighlightedLyricLineState
     bool lift = true,
   }) {
     final highlightedColor = widget.colorScheme.onSurface;
-    final mornye = context.isMornye;
-    final pendingColor = mornye
+    final tango = context.isTango;
+    final pendingColor = tango
         ? Colors.white.withValues(alpha: 0.4)
         : widget.colorScheme.onSurfaceVariant.withValues(alpha: 0.6);
     return _SweepingTimedLyricText(
@@ -351,7 +351,7 @@ class _WordHighlightedLyricLineState
       pendingColor: pendingColor,
       highlightedColor: highlightedColor,
       semanticsLabel: text,
-      liftEnabled: lift && mornye && !MediaQuery.disableAnimationsOf(context),
+      liftEnabled: lift && tango && !MediaQuery.disableAnimationsOf(context),
       maxLines: widget.maxLines,
     );
   }

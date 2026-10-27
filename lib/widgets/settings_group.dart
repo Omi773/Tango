@@ -3,15 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:material_3_expressive/material_3_expressive.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_switch.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/theme/material_expressive.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_switch.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/widgets/tango_chrome.dart';
+import 'package:tango/utils/adaptive_layout.dart';
 
 /// Background fill for grouped cards, matching the Settings group look.
 ///
@@ -245,7 +245,7 @@ class SettingsGroup extends StatelessWidget {
     final decoration = BoxDecoration(
       color: cardColor,
       borderRadius: BorderRadius.circular(
-        context.isMornye ? 28 : context.tokens.radiusCard,
+        context.isTango ? 28 : context.tokens.radiusCard,
       ),
     );
     final child = Material(
@@ -253,7 +253,7 @@ class SettingsGroup extends StatelessWidget {
       child: Column(mainAxisSize: MainAxisSize.min, children: children),
     );
 
-    if (glass && context.isMornye) {
+    if (glass && context.isTango) {
       return LayoutBuilder(
         builder: (context, constraints) => Padding(
           padding:
@@ -266,7 +266,7 @@ class SettingsGroup extends StatelessWidget {
                         : 0),
                 vertical: 4,
               ),
-          child: MornyeGlassPanel(child: child),
+          child: TangoGlassPanel(child: child),
         ),
       );
     }
@@ -284,7 +284,7 @@ class SettingsGroup extends StatelessWidget {
                   child is ListTile,
             ));
     // Connected surfaces are static layout, so reduced motion keeps the gaps.
-    if (!context.isMornye && standardRows) {
+    if (!context.isTango && standardRows) {
       // Expressive connected list: every row is its own surface separated by
       // a 2dp gap. The group's ends keep the card radius, inner corners stay
       // tight, and the gaps replace row dividers.
@@ -403,8 +403,8 @@ class SliverSettingsGroup extends StatelessWidget {
       itemBuilder: (context, index) {
         final first = index == 0;
         final last = index == itemCount - 1;
-        final mornye = context.isMornye;
-        final radius = mornye
+        final tango = context.isTango;
+        final radius = tango
             ? BorderRadius.vertical(
                 top: first ? const Radius.circular(28) : Radius.zero,
                 bottom: last ? const Radius.circular(28) : Radius.zero,
@@ -416,7 +416,7 @@ class SliverSettingsGroup extends StatelessWidget {
           borderRadius: radius,
           child: itemBuilder(context, index),
         );
-        return mornye
+        return tango
             ? row
             : Padding(
                 padding: EdgeInsets.only(top: first ? 0 : 2),
@@ -431,8 +431,8 @@ class SettingsItem extends StatelessWidget {
   final IconData? icon;
   final Color? iconColor;
 
-  /// Show category icons in Mornye's top-level settings and search results.
-  final bool showIconInMornye;
+  /// Show category icons in Tango's top-level settings and search results.
+  final bool showIconInTango;
   final String title;
   final Widget? titleTrailing;
   final String? subtitle;
@@ -449,7 +449,7 @@ class SettingsItem extends StatelessWidget {
     super.key,
     this.icon,
     this.iconColor,
-    this.showIconInMornye = false,
+    this.showIconInTango = false,
     required this.title,
     this.titleTrailing,
     this.subtitle,
@@ -463,7 +463,7 @@ class SettingsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final showIcon = icon != null && (!context.isMornye || showIconInMornye);
+    final showIcon = icon != null && (!context.isTango || showIconInTango);
 
     final content = Column(
       mainAxisSize: MainAxisSize.min,
@@ -518,7 +518,7 @@ class SettingsItem extends StatelessWidget {
                             Text(
                               subtitle!,
                               style:
-                                  (context.isMornye
+                                  (context.isTango
                                           ? Theme.of(
                                               context,
                                             ).textTheme.bodySmall
@@ -543,7 +543,7 @@ class SettingsItem extends StatelessWidget {
                     ] else if (onTap != null) ...[
                       const SizedBox(width: 8),
                       AppIcon(
-                        context.isMornye
+                        context.isTango
                             ? CupertinoIcons.forward
                             : Icons.chevron_right,
                         size: context.tokens.rowChevronSize,
@@ -563,7 +563,7 @@ class SettingsItem extends StatelessWidget {
                 ? context.tokens.rowIconDividerIndent
                 : context.tokens.rowPaddingH,
             endIndent: context.tokens.rowPaddingH,
-            color: context.isMornye
+            color: context.isTango
                 ? colorScheme.outlineVariant
                 : colorScheme.outlineVariant.withValues(alpha: 0.3),
           ),
@@ -599,7 +599,7 @@ class SettingsSwitchItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isDisabled = !enabled || onChanged == null;
-    final showIcon = icon != null && !context.isMornye;
+    final showIcon = icon != null && !context.isTango;
 
     final content = Column(
       mainAxisSize: MainAxisSize.min,
@@ -686,7 +686,7 @@ class SettingsSwitchItem extends StatelessWidget {
                 ? context.tokens.rowIconDividerIndent
                 : context.tokens.rowPaddingH,
             endIndent: context.tokens.rowPaddingH,
-            color: context.isMornye
+            color: context.isTango
                 ? colorScheme.outlineVariant
                 : colorScheme.outlineVariant.withValues(alpha: 0.3),
           ),
@@ -706,11 +706,11 @@ class SettingsSectionHeader extends StatelessWidget {
     final label = Text(
       title,
       style:
-          (context.isMornye
+          (context.isTango
                   ? Theme.of(context).textTheme.bodyLarge
                   : Theme.of(context).textTheme.titleSmall)
               ?.copyWith(
-                color: context.isMornye
+                color: context.isTango
                     ? Theme.of(context).colorScheme.onSurfaceVariant
                     : Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.w600,
@@ -768,10 +768,10 @@ class SettingsChoiceChip extends StatelessWidget {
     final borderRadius = BorderRadius.circular(tokens.radiusCover);
 
     // One solid tier above a settings group in light, dark and AMOLED.
-    final unselectedColor = context.isMornye
+    final unselectedColor = context.isTango
         ? Colors.transparent
         : colorScheme.surfaceContainerHigh;
-    final foreground = context.isMornye && isSelected
+    final foreground = context.isTango && isSelected
         ? colorScheme.primary
         : isSelected
         ? colorScheme.onPrimaryContainer
@@ -785,8 +785,8 @@ class SettingsChoiceChip extends StatelessWidget {
       style: theme.textTheme.bodyMedium?.copyWith(
         fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
         // Like an iOS segment, the filled chip marks the choice; accent text
-        // on Mornye's grey fill falls below readable contrast.
-        color: context.isMornye && isSelected
+        // on Tango's grey fill falls below readable contrast.
+        color: context.isTango && isSelected
             ? colorScheme.onSurface
             : foreground,
       ),
@@ -817,7 +817,7 @@ class SettingsChoiceChip extends StatelessWidget {
 
     final chip = Material(
       color: isSelected
-          ? (context.isMornye
+          ? (context.isTango
                 ? colorScheme.surfaceContainerHighest
                 : colorScheme.primaryContainer)
           : unselectedColor,
@@ -865,7 +865,7 @@ class SettingsSegmentOption<T> {
 ///
 /// Material 3 Expressive replaces the segmented button with a connected
 /// button group spanning the row; reduced motion keeps the static
-/// [SegmentedButton]. Mornye keeps its equal-width chips. Option sets that
+/// [SegmentedButton]. Tango keeps its equal-width chips. Option sets that
 /// wrap belong in a [SettingsChoiceGrid] instead.
 class SettingsSegmentedChoice<T> extends StatelessWidget {
   const SettingsSegmentedChoice({
@@ -913,7 +913,7 @@ class SettingsSegmentedChoice<T> extends StatelessWidget {
         ),
       );
     }
-    if (!context.isMornye) {
+    if (!context.isTango) {
       return SegmentedButton<T>(
         showSelectedIcon: false,
         expandedInsets: EdgeInsets.zero,
@@ -1000,7 +1000,7 @@ class SettingsInfoCard extends StatelessWidget {
 
   final EdgeInsetsGeometry? margin;
 
-  /// Uses the shared glass surface in Mornye without changing Material cards.
+  /// Uses the shared glass surface in Tango without changing Material cards.
   final bool glass;
 
   @override
@@ -1010,30 +1010,30 @@ class SettingsInfoCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     // Material uses the solid container with its paired on-color, so the
-    // text keeps its contrast; Mornye keeps its softer fills.
-    final mornye = context.isMornye;
+    // text keeps its contrast; Tango keeps its softer fills.
+    final tango = context.isTango;
     final (background, foreground) = switch (tone) {
       SettingsInfoTone.neutral => (
-        mornye
+        tango
             ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
             : colorScheme.surfaceContainerHigh,
         colorScheme.onSurfaceVariant,
       ),
       SettingsInfoTone.warning => (
-        mornye
+        tango
             ? colorScheme.tertiaryContainer.withValues(alpha: 0.5)
             : colorScheme.tertiaryContainer,
         colorScheme.onTertiaryContainer,
       ),
       SettingsInfoTone.error => (
-        mornye
+        tango
             ? colorScheme.errorContainer.withValues(alpha: 0.6)
             : colorScheme.errorContainer,
         colorScheme.onErrorContainer,
       ),
     };
 
-    final useGlass = glass && mornye;
+    final useGlass = glass && tango;
     final textColor = useGlass ? colorScheme.onSurface : foreground;
     final content = Padding(
       padding: EdgeInsets.all(tokens.gapLg),
@@ -1042,7 +1042,7 @@ class SettingsInfoCard extends StatelessWidget {
         children: [
           if (icon != null) ...[
             AppIcon(
-              useGlass ? mornyeIconFor(icon!) : icon,
+              useGlass ? tangoIconFor(icon!) : icon,
               size: 20,
               color: useGlass ? colorScheme.primary : foreground,
             ),
@@ -1081,7 +1081,7 @@ class SettingsInfoCard extends StatelessWidget {
       ),
     );
     final card = useGlass
-        ? MornyeGlassPanel.overlay(child: content)
+        ? TangoGlassPanel.overlay(child: content)
         : DecoratedBox(
             decoration: BoxDecoration(
               color: background,

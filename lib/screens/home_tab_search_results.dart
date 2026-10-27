@@ -67,7 +67,7 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
     if (isUrlNotRecognized) {
       return AppContentCard(
         elevation: 0,
-        mornyeSurface: false,
+        tangoSurface: false,
         // Matches ErrorCard: a solid container with its paired on-color.
         color: colorScheme.errorContainer,
         shape: RoundedRectangleBorder(
@@ -176,12 +176,12 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
 
   void _showSortOptions(ColorScheme colorScheme) {
     var tempSort = _searchSortOption;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     showAppModalBottomSheet<void>(
       context: context,
       useRootNavigator: true,
       isScrollControlled: true,
-      backgroundColor: mornye ? null : colorScheme.surfaceContainerLow,
+      backgroundColor: tango ? null : colorScheme.surfaceContainerLow,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheetState) {
           final content = SafeArea(
@@ -215,8 +215,8 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
                     spacing: 8,
                     runSpacing: 8,
                     children: HomeSearchSortOption.values.map((option) {
-                      if (context.isMornye) {
-                        return MornyeFilterChip(
+                      if (context.isTango) {
+                        return TangoFilterChip(
                           label: _sortOptionLabel(option),
                           selected: tempSort == option,
                           glass: false,
@@ -459,14 +459,14 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
   }) {
     // Material result groups are grouped rows, on the settings group tier.
     final sectionColor = colorScheme.surfaceContainer;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
 
     return [
       SliverToBoxAdapter(
         child: Padding(
           // Aligned with the clamped result list below on wide screens.
           padding:
-              (mornye
+              (tango
                       ? const EdgeInsetsDirectional.fromSTEB(20, 16, 12, 10)
                       : const EdgeInsetsDirectional.fromSTEB(16, 8, 8, 8))
                   .add(
@@ -477,7 +477,7 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
               Expanded(
                 child: Text(
                   title,
-                  style: mornye
+                  style: tango
                       ? Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
@@ -493,7 +493,7 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
                 ExpressiveButton(
                   text: true,
                   onPressed: () => _showSortOptions(colorScheme),
-                  icon: mornye
+                  icon: tango
                       ? null
                       : Icon(
                           Icons.swap_vert,
@@ -529,10 +529,10 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
           delegate: SliverChildBuilderDelegate((context, index) {
             final isFirst = index == 0;
             final isLast = index == itemCount - 1;
-            if (mornye) {
+            if (tango) {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: MornyeGlassPanel.overlay(
+                child: TangoGlassPanel.overlay(
                   blurEnabled: false,
                   radius: 24,
                   firstInGroup: isFirst,
@@ -714,13 +714,13 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
         _triggerSearchWithFilter(id);
       }
 
-      return context.isMornye
-          ? MornyeGlassPanel.overlay(
+      return context.isTango
+          ? TangoGlassPanel.overlay(
               radius: 24,
-              child: MornyeFilterChip(
+              child: TangoFilterChip(
                 label: label,
                 selected: selectedFilter == id,
-                icon: icon == null ? null : mornyeIconFor(icon),
+                icon: icon == null ? null : tangoIconFor(icon),
                 glass: false,
                 tonal: selectedFilter == id,
                 onTap: select,
@@ -798,7 +798,7 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
     // The Material Home keeps the resting field clean; import and paste
     // appear once it is focused.
     final showInputActions =
-        context.isMornye ||
+        context.isTango ||
         widget.mode == HomeTabMode.search ||
         _searchFocusNode.hasFocus;
 

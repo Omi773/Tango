@@ -4,7 +4,7 @@ mod index;
 
 use cap_std::ambient_authority;
 use cap_std::fs::{Dir, File, OpenOptions};
-pub(crate) use mornye_core::fs::clean;
+pub(crate) use tango_core::fs::clean;
 use std::collections::BTreeMap;
 use std::io;
 use std::path::{Component, Path, PathBuf};
@@ -631,7 +631,7 @@ impl FilePath {
             let mut nonce = [0; 16];
             getrandom::fill(&mut nonce).map_err(|error| io::Error::other(error.to_string()))?;
             let name = format!(
-                ".mornye-{}.partial",
+                ".tango-{}.partial",
                 crate::binary::encode(&nonce, "hex").expect("hex encoding")
             );
             #[cfg(unix)]

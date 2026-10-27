@@ -37,7 +37,7 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
         ),
       _MetadataOption(
         icon: Icons.person_outline,
-        label: l10n.mornyeGoToArtist,
+        label: l10n.tangoGoToArtist,
         onTap: () =>
             navigateToArtistCredits(screenContext, artistNames: artistName),
       ),
@@ -131,7 +131,7 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
     ColorScheme colorScheme, {
     Rect? anchor,
   }) {
-    if (isDesktopPlatform && !screenContext.isMornye) {
+    if (isDesktopPlatform && !screenContext.isTango) {
       _showDesktopOptionsMenu(screenContext, ref, colorScheme, anchor: anchor);
       return;
     }
@@ -139,8 +139,8 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
       final l10n = sheetContext.l10n;
       final options = _menuOptions(screenContext, ref, colorScheme, l10n);
 
-      if (sheetContext.isMornye) {
-        final groups = <List<MornyeMenuAction>>[];
+      if (sheetContext.isTango) {
+        final groups = <List<TangoMenuAction>>[];
         for (final option in options) {
           if (option.icon == Icons.share_outlined) {
             continue;
@@ -149,8 +149,8 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
             groups.add([]);
           }
           groups.last.add(
-            MornyeMenuAction(
-              icon: mornyeIconFor(option.icon),
+            TangoMenuAction(
+              icon: tangoIconFor(option.icon),
               label: option.label,
               destructive: option.destructive,
               onPressed: () =>
@@ -158,10 +158,10 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
             ),
           );
         }
-        return MornyeContextMenu(
+        return TangoContextMenu(
           quickActions: [
             if (_fileExists) ...[
-              MornyeMenuAction(
+              TangoMenuAction(
                 icon: CupertinoIcons.play_fill,
                 label: l10n.trackMetadataPlay,
                 onPressed: () => _closeOptionsMenuAndRun(
@@ -171,7 +171,7 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
               ),
             ],
             if (!_isNetworkItem)
-              MornyeMenuAction(
+              TangoMenuAction(
                 icon: CupertinoIcons.share_solid,
                 label: l10n.trackMetadataShare,
                 onPressed: () => _closeOptionsMenuAndRun(
@@ -270,8 +270,8 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
       );
     }
 
-    if (screenContext.isMornye) {
-      showMornyeContextMenu<void>(
+    if (screenContext.isTango) {
+      showTangoContextMenu<void>(
         context: screenContext,
         anchor: anchor,
         builder: buildMenu,

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:mornye/services/cover_cache_manager.dart';
-import 'package:mornye/constants/app_info.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/screens/upgrade_intro_screen.dart';
+import 'package:tango/services/cover_cache_manager.dart';
+import 'package:tango/constants/app_info.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
+import 'package:tango/screens/upgrade_intro_screen.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -171,7 +171,7 @@ class _AppHeaderCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Material sits on the settings group tier beside the groups below.
-    final cardColor = !context.isMornye
+    final cardColor = !context.isTango
         ? settingsGroupColor(context)
         : isDark
         ? Color.alphaBlend(
@@ -387,7 +387,7 @@ class _TranslatorsSection extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final cardColor = !context.isMornye
+    final cardColor = !context.isTango
         ? settingsGroupColor(context)
         : isDark
         ? Color.alphaBlend(
@@ -505,7 +505,7 @@ class _AboutSettingsItem extends StatelessWidget {
                   height: 40,
                   child: AppIcon(
                     context.adaptiveIcon(icon),
-                    color: context.isMornye
+                    color: context.isTango
                         ? colorScheme.primary
                         : colorScheme.onSurfaceVariant,
                     size: 24,

@@ -6,8 +6,8 @@ import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:mornye/services/update_checker.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/services/update_checker.dart';
+import 'package:tango/utils/logger.dart';
 
 final _log = AppLogger('DesktopUpdater');
 
@@ -108,7 +108,7 @@ class DesktopUpdater {
       final directory =
           _downloadDirectory ??
           Directory(
-            p.join((await getTemporaryDirectory()).path, 'mornye-update'),
+            p.join((await getTemporaryDirectory()).path, 'tango-update'),
           );
       await directory.create(recursive: true);
       final target = File(p.join(directory.path, assetName));

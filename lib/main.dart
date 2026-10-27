@@ -9,37 +9,37 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mornye/app.dart';
-import 'package:mornye/models/library_database_models.dart';
-import 'package:mornye/models/settings.dart';
-import 'package:mornye/providers/download_queue_provider.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/providers/local_library_provider.dart';
-import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/providers/theme_provider.dart';
-import 'package:mornye/services/notification_service.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/services/share_intent_service.dart';
-import 'package:mornye/services/cover_cache_manager.dart';
-import 'package:mornye/services/app_state_database.dart';
-import 'package:mornye/services/app_navigation_service.dart';
-import 'package:mornye/services/app_orientation.dart';
-import 'package:mornye/services/activity_attachment.dart';
-import 'package:mornye/services/app_crash_service.dart';
-import 'package:mornye/services/desktop_deep_links.dart';
-import 'package:mornye/services/desktop_diagnostics.dart';
-import 'package:mornye/services/desktop_library_watcher.dart';
-import 'package:mornye/services/music_player_service.dart';
-import 'package:mornye/services/player_widget_service.dart';
-import 'package:mornye/screens/now_playing_screen.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/local_library_scan_prefs.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/utils/extension_auth_launcher.dart';
-import 'package:mornye/widgets/desktop/desktop_inspector.dart'
+import 'package:tango/app.dart';
+import 'package:tango/models/library_database_models.dart';
+import 'package:tango/models/settings.dart';
+import 'package:tango/providers/download_queue_provider.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/providers/local_library_provider.dart';
+import 'package:tango/providers/runtime_profile_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/providers/theme_provider.dart';
+import 'package:tango/services/notification_service.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/services/share_intent_service.dart';
+import 'package:tango/services/cover_cache_manager.dart';
+import 'package:tango/services/app_state_database.dart';
+import 'package:tango/services/app_navigation_service.dart';
+import 'package:tango/services/app_orientation.dart';
+import 'package:tango/services/activity_attachment.dart';
+import 'package:tango/services/app_crash_service.dart';
+import 'package:tango/services/desktop_deep_links.dart';
+import 'package:tango/services/desktop_diagnostics.dart';
+import 'package:tango/services/desktop_library_watcher.dart';
+import 'package:tango/services/music_player_service.dart';
+import 'package:tango/services/player_widget_service.dart';
+import 'package:tango/screens/now_playing_screen.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/local_library_scan_prefs.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/utils/extension_auth_launcher.dart';
+import 'package:tango/widgets/desktop/desktop_inspector.dart'
     show bindDesktopFullScreenLyrics;
-import 'package:mornye/widgets/desktop/desktop_window.dart'
+import 'package:tango/widgets/desktop/desktop_window.dart'
     show listenDesktopWindowFullScreen;
 
 final _log = AppLogger('Main');
@@ -157,7 +157,7 @@ void main() {
             initialThemeSettingsProvider.overrideWithValue(bootstrapTheme),
           ],
           child: EagerInitialization(
-            child: MornyeApp(
+            child: TangoApp(
               disableOverscrollEffects: runtimeProfile.disableOverscrollEffects,
             ),
           ),

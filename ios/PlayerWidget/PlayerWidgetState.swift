@@ -13,7 +13,7 @@ struct PlayerWidgetState: Codable {
     var artworkKey = ""
     var artworkName = ""
 
-    static let kind = "MornyePlayer"
+    static let kind = "TangoPlayer"
     static var container: URL? {
         let group = Bundle.main.object(forInfoDictionaryKey: "PlayerWidgetAppGroup") as? String
             ?? "group.app.tango.music"
@@ -35,7 +35,7 @@ struct PlayerWidgetState: Codable {
     static var preview: PlayerWidgetState {
         var value = Self()
         value.title = "Your favorite music"
-        value.artist = "Mornye"
+        value.artist = "Tango"
         value.album = "Now Playing"
         value.canPlay = true
         value.canPrevious = true

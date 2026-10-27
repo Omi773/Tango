@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/material_symbols.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:tango/theme/material_symbols.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/theme/tango_theme.dart';
 
 /// [widget] as an [AppIcon] when it is a plain [Icon], so shared components
 /// can adopt Material Symbols without changing every caller.
@@ -23,7 +23,7 @@ Widget symbolIconWidget(Widget widget) {
 
 /// [Icon] that draws the Material theme with rounded Material Symbols.
 ///
-/// Mornye keeps [icon] unchanged, or its Cupertino counterpart with
+/// Tango keeps [icon] unchanged, or its Cupertino counterpart with
 /// [AppIcon.adaptive]. Icons without a symbol fall back to [icon].
 class AppIcon extends StatelessWidget {
   const AppIcon(
@@ -37,7 +37,7 @@ class AppIcon extends StatelessWidget {
     this.textDirection,
   }) : _adaptive = false;
 
-  /// Uses [mornyeIconFor] when the Mornye theme is on.
+  /// Uses [tangoIconFor] when the Tango theme is on.
   const AppIcon.adaptive(
     this.icon, {
     super.key,
@@ -63,9 +63,9 @@ class AppIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final icon = this.icon;
-    if (context.isMornye) {
+    if (context.isTango) {
       return Icon(
-        _adaptive && icon != null ? mornyeIconFor(icon) : icon,
+        _adaptive && icon != null ? tangoIconFor(icon) : icon,
         size: size,
         color: color,
         semanticLabel: semanticLabel,

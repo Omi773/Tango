@@ -1,5 +1,5 @@
-use mornye_extensions::RuntimeLimits;
-use mornye_extensions::environment::ExtensionEnvironment;
+use tango_extensions::RuntimeLimits;
+use tango_extensions::environment::ExtensionEnvironment;
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 use std::io::{Read, Write};

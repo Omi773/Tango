@@ -9,35 +9,35 @@ import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:flutter/rendering.dart'
     show OverflowBoxFit, RenderAbstractViewport, ScrollDirection;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/lyrics_parser.dart';
-import 'package:mornye/utils/lyrics_timeline.dart';
-import 'package:mornye/utils/synced_lyrics_scroll.dart';
-import 'package:mornye/widgets/aligned_lyric_pronunciation.dart';
-import 'package:mornye/widgets/lyric_supplement_transition.dart';
-import 'package:mornye/widgets/lyric_scroll_motion.dart';
-import 'package:mornye/widgets/lyric_gap_indicator.dart';
-import 'package:mornye/widgets/mornye_player_slider.dart';
-import 'package:mornye/widgets/lyrics_text_scale.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/providers/runtime_profile_provider.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/lyrics_parser.dart';
+import 'package:tango/utils/lyrics_timeline.dart';
+import 'package:tango/utils/synced_lyrics_scroll.dart';
+import 'package:tango/widgets/aligned_lyric_pronunciation.dart';
+import 'package:tango/widgets/lyric_supplement_transition.dart';
+import 'package:tango/widgets/lyric_scroll_motion.dart';
+import 'package:tango/widgets/lyric_gap_indicator.dart';
+import 'package:tango/widgets/tango_player_slider.dart';
+import 'package:tango/widgets/lyrics_text_scale.dart';
 
 part 'player_lyrics_line_style.dart';
 part 'player_lyrics_word_sweep.dart';
 
-const _mornyeLyricFontSize = 34.0;
+const _tangoLyricFontSize = 34.0;
 
 /// Material lyric sizes on desktop, where the lyrics panel is far wider than
 /// a phone. Null keeps the text theme's size (phones and tablets).
 double? get _materialLyricFontSize => isDesktopPlatform ? 32 : null;
 double get _materialBackgroundLyricFontSize => isDesktopPlatform ? 24 : 18;
-const mornyeLyricsContentInset = 28.0 + MornyePlayerSlider.horizontalInset;
+const tangoLyricsContentInset = 28.0 + TangoPlayerSlider.horizontalInset;
 
 /// How much of the lyrics area's bottom the player's controls cover. The
-/// Mornye phone player lays lyrics out under its controls so they can grow
+/// Tango phone player lays lyrics out under its controls so they can grow
 /// when the controls hide; content that is not a scrolling lyric list keeps
 /// clear of this part.
 class LyricsCoveredBottom extends InheritedWidget {
@@ -409,7 +409,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     if (widget.seekPreview.value != null) {
       return LyricsParser.activeIndex(_lines, position);
     }
-    if (context.isMornye) {
+    if (context.isTango) {
       // Read one transport snapshot: playing/loading derived providers can
       // notify separately during the same playback event.
       final playback = ref.read(playbackStateProvider).value;
@@ -535,7 +535,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     super.dispose();
   }
 
-  void _measureMornyeLines(BuildContext context, double width) {
+  void _measureTangoLines(BuildContext context, double width) {
     final style = _primaryLyricStyle(context);
     final scaler = MediaQuery.textScalerOf(context);
     final direction = Directionality.of(context);
@@ -757,7 +757,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     final curve = seeking ? Curves.easeOutCubic : LyricScrollMotion.scrollCurve;
     if (duration == Duration.zero) _stopScrollMotion();
     final extents = _targetLineExtents;
-    if (context.isMornye && extents != null && row < extents.length) {
+    if (context.isTango && extents != null && row < extents.length) {
       final position = _scroll.position;
       final target = extents.offsetForRow(row);
       final offset = target.clamp(
@@ -860,13 +860,13 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     final loading = _visible
         ? ref.watch(playbackLoadingProvider)
         : ref.read(playbackLoadingProvider);
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final highContrast = MediaQuery.highContrastOf(context);
     final blurLyrics =
-        mornye &&
+        tango &&
         !highContrast &&
         // Every defocused line is filtered again on each playback frame.
-        ref.watch(mornyeLiquidGlassProvider);
+        ref.watch(tangoLiquidGlassProvider);
     // Line emphasis eases over most of the scroll, so the new line brightens
     // as it arrives instead of switching ahead of the movement.
     final motion = MediaQuery.disableAnimationsOf(context)
@@ -903,7 +903,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
       },
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final inset = mornye ? mornyeLyricsContentInset : 24.0;
+          final inset = tango ? tangoLyricsContentInset : 24.0;
           final contentWidth = (constraints.maxWidth - inset * 2).clamp(
             0.0,
             double.infinity,
@@ -915,10 +915,10 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
             0.0,
             double.infinity,
           );
-          final lyricScale = mornye && layoutWidth > 0
+          final lyricScale = tango && layoutWidth > 0
               ? contentWidth / layoutWidth
               : 1.0;
-          if (mornye) {
+          if (tango) {
             final previousExtents = _lineExtents;
             final previousScrollAnchor =
                 previousExtents != null && _scroll.hasClients
@@ -931,7 +931,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                 previousExtents?.offsetForRow(previousScrollAnchor) ?? 0;
             final previousFocusOffset =
                 previousExtents?.offsetForRow(focusAnchor) ?? 0;
-            _measureMornyeLines(context, layoutWidth);
+            _measureTangoLines(context, layoutWidth);
             // Reuse text measurements; only interpolate row heights as the
             // supplements fade. Scrolling follows the same animation clock.
             final geometryKey = (
@@ -998,7 +998,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
               }
             });
           }
-          final topPadding = mornye
+          final topPadding = tango
               ? _focusInset
               : syncedLyricsCenterPadding(
                   viewportDimension: constraints.maxHeight,
@@ -1006,7 +1006,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                 );
           // Leave enough trailing space for the final line to reach the same
           // upper focus position as every other line.
-          final bottomPadding = mornye && _lineExtents!.isNotEmpty
+          final bottomPadding = tango && _lineExtents!.isNotEmpty
               ? (constraints.maxHeight - _lineExtents!.last - topPadding).clamp(
                   topPadding,
                   double.infinity,
@@ -1014,7 +1014,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
               : topPadding;
           final list = ListView.builder(
             controller: _scroll,
-            itemExtentBuilder: mornye
+            itemExtentBuilder: tango
                 ? (index, _) => index < lines.length
                       ? _lineExtents![index]
                       : widget.credits!.heightFor(context, contentWidth)
@@ -1037,7 +1037,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
               final isActive = _activeLines.contains(index);
               final isPast = index < active;
 
-              final color = mornye
+              final color = tango
                   ? Colors.white
                   : isActive
                   ? widget.colorScheme.onSurface
@@ -1057,7 +1057,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                     child: SizedBox(
                       height: 24,
                       child: Align(
-                        alignment: mornye
+                        alignment: tango
                             ? AlignmentDirectional.centerStart
                             : Alignment.center,
                         child:
@@ -1094,7 +1094,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                   initialPosition: _activeTransitionPosition,
                   seekPreview: widget.seekPreview,
                   supplementVisibility: visibility,
-                  pronunciationLayout: mornye
+                  pronunciationLayout: tango
                       ? _pronunciationLayouts[index]
                       : null,
                   textAlign: textAlign,
@@ -1114,7 +1114,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                   content,
                   color,
                   visibility: visibility,
-                  pronunciationLayout: mornye
+                  pronunciationLayout: tango
                       ? _pronunciationLayouts[index]
                       : null,
                   textAlign: textAlign,
@@ -1130,7 +1130,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                   child: SizedBox(width: double.infinity, child: content),
                 ),
               );
-              if (mornye) {
+              if (tango) {
                 final activeLead = active < 0 ? -1 : _focus;
                 final distance = activeLead < 0
                     ? row + 1
@@ -1192,7 +1192,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                       // Focus changes paint scale, never font metrics or
                       // wrapping shared by the plain and word-timed line.
                       scale: isActive ? 1.0 : 0.96,
-                      alignment: !mornye
+                      alignment: !tango
                           ? Alignment.center
                           : (textAlign == TextAlign.end
                                     ? AlignmentDirectional.centerEnd
@@ -1201,7 +1201,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                       duration: motion,
                       curve: Curves.easeOutCubic,
                       child: AnimatedOpacity(
-                        opacity: mornye
+                        opacity: tango
                             ? (isActive || highContrast ? 1 : 0.48)
                             : (isActive ? 1.0 : (isPast ? 0.55 : 0.85)),
                         duration: motion,
@@ -1470,7 +1470,7 @@ class LyricsCredits extends StatelessWidget {
 
   TextStyle _style(BuildContext context) =>
       Theme.of(context).textTheme.bodyMedium!.copyWith(
-        fontSize: context.isMornye ? 17 : 14,
+        fontSize: context.isTango ? 17 : 14,
         fontWeight: FontWeight.w600,
         height: 1.4,
         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.48),

@@ -3,8 +3,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/theme/tango_theme.dart';
 
 /// A draggable scroll thumb for long library lists, with a bubble naming the
 /// section under the thumb (a letter or a month).
@@ -209,7 +209,7 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final reduced = MediaQuery.disableAnimationsOf(context);
     final motion = AppMotion.spatialFast(
       context,
@@ -284,7 +284,7 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
                                             ? colors.primary
                                             : colors.onSurfaceVariant
                                                   .withValues(
-                                                    alpha: mornye ? 0.45 : 0.6,
+                                                    alpha: tango ? 0.45 : 0.6,
                                                   ),
                                         shape: const StadiumBorder(),
                                       ),
@@ -309,7 +309,7 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
                                 child: _Bubble(
                                   key: const ValueKey('library-scroll-bubble'),
                                   label: label,
-                                  mornye: mornye,
+                                  tango: tango,
                                   motion: motion,
                                 ),
                               ),
@@ -367,17 +367,17 @@ class _BubbleLayout extends SingleChildLayoutDelegate {
 }
 
 /// The section bubble beside the thumb. Material uses a container-colored
-/// shape pointing at the thumb; Mornye a plain rounded tile.
+/// shape pointing at the thumb; Tango a plain rounded tile.
 class _Bubble extends StatelessWidget {
   const _Bubble({
     super.key,
     required this.label,
-    required this.mornye,
+    required this.tango,
     required this.motion,
   });
 
   final String label;
-  final bool mornye;
+  final bool tango;
   final AppMotionSpec motion;
 
   @override
@@ -397,12 +397,12 @@ class _Bubble extends StatelessWidget {
         constraints: const BoxConstraints(minWidth: 72, minHeight: 72),
         child: DecoratedBox(
           decoration: ShapeDecoration(
-            color: mornye
+            color: tango
                 ? colors.surfaceContainerHighest
                 : colors.primaryContainer,
             shadows: kElevationToShadow[2],
             shape: RoundedRectangleBorder(
-              borderRadius: mornye
+              borderRadius: tango
                   ? BorderRadius.circular(18)
                   // The sharp corner points at the thumb.
                   : const BorderRadiusDirectional.only(
@@ -428,7 +428,7 @@ class _Bubble extends StatelessWidget {
                               : Theme.of(context).textTheme.titleMedium)
                           ?.copyWith(
                             fontWeight: FontWeight.w700,
-                            color: mornye
+                            color: tango
                                 ? colors.onSurface
                                 : colors.onPrimaryContainer,
                           ),

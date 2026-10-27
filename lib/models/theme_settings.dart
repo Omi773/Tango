@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mornye/utils/desktop_platform.dart';
+import 'package:tango/utils/desktop_platform.dart';
 
 const String kThemeModeKey = 'theme_mode';
 const String kUseDynamicColorKey = 'use_dynamic_color';
 const String kSeedColorKey = 'seed_color';
 const String kUseAmoledKey = 'use_amoled';
 const String kThemeStyleKey = 'theme_style';
-const String kMornyeAccentKey = 'mornye_accent';
+const String kTangoAccentKey = 'tango_accent';
 const String kUseSystemFontKey = 'use_system_font';
 const String kCustomFontIdKey = 'custom_font_id';
 const String kCustomFontNameKey = 'custom_font_name';
@@ -15,30 +15,30 @@ const String kLyricsTextScaleKey = 'lyrics_text_scale';
 
 double normalizeLyricsTextScale(num? value) =>
     value != null && value.isFinite ? value.toDouble().clamp(0.8, 1.4) : 1.0;
-const String kMornyeGlassClarityKey = 'mornye_glass_clarity';
-const String kMornyeGlassOutlinesKey = 'mornye_glass_outlines';
-const double kDefaultMornyeGlassClarity = 0.75;
+const String kTangoGlassClarityKey = 'tango_glass_clarity';
+const String kTangoGlassOutlinesKey = 'tango_glass_outlines';
+const double kDefaultTangoGlassClarity = 0.75;
 
-double normalizeMornyeGlassClarity(num? value) =>
+double normalizeTangoGlassClarity(num? value) =>
     value != null && value.isFinite
     ? value.toDouble().clamp(0.0, 1.0)
-    : kDefaultMornyeGlassClarity;
+    : kDefaultTangoGlassClarity;
 
-enum AppThemeStyle { material, mornye }
+enum AppThemeStyle { material, tango }
 
-enum MornyeAccent { red, orange, green, teal, blue, purple, pink }
+enum TangoAccent { red, orange, green, teal, blue, purple, pink }
 
-MornyeAccent mornyeAccentFromString(String? value) =>
-    MornyeAccent.values.firstWhere(
+TangoAccent tangoAccentFromString(String? value) =>
+    TangoAccent.values.firstWhere(
       (accent) => accent.name == value,
-      orElse: () => MornyeAccent.red,
+      orElse: () => TangoAccent.red,
     );
 
-/// Style used until the person picks one: Mornye on macOS, Material on
+/// Style used until the person picks one: Tango on macOS, Material on
 /// Windows, Linux and mobile.
 AppThemeStyle defaultAppThemeStyle() =>
     isDesktopPlatform && defaultTargetPlatform == TargetPlatform.macOS
-    ? AppThemeStyle.mornye
+    ? AppThemeStyle.tango
     : AppThemeStyle.material;
 
 AppThemeStyle themeStyleFromString(String? value) => AppThemeStyle.values
@@ -53,13 +53,13 @@ class ThemeSettings {
   final int seedColorValue;
   final bool useAmoled;
   final AppThemeStyle style;
-  final MornyeAccent mornyeAccent;
+  final TangoAccent tangoAccent;
   final bool useSystemFont;
   final String customFontId;
   final String customFontName;
   final double lyricsTextScale;
-  final double mornyeGlassClarity;
-  final bool mornyeGlassOutlines;
+  final double tangoGlassClarity;
+  final bool tangoGlassOutlines;
 
   const ThemeSettings({
     this.themeMode = ThemeMode.system,
@@ -67,13 +67,13 @@ class ThemeSettings {
     this.seedColorValue = kDefaultSeedColor,
     this.useAmoled = false,
     this.style = AppThemeStyle.material,
-    this.mornyeAccent = MornyeAccent.red,
+    this.tangoAccent = TangoAccent.red,
     this.useSystemFont = false,
     this.customFontId = '',
     this.customFontName = '',
     this.lyricsTextScale = 1,
-    this.mornyeGlassClarity = kDefaultMornyeGlassClarity,
-    this.mornyeGlassOutlines = true,
+    this.tangoGlassClarity = kDefaultTangoGlassClarity,
+    this.tangoGlassOutlines = true,
   });
 
   Color get seedColor => Color(seedColorValue);
@@ -84,13 +84,13 @@ class ThemeSettings {
     int? seedColorValue,
     bool? useAmoled,
     AppThemeStyle? style,
-    MornyeAccent? mornyeAccent,
+    TangoAccent? tangoAccent,
     bool? useSystemFont,
     String? customFontId,
     String? customFontName,
     double? lyricsTextScale,
-    double? mornyeGlassClarity,
-    bool? mornyeGlassOutlines,
+    double? tangoGlassClarity,
+    bool? tangoGlassOutlines,
   }) {
     return ThemeSettings(
       themeMode: themeMode ?? this.themeMode,
@@ -98,17 +98,17 @@ class ThemeSettings {
       seedColorValue: seedColorValue ?? this.seedColorValue,
       useAmoled: useAmoled ?? this.useAmoled,
       style: style ?? this.style,
-      mornyeAccent: mornyeAccent ?? this.mornyeAccent,
+      tangoAccent: tangoAccent ?? this.tangoAccent,
       useSystemFont: useSystemFont ?? this.useSystemFont,
       customFontId: customFontId ?? this.customFontId,
       customFontName: customFontName ?? this.customFontName,
       lyricsTextScale: normalizeLyricsTextScale(
         lyricsTextScale ?? this.lyricsTextScale,
       ),
-      mornyeGlassClarity: normalizeMornyeGlassClarity(
-        mornyeGlassClarity ?? this.mornyeGlassClarity,
+      tangoGlassClarity: normalizeTangoGlassClarity(
+        tangoGlassClarity ?? this.tangoGlassClarity,
       ),
-      mornyeGlassOutlines: mornyeGlassOutlines ?? this.mornyeGlassOutlines,
+      tangoGlassOutlines: tangoGlassOutlines ?? this.tangoGlassOutlines,
     );
   }
 
@@ -118,13 +118,13 @@ class ThemeSettings {
     kSeedColorKey: seedColorValue,
     kUseAmoledKey: useAmoled,
     kThemeStyleKey: style.name,
-    kMornyeAccentKey: mornyeAccent.name,
+    kTangoAccentKey: tangoAccent.name,
     kUseSystemFontKey: useSystemFont,
     kCustomFontIdKey: customFontId,
     kCustomFontNameKey: customFontName,
     kLyricsTextScaleKey: lyricsTextScale,
-    kMornyeGlassClarityKey: mornyeGlassClarity,
-    kMornyeGlassOutlinesKey: mornyeGlassOutlines,
+    kTangoGlassClarityKey: tangoGlassClarity,
+    kTangoGlassOutlinesKey: tangoGlassOutlines,
   };
 
   factory ThemeSettings.fromJson(Map<String, dynamic> json) {
@@ -134,17 +134,17 @@ class ThemeSettings {
       seedColorValue: json[kSeedColorKey] as int? ?? kDefaultSeedColor,
       useAmoled: json[kUseAmoledKey] as bool? ?? false,
       style: themeStyleFromString(json[kThemeStyleKey] as String?),
-      mornyeAccent: mornyeAccentFromString(json[kMornyeAccentKey] as String?),
+      tangoAccent: tangoAccentFromString(json[kTangoAccentKey] as String?),
       useSystemFont: json[kUseSystemFontKey] as bool? ?? false,
       customFontId: json[kCustomFontIdKey] as String? ?? '',
       customFontName: json[kCustomFontNameKey] as String? ?? '',
       lyricsTextScale: normalizeLyricsTextScale(
         json[kLyricsTextScaleKey] as num?,
       ),
-      mornyeGlassClarity: normalizeMornyeGlassClarity(
-        json[kMornyeGlassClarityKey] as num?,
+      tangoGlassClarity: normalizeTangoGlassClarity(
+        json[kTangoGlassClarityKey] as num?,
       ),
-      mornyeGlassOutlines: json[kMornyeGlassOutlinesKey] as bool? ?? true,
+      tangoGlassOutlines: json[kTangoGlassOutlinesKey] as bool? ?? true,
     );
   }
 
@@ -157,13 +157,13 @@ class ThemeSettings {
         other.seedColorValue == seedColorValue &&
         other.useAmoled == useAmoled &&
         other.style == style &&
-        other.mornyeAccent == mornyeAccent &&
+        other.tangoAccent == tangoAccent &&
         other.useSystemFont == useSystemFont &&
         other.customFontId == customFontId &&
         other.customFontName == customFontName &&
         other.lyricsTextScale == lyricsTextScale &&
-        other.mornyeGlassClarity == mornyeGlassClarity &&
-        other.mornyeGlassOutlines == mornyeGlassOutlines;
+        other.tangoGlassClarity == tangoGlassClarity &&
+        other.tangoGlassOutlines == tangoGlassOutlines;
   }
 
   @override
@@ -173,13 +173,13 @@ class ThemeSettings {
       seedColorValue.hashCode ^
       useAmoled.hashCode ^
       style.hashCode ^
-      mornyeAccent.hashCode ^
+      tangoAccent.hashCode ^
       useSystemFont.hashCode ^
       customFontId.hashCode ^
       customFontName.hashCode ^
       lyricsTextScale.hashCode ^
-      mornyeGlassClarity.hashCode ^
-      mornyeGlassOutlines.hashCode;
+      tangoGlassClarity.hashCode ^
+      tangoGlassOutlines.hashCode;
 }
 
 ThemeMode themeModeFromString(String? value) {

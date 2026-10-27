@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/app_action_button.dart';
-import 'package:mornye/widgets/expressive_button.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/widgets/app_action_button.dart';
+import 'package:tango/widgets/expressive_button.dart';
 
 /// Responsive rows shared by selection-mode action buttons.
 class SelectionActionGrid extends StatelessWidget {
@@ -59,7 +59,7 @@ class SelectionActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
+    if (context.isTango) {
       return AppActionButton(
         outlined: !destructive,
         tonal: !destructive,

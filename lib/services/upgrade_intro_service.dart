@@ -4,10 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// the rebrand tour before the user has actually seen it.
 class UpgradeIntroService {
   /// A new key shows the tour once again.
-  static const _seenKey = 'upgrade_intro_mornye_seen';
+  static const _seenKey = 'upgrade_intro_tango_seen';
 
   /// Fresh installs see the tour too: the application ID changed with the
-  /// rebrand, so SpotiFLAC users arrive as new Mornye installations.
+  /// rebrand, so SpotiFLAC users arrive as new Tango installations.
   static bool shouldShow(SharedPreferences preferences) =>
       !(preferences.getBool(_seenKey) ?? false);
 

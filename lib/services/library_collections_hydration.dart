@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:mornye/models/library_collections.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/services/library_collections_database.dart';
+import 'package:tango/models/library_collections.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/services/library_collections_database.dart';
 
 const _workerRowThreshold = 64;
 const _workerJsonThreshold = 64 * 1024;

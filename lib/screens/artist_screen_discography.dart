@@ -31,7 +31,7 @@ extension _ArtistScreenDiscography on _ArtistScreenState {
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
               child: Row(
                 children: [
-                  if (!context.isMornye) ...[
+                  if (!context.isTango) ...[
                     Icon(Icons.download, color: colorScheme.primary),
                     const SizedBox(width: 12),
                   ],
@@ -39,7 +39,7 @@ extension _ArtistScreenDiscography on _ArtistScreenState {
                     child: Text(
                       context.l10n.discographyDownload,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: context.isMornye
+                        fontWeight: context.isTango
                             ? FontWeight.w600
                             : FontWeight.bold,
                       ),
@@ -48,8 +48,8 @@ extension _ArtistScreenDiscography on _ArtistScreenState {
                 ],
               ),
             ),
-            // Material sheets separate the header by space; dividers are Mornye's.
-            if (context.isMornye) const Divider(height: 1),
+            // Material sheets separate the header by space; dividers are Tango's.
+            if (context.isTango) const Divider(height: 1),
             if (albums.isNotEmpty)
               _DiscographyOptionTile(
                 icon: Icons.library_music,
@@ -110,14 +110,14 @@ extension _ArtistScreenDiscography on _ArtistScreenState {
       useRootNavigator: true,
       isScrollControlled: true,
       // The sheet forces the dark theme on its own glass.
-      mornyeGlass: false,
-      builder: (sheetContext) => sheetContext.isMornye
+      tangoGlass: false,
+      builder: (sheetContext) => sheetContext.isTango
           ? Theme(
-              data: MornyeTheme.fromContext(
+              data: TangoTheme.fromContext(
                 sheetContext,
                 brightness: Brightness.dark,
               ),
-              child: MornyeGlassPanel(
+              child: TangoGlassPanel(
                 tintOpacity: 0.78,
                 child: Builder(builder: buildSheet),
               ),
@@ -359,7 +359,7 @@ class _DiscographyOptionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    if (context.isMornye) {
+    if (context.isTango) {
       final textTheme = Theme.of(context).textTheme;
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -390,7 +390,7 @@ class _DiscographyOptionTile extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   Icon(
-                    mornyeIconFor(icon),
+                    tangoIconFor(icon),
                     size: 22,
                     color: colorScheme.onSurface,
                   ),

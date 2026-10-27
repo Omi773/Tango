@@ -7,7 +7,7 @@ extension _HomeTabExploreUI on _HomeTabState {
     ColorScheme colorScheme,
   ) {
     final hasGreeting =
-        !context.isMornye && greeting != null && greeting.isNotEmpty;
+        !context.isTango && greeting != null && greeting.isNotEmpty;
     final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     final sectionOffset = hasGreeting ? 1 : 0;
     final totalCount = sections.length + sectionOffset + 1;
@@ -394,28 +394,28 @@ extension _HomeTabExploreUI on _HomeTabState {
   }
 
   void _showTrackBottomSheet(ExploreItem item, BuildContext itemContext) {
-    if (context.isMornye) {
+    if (context.isTango) {
       final box = itemContext.findRenderObject();
       final anchor = box is RenderBox && box.hasSize
           ? box.localToGlobal(Offset.zero) & box.size
           : null;
-      showMornyeContextMenu<void>(
+      showTangoContextMenu<void>(
         context: itemContext,
         // Featured cards can exceed the menu helper's page-size heuristic.
         anchor: anchor,
-        builder: (menuContext) => MornyeContextMenu(
+        builder: (menuContext) => TangoContextMenu(
           groups: [
             [
-              MornyeMenuAction(
-                icon: mornyeIconFor(Icons.download),
+              TangoMenuAction(
+                icon: tangoIconFor(Icons.download),
                 label: menuContext.l10n.downloadTitle,
                 onPressed: () {
                   Navigator.pop(menuContext);
                   _handleExploreTrackPrimaryAction(item);
                 },
               ),
-              MornyeMenuAction(
-                icon: mornyeIconFor(Icons.album),
+              TangoMenuAction(
+                icon: tangoIconFor(Icons.album),
                 label: menuContext.l10n.homeGoToAlbum,
                 onPressed: () {
                   Navigator.pop(menuContext);
@@ -496,7 +496,7 @@ extension _HomeTabExploreUI on _HomeTabState {
               ),
             ),
             // Material sheets separate the header by space alone.
-            if (context.isMornye) const Divider(height: 1),
+            if (context.isTango) const Divider(height: 1),
             ListTile(
               leading: Icon(Icons.download, color: colorScheme.primary),
               title: Text(context.l10n.downloadTitle),
@@ -570,7 +570,7 @@ extension _HomeTabExploreUI on _HomeTabState {
     }
   }
 
-  /// Music's Search page closes with Browse Categories. Mornye has no genre
+  /// Music's Search page closes with Browse Categories. Tango has no genre
   /// catalog, so each section of the home feed stands in as one tile.
   Widget _buildBrowseSliver() {
     return Consumer(

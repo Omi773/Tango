@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/models/unified_library_item.dart';
-import 'package:mornye/providers/download_history_provider.dart';
-import 'package:mornye/providers/library_collections_provider.dart';
-import 'package:mornye/providers/local_library_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/services/library_database.dart';
-import 'package:mornye/services/history_database.dart';
-import 'package:mornye/services/library_playlist_search.dart';
-import 'package:mornye/services/library_search.dart';
+import 'package:tango/models/unified_library_item.dart';
+import 'package:tango/providers/download_history_provider.dart';
+import 'package:tango/providers/library_collections_provider.dart';
+import 'package:tango/providers/local_library_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/services/library_database.dart';
+import 'package:tango/services/history_database.dart';
+import 'package:tango/services/library_playlist_search.dart';
+import 'package:tango/services/library_search.dart';
 
 typedef LibrarySearchRequest = ({
   String query,

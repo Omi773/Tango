@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons, CupertinoTextField;
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/app_text_field.dart';
-import 'package:mornye/widgets/app_refresh_indicator.dart';
-import 'package:mornye/widgets/extension_row.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/widgets/app_search_field.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/app_text_field.dart';
+import 'package:tango/widgets/app_refresh_indicator.dart';
+import 'package:tango/widgets/extension_row.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/widgets/app_search_field.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/repo_provider.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/screens/repo/extension_details_screen.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/nav_bar_inset.dart';
-import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/extension_repo_card.dart';
-import 'package:mornye/widgets/app_choice_chip.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/repo_provider.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/animation_utils.dart';
+import 'package:tango/screens/repo/extension_details_screen.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/nav_bar_inset.dart';
+import 'package:tango/providers/runtime_profile_provider.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/widgets/tango_chrome.dart';
+import 'package:tango/widgets/extension_repo_card.dart';
+import 'package:tango/widgets/app_choice_chip.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
 
 class RepoTab extends ConsumerStatefulWidget {
   const RepoTab({super.key});
@@ -116,7 +116,7 @@ class _RepoTabState extends ConsumerState<RepoTab> {
                 if (hasRegistryUrl)
                   AppIconButton(
                     icon: Icon(
-                      context.isMornye ? CupertinoIcons.link : Icons.link,
+                      context.isTango ? CupertinoIcons.link : Icons.link,
                     ),
                     tooltip: context.l10n.storeChangeRepoTooltip,
                     onPressed: () => _showChangeRepoDialog(registryUrl),
@@ -248,7 +248,7 @@ class _RepoTabState extends ConsumerState<RepoTab> {
                     edge: edge,
                     downloadingId: downloadingId,
                   )
-                else if (context.isMornye)
+                else if (context.isTango)
                   SliverToBoxAdapter(
                     child: ExtensionRepoCard(
                       margin: EdgeInsets.symmetric(
@@ -326,7 +326,7 @@ class _RepoTabState extends ConsumerState<RepoTab> {
         onUpdate: () => _updateExtension(ext),
         onTap: () => _showExtensionDetails(ext),
       );
-      return context.isMornye
+      return context.isTango
           ? ExtensionRepoCard(margin: EdgeInsets.zero, child: item)
           : SettingsGroup(
               connected: true,
@@ -505,7 +505,7 @@ class _RepoTabState extends ConsumerState<RepoTab> {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 16),
-            if (context.isMornye)
+            if (context.isTango)
               CupertinoTextField(
                 controller: changeUrlController,
                 placeholder: context.l10n.storeNewRepoUrlLabel,
@@ -726,7 +726,7 @@ class _CategoryChip extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
-    if (context.isMornye) {
+    if (context.isTango) {
       return Semantics(
         button: true,
         selected: isSelected,
@@ -734,9 +734,9 @@ class _CategoryChip extends ConsumerWidget {
         onTap: onTap,
         excludeSemantics: true,
         // Scrolls with the list over the plain page: see ExtensionRepoCard.
-        child: MornyeGlass.navigation(
+        child: TangoGlass.navigation(
           radius: 24,
-          blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+          blurEnabled: ref.watch(tangoBlurEnabledProvider),
           samplesBackdrop: false,
           child: Material(
             color: Colors.transparent,
@@ -756,7 +756,7 @@ class _CategoryChip extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      mornyeIconFor(icon),
+                      tangoIconFor(icon),
                       size: 18,
                       color: isSelected
                           ? colorScheme.primary
@@ -806,7 +806,7 @@ class _RepoListSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = context.tokens;
     // Placeholders keep their contrast on the Material group surface.
-    final surface = context.isMornye ? null : settingsGroupColor(context);
+    final surface = context.isTango ? null : settingsGroupColor(context);
     final rows = [
       for (var index = 0; index < _count; index++)
         ExtensionRow(
@@ -874,7 +874,7 @@ class _RepoListSkeleton extends StatelessWidget {
           ),
         ),
     ];
-    if (context.isMornye) {
+    if (context.isTango) {
       return ExtensionRepoCard(
         margin: EdgeInsets.fromLTRB(edge, 12, edge, 4),
         child: Column(mainAxisSize: MainAxisSize.min, children: rows),
@@ -931,8 +931,8 @@ class _ExtensionItem extends StatelessWidget {
       onTap: onTap,
       avatar: ExtensionAvatar(
         imageUrl: extension.iconUrl,
-        fallbackIcon: context.isMornye
-            ? mornyeIconFor(_getCategoryIcon(extension.category))
+        fallbackIcon: context.isTango
+            ? tangoIconFor(_getCategoryIcon(extension.category))
             : _getCategoryIcon(extension.category),
         background: extension.isInstalled
             ? colorScheme.primaryContainer
@@ -999,7 +999,7 @@ class _ExtensionItem extends StatelessWidget {
         padding: EdgeInsetsDirectional.only(start: tokens.gapMd),
         child: isDownloading
             ? const AppLoadingIndicator(size: 24)
-            : !context.isMornye
+            : !context.isTango
             ? ExpressiveButton(
                 onPressed: extension.hasUpdate
                     ? onUpdate
@@ -1026,7 +1026,7 @@ class _ExtensionItem extends StatelessWidget {
             ? FilledButton.tonal(
                 onPressed: onUpdate,
                 style: FilledButton.styleFrom(
-                  shape: context.isMornye ? const StadiumBorder() : null,
+                  shape: context.isTango ? const StadiumBorder() : null,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   minimumSize: Size(0, context.tokens.minTouchTarget),
                 ),
@@ -1036,7 +1036,7 @@ class _ExtensionItem extends StatelessWidget {
             ? OutlinedButton(
                 onPressed: null,
                 style: OutlinedButton.styleFrom(
-                  shape: context.isMornye ? const StadiumBorder() : null,
+                  shape: context.isTango ? const StadiumBorder() : null,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   minimumSize: Size(0, context.tokens.minTouchTarget),
                 ),
@@ -1044,7 +1044,7 @@ class _ExtensionItem extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      context.isMornye
+                      context.isTango
                           ? CupertinoIcons.check_mark
                           : Icons.check,
                       size: 16,
@@ -1061,11 +1061,11 @@ class _ExtensionItem extends StatelessWidget {
             : FilledButton(
                 onPressed: onInstall,
                 style: FilledButton.styleFrom(
-                  shape: context.isMornye ? const StadiumBorder() : null,
-                  backgroundColor: context.isMornye
+                  shape: context.isTango ? const StadiumBorder() : null,
+                  backgroundColor: context.isTango
                       ? colorScheme.primary.withValues(alpha: 0.12)
                       : null,
-                  foregroundColor: context.isMornye
+                  foregroundColor: context.isTango
                       ? colorScheme.primary
                       : null,
                   padding: const EdgeInsets.symmetric(horizontal: 12),

@@ -2,25 +2,25 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/services/music_playback_deck.dart';
-import 'package:mornye/services/music_player_service.dart'
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/services/music_playback_deck.dart';
+import 'package:tango/services/music_player_service.dart'
     show resetAutoplayLearning;
-import 'package:mornye/screens/listening_statistics_screen.dart';
-import 'package:mornye/screens/equalizer_screen.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/widgets/beta_badge.dart';
-import 'package:mornye/widgets/player_volume_control.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/discord_presence_settings.dart';
-import 'package:mornye/widgets/automix_settings.dart';
-import 'package:mornye/widgets/music_haptics_settings.dart';
-import 'package:mornye/widgets/playback_normalization_settings.dart';
+import 'package:tango/screens/listening_statistics_screen.dart';
+import 'package:tango/screens/equalizer_screen.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/widgets/animation_utils.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/beta_badge.dart';
+import 'package:tango/widgets/player_volume_control.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/discord_presence_settings.dart';
+import 'package:tango/widgets/automix_settings.dart';
+import 'package:tango/widgets/music_haptics_settings.dart';
+import 'package:tango/widgets/playback_normalization_settings.dart';
 
 class PlaybackSettingsPage extends ConsumerStatefulWidget {
   const PlaybackSettingsPage({super.key});

@@ -1,14 +1,14 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/models/unified_library_item.dart';
-import 'package:mornye/providers/download_queue_provider.dart';
-import 'package:mornye/services/history_database.dart';
-import 'package:mornye/services/history_row_mapper.dart';
-import 'package:mornye/services/library_database.dart';
-import 'package:mornye/services/music_player_service.dart';
-import 'package:mornye/utils/file_access.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/models/unified_library_item.dart';
+import 'package:tango/providers/download_queue_provider.dart';
+import 'package:tango/services/history_database.dart';
+import 'package:tango/services/history_row_mapper.dart';
+import 'package:tango/services/library_database.dart';
+import 'package:tango/services/music_player_service.dart';
+import 'package:tango/utils/file_access.dart';
 
 final musicPlayerRuntimeProvider = Provider<MusicPlayerRuntime>(
   (ref) => musicPlayerRuntime,

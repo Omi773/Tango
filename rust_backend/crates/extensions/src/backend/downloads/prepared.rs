@@ -1,6 +1,6 @@
 use super::{Prepared, PreparedDownloads};
 use crate::backend::Backend;
-use mornye_core::downloads::DownloadRequest;
+use tango_core::downloads::DownloadRequest;
 use std::time::{Duration, Instant};
 
 impl Backend {

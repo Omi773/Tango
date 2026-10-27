@@ -2,26 +2,26 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/controllers/player_metadata_controller.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/playback_seek_preview.dart';
-import 'package:mornye/utils/string_utils.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/audio_info_sheet.dart';
-import 'package:mornye/widgets/automix_status_badge.dart';
-import 'package:mornye/widgets/expressive_icon_button.dart';
-import 'package:mornye/widgets/expressive_playback_transport.dart';
-import 'package:mornye/widgets/mornye_playback_button.dart';
-import 'package:mornye/widgets/mornye_playback_time.dart';
-import 'package:mornye/widgets/mornye_player_slider.dart';
-import 'package:mornye/widgets/playback_seek_slider.dart';
+import 'package:tango/controllers/player_metadata_controller.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/theme/material_expressive.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/playback_seek_preview.dart';
+import 'package:tango/utils/string_utils.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/audio_info_sheet.dart';
+import 'package:tango/widgets/automix_status_badge.dart';
+import 'package:tango/widgets/expressive_icon_button.dart';
+import 'package:tango/widgets/expressive_playback_transport.dart';
+import 'package:tango/widgets/tango_playback_button.dart';
+import 'package:tango/widgets/tango_playback_time.dart';
+import 'package:tango/widgets/tango_player_slider.dart';
+import 'package:tango/widgets/playback_seek_slider.dart';
 
-const _mornyeTimelinePadding = 28.0;
+const _tangoTimelinePadding = 28.0;
 
 class PlayerPlaybackControls extends ConsumerWidget {
   final String mediaId;
@@ -52,7 +52,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.read(musicPlayerControllerProvider);
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final isPlaying = ref.watch(playbackPlayingProvider);
     final isLoading = ref.watch(playbackLoadingProvider);
     final playPauseSize = compact
@@ -78,8 +78,8 @@ class PlayerPlaybackControls extends ConsumerWidget {
                   padding: EdgeInsets.symmetric(
                     horizontal: edgeAligned
                         ? 0
-                        : mornye
-                        ? _mornyeTimelinePadding
+                        : tango
+                        ? _tangoTimelinePadding
                         : 16,
                   ),
                   child: Column(
@@ -87,15 +87,15 @@ class PlayerPlaybackControls extends ConsumerWidget {
                       SliderTheme(
                         data: SliderThemeData(
                           trackHeight: 4,
-                          activeTrackColor: mornye
+                          activeTrackColor: tango
                               ? colorScheme.onSurface
                               : colorScheme.primary,
                           // Material matches the volume slider's M3 inactive
                           // track below it.
-                          inactiveTrackColor: mornye
+                          inactiveTrackColor: tango
                               ? colorScheme.onSurface.withValues(alpha: 0.18)
                               : colorScheme.secondaryContainer,
-                          thumbColor: mornye
+                          thumbColor: tango
                               ? colorScheme.onSurface
                               : colorScheme.primary,
                           // A 7dp thumb was hard to grab; 10dp with a 24dp overlay
@@ -117,19 +117,19 @@ class PlayerPlaybackControls extends ConsumerWidget {
                           edgeAligned: edgeAligned,
                         ),
                       ),
-                      if (!mornye) const SizedBox(height: 8),
+                      if (!tango) const SizedBox(height: 8),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: edgeAligned
                               ? 0
-                              : mornye
-                              ? MornyePlayerSlider.horizontalInset
+                              : tango
+                              ? TangoPlayerSlider.horizontalInset
                               : 12,
                         ),
                         child: Row(
                           children: [
-                            if (mornye)
-                              MornyePlaybackTime(
+                            if (tango)
+                              TangoPlaybackTime(
                                 key: ValueKey('elapsed:$mediaId'),
                                 seconds: elapsedSeconds,
                                 style: timeStyle,
@@ -140,8 +140,8 @@ class PlayerPlaybackControls extends ConsumerWidget {
                                 style: timeStyle,
                               ),
                             Expanded(child: Center(child: quality)),
-                            if (mornye)
-                              MornyePlaybackTime(
+                            if (tango)
+                              TangoPlaybackTime(
                                 key: ValueKey('remaining:$mediaId'),
                                 // Subtract whole seconds so both labels roll together,
                                 // even when the track duration includes milliseconds.
@@ -172,9 +172,9 @@ class PlayerPlaybackControls extends ConsumerWidget {
             ),
           ),
           SizedBox(
-            height: compact ? 8 : transportTopPadding + (mornye ? 0 : 8),
+            height: compact ? 8 : transportTopPadding + (tango ? 0 : 8),
           ),
-          if (!mornye && materialExpressiveEnabled(context))
+          if (!tango && materialExpressiveEnabled(context))
             Padding(
               padding: EdgeInsets.symmetric(horizontal: edgeAligned ? 0 : 16),
               child: ExpressivePlaybackTransport(
@@ -205,22 +205,22 @@ class PlayerPlaybackControls extends ConsumerWidget {
           else
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: mornye && !edgeAligned ? (compact ? 16 : 32) : 0,
+                horizontal: tango && !edgeAligned ? (compact ? 16 : 32) : 0,
               ),
               child: Row(
                 // Edge to edge, the shuffle and repeat buttons line up with
                 // the timeline's ends.
-                mainAxisAlignment: edgeAligned && !mornye
+                mainAxisAlignment: edgeAligned && !tango
                     ? MainAxisAlignment.spaceBetween
                     : MainAxisAlignment.spaceEvenly,
                 children: [
-                  if (!mornye)
+                  if (!tango)
                     PlayerPlaybackModeButton(
                       mode: PlayerPlaybackMode.shuffle,
                       colorScheme: colorScheme,
                     ),
-                  if (mornye)
-                    MornyePlaybackButton(
+                  if (tango)
+                    TangoPlaybackButton(
                       icon: CupertinoIcons.backward_fill,
                       color: colorScheme.onSurface,
                       tooltip: context.l10n.nowPlayingPreviousTrack,
@@ -234,8 +234,8 @@ class PlayerPlaybackControls extends ConsumerWidget {
                       icon: const Icon(Icons.skip_previous),
                       onPressed: controller.previous,
                     ),
-                  if (mornye)
-                    MornyePlaybackButton(
+                  if (tango)
+                    TangoPlaybackButton(
                       icon: isPlaying
                           ? CupertinoIcons.pause_fill
                           : CupertinoIcons.play_fill,
@@ -269,8 +269,8 @@ class PlayerPlaybackControls extends ConsumerWidget {
                           ? null
                           : () => controller.togglePlayPause(isPlaying),
                     ),
-                  if (mornye)
-                    MornyePlaybackButton(
+                  if (tango)
+                    TangoPlaybackButton(
                       icon: CupertinoIcons.forward_fill,
                       color: colorScheme.onSurface,
                       tooltip: context.l10n.nowPlayingNextTrack,
@@ -284,7 +284,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
                       icon: const Icon(Icons.skip_next),
                       onPressed: controller.next,
                     ),
-                  if (!mornye)
+                  if (!tango)
                     PlayerPlaybackModeButton(
                       mode: PlayerPlaybackMode.repeat,
                       colorScheme: colorScheme,
@@ -394,14 +394,14 @@ class _QualityBadge extends StatelessWidget {
   Widget _buildBadge(BuildContext context) {
     final text = metadata.qualityLabel;
     if (text == null || text.isEmpty) return const SizedBox.shrink();
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final radius = BorderRadius.circular(20);
     final badge = Container(
       padding: EdgeInsets.symmetric(
-        horizontal: mornye ? 8 : 10,
-        vertical: mornye ? 2 : 5,
+        horizontal: tango ? 8 : 10,
+        vertical: tango ? 2 : 5,
       ),
-      decoration: mornye
+      decoration: tango
           ? null
           : BoxDecoration(
               color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
@@ -412,17 +412,17 @@ class _QualityBadge extends StatelessWidget {
         children: [
           AppIcon(
             Icons.graphic_eq,
-            size: mornye ? 11 : 14,
+            size: tango ? 11 : 14,
             color: colorScheme.onSurfaceVariant,
           ),
-          SizedBox(width: mornye ? 5 : 6),
+          SizedBox(width: tango ? 5 : 6),
           Flexible(
             child: Text(
               text,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                fontSize: mornye ? 10.5 : 12,
+                fontSize: tango ? 10.5 : 12,
                 color: colorScheme.onSurfaceVariant,
                 letterSpacing: 0.2,
               ),

@@ -25,7 +25,7 @@ Don’t use the app to break the law, infringe others’ rights, or interfere wi
 
 ## 5. Third-party software
 
-The app is built on open-source software, including Mornye (MIT licence), used under each component’s own licence.
+The app is built on open-source software, including Tango (MIT licence), used under each component’s own licence.
 
 ## 6. No warranty
 

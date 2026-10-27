@@ -5,66 +5,66 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:mornye/services/network_download_staging.dart';
+import 'package:tango/services/network_download_staging.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mornye/models/download_item.dart';
-import 'package:mornye/models/download_result.dart';
-import 'package:mornye/models/settings.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/providers/player_motion_artwork_provider.dart';
-import 'package:mornye/providers/download_verification_retry_guard.dart';
-import 'package:mornye/providers/download_queue_state.dart';
-import 'package:mornye/providers/download_queue_policy.dart';
-import 'package:mornye/services/download_queue_persistence.dart';
-import 'package:mornye/providers/download_progress.dart';
-import 'package:mornye/services/download_file_finalizer.dart';
-import 'package:mornye/services/download_container_finalizer.dart';
-import 'package:mornye/services/download_completion_audio.dart';
-import 'package:mornye/services/download_metadata_resolver.dart';
-import 'package:mornye/services/download_metadata_embedding.dart';
-import 'package:mornye/services/download_saf_file_replacer.dart';
-import 'package:mornye/services/download_connectivity_policy.dart';
-import 'package:mornye/services/download_keep_awake.dart';
-import 'package:mornye/services/download_scheduler.dart';
-import 'package:mornye/services/source_deletion_events.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/services/download_request_payload.dart';
-import 'package:mornye/services/download_motion_artwork_source.dart';
-import 'package:mornye/services/ffmpeg_service.dart';
-import 'package:mornye/services/hires_check_service.dart';
-import 'package:mornye/services/replaygain_service.dart';
-import 'package:mornye/services/album_replaygain_readiness.dart';
-import 'package:mornye/services/notification_service.dart';
-import 'package:mornye/services/verification_notification.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/utils/desktop_folders.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/utils/string_utils.dart';
-import 'package:mornye/utils/audio_format_utils.dart';
-import 'package:mornye/utils/int_utils.dart';
-import 'package:mornye/utils/path_match_keys.dart';
-import 'package:mornye/utils/extension_auth_launcher.dart';
-import 'package:mornye/utils/download_error_type.dart';
-import 'package:mornye/utils/lyrics_metadata_helper.dart';
-import 'package:mornye/utils/progress_stream_poller.dart';
+import 'package:tango/models/download_item.dart';
+import 'package:tango/models/download_result.dart';
+import 'package:tango/models/settings.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/providers/player_motion_artwork_provider.dart';
+import 'package:tango/providers/download_verification_retry_guard.dart';
+import 'package:tango/providers/download_queue_state.dart';
+import 'package:tango/providers/download_queue_policy.dart';
+import 'package:tango/services/download_queue_persistence.dart';
+import 'package:tango/providers/download_progress.dart';
+import 'package:tango/services/download_file_finalizer.dart';
+import 'package:tango/services/download_container_finalizer.dart';
+import 'package:tango/services/download_completion_audio.dart';
+import 'package:tango/services/download_metadata_resolver.dart';
+import 'package:tango/services/download_metadata_embedding.dart';
+import 'package:tango/services/download_saf_file_replacer.dart';
+import 'package:tango/services/download_connectivity_policy.dart';
+import 'package:tango/services/download_keep_awake.dart';
+import 'package:tango/services/download_scheduler.dart';
+import 'package:tango/services/source_deletion_events.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/services/download_request_payload.dart';
+import 'package:tango/services/download_motion_artwork_source.dart';
+import 'package:tango/services/ffmpeg_service.dart';
+import 'package:tango/services/hires_check_service.dart';
+import 'package:tango/services/replaygain_service.dart';
+import 'package:tango/services/album_replaygain_readiness.dart';
+import 'package:tango/services/notification_service.dart';
+import 'package:tango/services/verification_notification.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/utils/desktop_folders.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/file_access.dart';
+import 'package:tango/utils/string_utils.dart';
+import 'package:tango/utils/audio_format_utils.dart';
+import 'package:tango/utils/int_utils.dart';
+import 'package:tango/utils/path_match_keys.dart';
+import 'package:tango/utils/extension_auth_launcher.dart';
+import 'package:tango/utils/download_error_type.dart';
+import 'package:tango/utils/lyrics_metadata_helper.dart';
+import 'package:tango/utils/progress_stream_poller.dart';
 
-import 'package:mornye/providers/download_history_provider.dart';
-import 'package:mornye/services/native_download_history.dart';
-import 'package:mornye/services/native_download_worker_monitor.dart';
+import 'package:tango/providers/download_history_provider.dart';
+import 'package:tango/services/native_download_history.dart';
+import 'package:tango/services/native_download_worker_monitor.dart';
 
-export 'package:mornye/providers/download_history_provider.dart';
-export 'package:mornye/providers/download_queue_policy.dart';
-export 'package:mornye/providers/download_queue_state.dart';
-export 'package:mornye/services/download_metadata_resolver.dart'
+export 'package:tango/providers/download_history_provider.dart';
+export 'package:tango/providers/download_queue_policy.dart';
+export 'package:tango/providers/download_queue_state.dart';
+export 'package:tango/services/download_metadata_resolver.dart'
     show copyTrackWithResolvedMetadata;
-export 'package:mornye/services/download_queue_persistence.dart'
+export 'package:tango/services/download_queue_persistence.dart'
     show encodeDownloadQueueItemForPersistence, downloadQueuePersistenceStatus;
 
-export 'package:mornye/services/history_database.dart'
+export 'package:tango/services/history_database.dart'
     show HistoryLookupRequest, HistoryBatchLookupRequest;
 
 part 'download_queue_provider_paths.dart';
@@ -88,7 +88,7 @@ final _multiUnderscoreRegex = RegExp(r'_+');
 
 double _log10(num x) => log(x) / ln10;
 final _yearRegex = RegExp(r'^(\d{4})');
-const _defaultOutputFolderName = 'Mornye';
+const _defaultOutputFolderName = 'Tango';
 const _defaultAndroidDownloadSubpath = 'Download/$_defaultOutputFolderName';
 const _maxSafFilenameUtf8Bytes = 180;
 const _maxSafDirSegmentUtf8Bytes = 120;
@@ -1430,7 +1430,7 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
       final buffer = StringBuffer();
 
       if (!fileExists) {
-        buffer.writeln('# Mornye Failed Downloads');
+        buffer.writeln('# Tango Failed Downloads');
         buffer.writeln('# Date: $dateStr');
         buffer.writeln('#');
         buffer.writeln('# Format: [Time] Track - Artist | URL | Error');

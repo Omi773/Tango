@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/utils/artist_utils.dart';
-import 'package:mornye/screens/settings/metadata_provider_priority_page.dart';
-import 'package:mornye/screens/settings/metadata_separator_settings_page.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/utils/artist_utils.dart';
+import 'package:tango/screens/settings/metadata_provider_priority_page.dart';
+import 'package:tango/screens/settings/metadata_separator_settings_page.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
 
 class MetadataSettingsPage extends ConsumerWidget {
   const MetadataSettingsPage({super.key});

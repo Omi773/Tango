@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/providers/download_queue_provider.dart';
-import 'package:mornye/providers/local_library_provider.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/clickable_metadata.dart';
-import 'package:mornye/controllers/local_playback.dart';
-import 'package:mornye/widgets/audio_quality_badges.dart';
-import 'package:mornye/widgets/track_card.dart';
-import 'package:mornye/widgets/in_library_badge.dart';
-import 'package:mornye/widgets/preview_button.dart';
-import 'package:mornye/widgets/track_collection_quick_actions.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/providers/download_queue_provider.dart';
+import 'package:tango/providers/local_library_provider.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/clickable_metadata.dart';
+import 'package:tango/controllers/local_playback.dart';
+import 'package:tango/widgets/audio_quality_badges.dart';
+import 'package:tango/widgets/track_card.dart';
+import 'package:tango/widgets/in_library_badge.dart';
+import 'package:tango/widgets/preview_button.dart';
+import 'package:tango/widgets/track_collection_quick_actions.dart';
 
 /// Track row shared by the album and playlist screens. Tap offers another
 /// download when quality variants are enabled, otherwise it plays the local
@@ -52,9 +52,9 @@ class TrackListTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
-    // Material rows mark the current track; Mornye rows show no
+    // Material rows mark the current track; Tango rows show no
     // current-track state.
-    final playback = context.isMornye
+    final playback = context.isTango
         ? null
         : ref.watch(catalogTrackPlaybackUiProvider(catalogTrackKey(track)));
 

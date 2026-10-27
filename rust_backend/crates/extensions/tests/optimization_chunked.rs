@@ -1,7 +1,7 @@
 #![cfg(unix)]
-use mornye_core::cancellation::{CancellationDomain, CancellationRegistry};
-use mornye_extensions::RuntimeLimits;
-use mornye_extensions::environment::ExtensionEnvironment;
+use tango_core::cancellation::{CancellationDomain, CancellationRegistry};
+use tango_extensions::RuntimeLimits;
+use tango_extensions::environment::ExtensionEnvironment;
 use serde_json::{Value, json};
 use std::fs;
 use std::io::{Read, Write};

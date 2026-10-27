@@ -4,12 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:mornye/constants/app_info.dart';
-import 'package:mornye/l10n/app_localizations.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/services/verification_notification.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/string_utils.dart';
+import 'package:tango/constants/app_info.dart';
+import 'package:tango/l10n/app_localizations.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/services/verification_notification.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/string_utils.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -121,7 +121,7 @@ class NotificationService {
 
   /// Windows toast identity. Keep both values stable: Windows ties the
   /// notification settings and activation callback to them.
-  static const String windowsAppUserModelId = 'com.zarz.mornye';
+  static const String windowsAppUserModelId = 'app.tango';
   static const String windowsNotificationGuid =
       '1a458cb1-f396-4430-8ee3-23d66b56e12f';
 

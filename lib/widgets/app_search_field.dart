@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:tango/providers/runtime_profile_provider.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/tango_chrome.dart';
 
 /// The standard search field used by top-level app surfaces.
 ///
@@ -39,16 +39,16 @@ class AppSearchField extends StatelessWidget {
   final FocusNode? focusNode;
   final bool autofocus;
 
-  /// See [MornyeGlass.samplesBackdrop]: false where the field scrolls over
+  /// See [TangoGlass.samplesBackdrop]: false where the field scrolls over
   /// the plain page background.
   final bool samplesBackdrop;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final radius = BorderRadius.circular(
-      mornye ? 28 : context.tokens.radiusSheet,
+      tango ? 28 : context.tokens.radiusSheet,
     );
 
     final field = ValueListenableBuilder<TextEditingValue>(
@@ -62,7 +62,7 @@ class AppSearchField extends StatelessWidget {
           hintText: hintText,
           prefixIcon:
               prefixIcon ??
-              AppIcon(mornye ? CupertinoIcons.search : Icons.search),
+              AppIcon(tango ? CupertinoIcons.search : Icons.search),
           suffixIcon:
               suffixIcon ??
               (value.text.isEmpty
@@ -70,7 +70,7 @@ class AppSearchField extends StatelessWidget {
                   : AppIconButton(
                       tooltip: clearTooltip,
                       icon: AppIcon(
-                        mornye
+                        tango
                             ? CupertinoIcons.clear_circled_solid
                             : Icons.clear,
                       ),
@@ -91,12 +91,12 @@ class AppSearchField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: radius,
-            borderSide: mornye
+            borderSide: tango
                 ? BorderSide.none
                 : BorderSide(color: colorScheme.primary, width: 2),
           ),
           filled: true,
-          fillColor: mornye
+          fillColor: tango
               ? Colors.transparent
               : colorScheme.surfaceContainerHigh,
           contentPadding: const EdgeInsets.symmetric(
@@ -109,11 +109,11 @@ class AppSearchField extends StatelessWidget {
         onTapOutside: (_) => FocusScope.of(context).unfocus(),
       ),
     );
-    if (!mornye) return field;
+    if (!tango) return field;
     return Consumer(
-      builder: (context, ref, child) => MornyeGlass.navigation(
+      builder: (context, ref, child) => TangoGlass.navigation(
         radius: 28,
-        blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+        blurEnabled: ref.watch(tangoBlurEnabledProvider),
         samplesBackdrop: samplesBackdrop,
         child: child!,
       ),

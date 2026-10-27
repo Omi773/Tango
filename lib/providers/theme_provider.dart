@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mornye/models/theme_settings.dart';
+import 'package:tango/models/theme_settings.dart';
 
 final initialThemeSettingsProvider = Provider<ThemeSettings>(
   (ref) => ThemeSettings(style: defaultAppThemeStyle()),
@@ -14,17 +14,17 @@ ThemeSettings loadBootstrapThemeSettings(SharedPreferences prefs) {
     seedColorValue: prefs.getInt(kSeedColorKey) ?? kDefaultSeedColor,
     useAmoled: prefs.getBool(kUseAmoledKey) ?? false,
     style: themeStyleFromString(prefs.getString(kThemeStyleKey)),
-    mornyeAccent: mornyeAccentFromString(prefs.getString(kMornyeAccentKey)),
+    tangoAccent: tangoAccentFromString(prefs.getString(kTangoAccentKey)),
     useSystemFont: prefs.getBool(kUseSystemFontKey) ?? false,
     customFontId: prefs.getString(kCustomFontIdKey) ?? '',
     customFontName: prefs.getString(kCustomFontNameKey) ?? '',
     lyricsTextScale: normalizeLyricsTextScale(
       prefs.getDouble(kLyricsTextScaleKey),
     ),
-    mornyeGlassClarity: normalizeMornyeGlassClarity(
-      prefs.getDouble(kMornyeGlassClarityKey),
+    tangoGlassClarity: normalizeTangoGlassClarity(
+      prefs.getDouble(kTangoGlassClarityKey),
     ),
-    mornyeGlassOutlines: prefs.getBool(kMornyeGlassOutlinesKey) ?? true,
+    tangoGlassOutlines: prefs.getBool(kTangoGlassOutlinesKey) ?? true,
   );
 }
 
@@ -80,18 +80,18 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
       await prefs.setInt(kSeedColorKey, snapshot.seedColorValue);
       await prefs.setBool(kUseAmoledKey, snapshot.useAmoled);
       await prefs.setString(kThemeStyleKey, snapshot.style.name);
-      await prefs.setString(kMornyeAccentKey, snapshot.mornyeAccent.name);
+      await prefs.setString(kTangoAccentKey, snapshot.tangoAccent.name);
       await prefs.setBool(kUseSystemFontKey, snapshot.useSystemFont);
       await prefs.setString(kCustomFontIdKey, snapshot.customFontId);
       await prefs.setString(kCustomFontNameKey, snapshot.customFontName);
       await prefs.setDouble(kLyricsTextScaleKey, snapshot.lyricsTextScale);
       await prefs.setDouble(
-        kMornyeGlassClarityKey,
-        snapshot.mornyeGlassClarity,
+        kTangoGlassClarityKey,
+        snapshot.tangoGlassClarity,
       );
       await prefs.setBool(
-        kMornyeGlassOutlinesKey,
-        snapshot.mornyeGlassOutlines,
+        kTangoGlassOutlinesKey,
+        snapshot.tangoGlassOutlines,
       );
     } catch (e) {
       debugPrint('Error saving theme settings: $e');
@@ -123,8 +123,8 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
     await _saveToStorage();
   }
 
-  Future<void> setMornyeAccent(MornyeAccent accent) async {
-    _editState((current) => current.copyWith(mornyeAccent: accent));
+  Future<void> setTangoAccent(TangoAccent accent) async {
+    _editState((current) => current.copyWith(tangoAccent: accent));
     await _saveToStorage();
   }
 
@@ -145,16 +145,16 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
     if (persist) await _saveToStorage();
   }
 
-  Future<void> setMornyeGlassClarity(
+  Future<void> setTangoGlassClarity(
     double value, {
     bool persist = true,
   }) async {
-    _editState((current) => current.copyWith(mornyeGlassClarity: value));
+    _editState((current) => current.copyWith(tangoGlassClarity: value));
     if (persist) await _saveToStorage();
   }
 
-  Future<void> setMornyeGlassOutlines(bool value) async {
-    _editState((current) => current.copyWith(mornyeGlassOutlines: value));
+  Future<void> setTangoGlassOutlines(bool value) async {
+    _editState((current) => current.copyWith(tangoGlassOutlines: value));
     await _saveToStorage();
   }
 }

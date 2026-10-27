@@ -1,54 +1,54 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/cover_palette.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/cover_palette.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:mornye/services/cover_cache_manager.dart';
-import 'package:mornye/services/deleted_library_files.dart';
-import 'package:mornye/services/batch_track_actions.dart';
-import 'package:mornye/services/local_track_batch_actions.dart';
-import 'package:mornye/models/unified_library_item.dart';
-import 'package:mornye/models/album_track_order.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/audio_quality_badge_policy.dart';
-import 'package:mornye/utils/confirm_and_delete_tracks.dart';
-import 'package:mornye/utils/cover_art_utils.dart';
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/utils/image_cache_utils.dart';
-import 'package:mornye/providers/download_queue_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/providers/playback_provider.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/player_motion_artwork_provider.dart';
-import 'package:mornye/screens/collapsing_header_scroll_mixin.dart';
-import 'package:mornye/screens/selection_mode_mixin.dart';
-import 'package:mornye/screens/track_metadata_screen.dart';
-import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
-import 'package:mornye/widgets/collection_scaffold.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/desktop/desktop_selection.dart';
-import 'package:mornye/widgets/desktop/detail_header.dart';
-import 'package:mornye/widgets/desktop/library_track_menu.dart';
-import 'package:mornye/widgets/playlist_picker_sheet.dart';
-import 'package:mornye/widgets/desktop/track_table.dart';
-import 'package:mornye/widgets/cached_cover_image.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/album_track_tile.dart';
-import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/widgets/destructive_selection_button.dart';
-import 'package:mornye/widgets/selection_action_button.dart';
-import 'package:mornye/widgets/selection_bottom_bar.dart';
-import 'package:mornye/widgets/library_selection_playback_actions.dart';
-import 'package:mornye/widgets/disc_separator_chip.dart';
-import 'package:mornye/widgets/album_detail_header.dart';
-import 'package:mornye/widgets/mornye_artist_header.dart';
-import 'package:mornye/widgets/motion_header_banner.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
+import 'package:tango/services/cover_cache_manager.dart';
+import 'package:tango/services/deleted_library_files.dart';
+import 'package:tango/services/batch_track_actions.dart';
+import 'package:tango/services/local_track_batch_actions.dart';
+import 'package:tango/models/unified_library_item.dart';
+import 'package:tango/models/album_track_order.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/utils/audio_quality_badge_policy.dart';
+import 'package:tango/utils/confirm_and_delete_tracks.dart';
+import 'package:tango/utils/cover_art_utils.dart';
+import 'package:tango/utils/file_access.dart';
+import 'package:tango/utils/image_cache_utils.dart';
+import 'package:tango/providers/download_queue_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/providers/playback_provider.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/providers/player_motion_artwork_provider.dart';
+import 'package:tango/screens/collapsing_header_scroll_mixin.dart';
+import 'package:tango/screens/selection_mode_mixin.dart';
+import 'package:tango/screens/track_metadata_screen.dart';
+import 'package:tango/services/downloaded_embedded_cover_resolver.dart';
+import 'package:tango/widgets/collection_scaffold.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/widgets/desktop/context_menu.dart';
+import 'package:tango/widgets/desktop/desktop_selection.dart';
+import 'package:tango/widgets/desktop/detail_header.dart';
+import 'package:tango/widgets/desktop/library_track_menu.dart';
+import 'package:tango/widgets/playlist_picker_sheet.dart';
+import 'package:tango/widgets/desktop/track_table.dart';
+import 'package:tango/widgets/cached_cover_image.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
+import 'package:tango/widgets/album_track_tile.dart';
+import 'package:tango/widgets/animation_utils.dart';
+import 'package:tango/widgets/destructive_selection_button.dart';
+import 'package:tango/widgets/selection_action_button.dart';
+import 'package:tango/widgets/selection_bottom_bar.dart';
+import 'package:tango/widgets/library_selection_playback_actions.dart';
+import 'package:tango/widgets/disc_separator_chip.dart';
+import 'package:tango/widgets/album_detail_header.dart';
+import 'package:tango/widgets/tango_artist_header.dart';
+import 'package:tango/widgets/motion_header_banner.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
 
 class DownloadedAlbumScreen extends ConsumerStatefulWidget {
   final String albumName;
@@ -191,7 +191,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
     required int navigationIndex,
   }) async {
     final navigator = Navigator.of(context);
-    final embeddedCoverPath = context.isMornye
+    final embeddedCoverPath = context.isTango
         ? DownloadedEmbeddedCoverResolver.resolve(item.filePath)
         : await DownloadedEmbeddedCoverResolver.resolveOrExtract(
             item.filePath,
@@ -199,10 +199,10 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
           );
     if (!mounted) return;
     final artworkSource = embeddedCoverPath ?? item.coverUrl;
-    if (embeddedCoverPath == null && !context.isMornye) {
+    if (embeddedCoverPath == null && !context.isTango) {
       precacheCoverImage(context, item.coverUrl);
     }
-    final backdropReady = context.isMornye
+    final backdropReady = context.isTango
         ? Future<void>.value()
         : precacheMetadataBackdrop(context, artworkSource);
     final beforeModTime =
@@ -262,8 +262,8 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
     final tracks = order.tracks;
     pruneSelection(tracks.map((t) => t.id).toSet());
 
-    if (context.isMornye) {
-      return MornyeArtistSurface(
+    if (context.isTango) {
+      return TangoArtistSurface(
         imageSource: _resolveAlbumEmbeddedCoverPath(tracks) ?? widget.coverUrl,
         neutralActions: true,
         child: Builder(builder: (context) => _buildPage(context, order)),
@@ -343,7 +343,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
     final expandedHeight = calculateExpandedHeight(context);
     final embeddedCoverPath = _resolveAlbumEmbeddedCoverPath(tracks);
     final commonQuality = _getCommonQuality(tracks, qualityLabelMode);
-    final motion = context.isMornye && !MediaQuery.disableAnimationsOf(context)
+    final motion = context.isTango && !MediaQuery.disableAnimationsOf(context)
         ? ref
               .watch(
                 playerMotionArtworkProvider((
@@ -386,7 +386,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
 
     return AlbumDetailHeader(
       title: widget.albumName,
-      immersive: context.isMornye,
+      immersive: context.isTango,
       squareArtwork: motion == null,
       expandedHeight: expandedHeight,
       showTitleInAppBar: showTitleInAppBar,
@@ -410,11 +410,11 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
           style: isDesktopPlatform
               ? desktopDetailSubtitleStyle(header)
               : TextStyle(
-                  color: context.isMornye
+                  color: context.isTango
                       ? colorScheme.primary
                       : HeaderPalette.of(context).onSurfaceVariant,
                   fontSize: context.tokens.headerSubtitleSize,
-                  fontWeight: context.isMornye
+                  fontWeight: context.isTango
                       ? FontWeight.w400
                       : FontWeight.w600,
                 ),
@@ -715,7 +715,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
           TrackTableColumn.duration,
         ],
         selectedIds: selectedIds,
-        albumLayout: context.isMornye,
+        albumLayout: context.isTango,
         albumArtist: widget.artistName,
         onSelect: applyDesktopClick,
         onActivate: (id) {

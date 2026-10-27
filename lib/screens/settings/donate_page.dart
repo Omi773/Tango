@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:mornye/services/app_remote_config_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_progress_indicator.dart';
-import 'package:mornye/widgets/donate_icons.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
+import 'package:tango/services/app_remote_config_service.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/widgets/app_content_card.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_progress_indicator.dart';
+import 'package:tango/widgets/donate_icons.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
 
 /// Fill of the donate cards. Material puts them on the settings group tier;
-/// Mornye keeps the tone it blends over its surface.
+/// Tango keeps the tone it blends over its surface.
 Color _donateCardColor(BuildContext context) {
   final theme = Theme.of(context);
   final colorScheme = theme.colorScheme;
-  if (!context.isMornye) return colorScheme.surfaceContainer;
+  if (!context.isTango) return colorScheme.surfaceContainer;
   final isDark = theme.brightness == Brightness.dark;
   return Color.alphaBlend(
     (isDark ? Colors.white : Colors.black).withValues(
@@ -138,7 +138,7 @@ class _MonthlyDonationGoalCard extends StatelessWidget {
 
     return AppContentCard(
       elevation: 0,
-      mornyeSurface: false,
+      tangoSurface: false,
       color: cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
@@ -265,7 +265,7 @@ class _DonateLinksCard extends StatelessWidget {
 
     return AppContentCard(
       elevation: 0,
-      mornyeSurface: false,
+      tangoSurface: false,
       color: cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.antiAlias,
@@ -282,8 +282,8 @@ class _DonateLinksCard extends StatelessWidget {
               ),
             ),
           ),
-          // Material groups rows by the card alone; dividers are Mornye's.
-          if (context.isMornye)
+          // Material groups rows by the card alone; dividers are Tango's.
+          if (context.isTango)
             Divider(
               height: 1,
               thickness: 1,
@@ -305,7 +305,7 @@ class _DonateLinksCard extends StatelessWidget {
                 method: config.methods[index],
                 colorScheme: colorScheme,
               ),
-              if (context.isMornye && index < config.methods.length - 1)
+              if (context.isTango && index < config.methods.length - 1)
                 Divider(
                   height: 1,
                   thickness: 1,
@@ -332,7 +332,7 @@ class _RecentSupportersCard extends StatelessWidget {
 
     return AppContentCard(
       elevation: 0,
-      mornyeSurface: false,
+      tangoSurface: false,
       color: _donateCardColor(context),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
@@ -426,7 +426,7 @@ class _DonateNoticeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppContentCard(
       elevation: 0,
-      mornyeSurface: false,
+      tangoSurface: false,
       color: colorScheme.secondaryContainer.withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(

@@ -1,6 +1,6 @@
 use crate::cancellation::{CancellationError, RequestLease};
-use mornye_core::downloads::DownloadState as CoreState;
-use mornye_core::progress::{ProgressError, ProgressSubscription};
+use tango_core::downloads::DownloadState as CoreState;
+use tango_core::progress::{ProgressError, ProgressSubscription};
 use std::sync::Arc;
 
 #[derive(Debug, thiserror::Error, uniffi::Error)]

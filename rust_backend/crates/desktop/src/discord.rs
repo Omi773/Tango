@@ -1,6 +1,6 @@
 //! Discord Rich Presence through the Discord client's local RPC IPC socket
 //! (`discord-ipc-N`), the desktop replacement for the Discord Social SDK the
-//! `mornye_discord` plugin uses on Android and iOS. Setting an activity over
+//! `tango_discord` plugin uses on Android and iOS. Setting an activity over
 //! IPC needs no OAuth, so desktop behaves like Android: no account link.
 //!
 //! Dart's `DiscordPresenceService` drives it with `discordPresenceInitialize`,
@@ -15,7 +15,7 @@ use std::sync::mpsc::{self, Receiver, Sender};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
-/// The Mornye application registered with Discord (same as mobile).
+/// The Tango application registered with Discord (same as mobile).
 pub(crate) const CLIENT_ID: &str = "1549854098801692862";
 
 const OP_HANDSHAKE: u32 = 0;
@@ -73,7 +73,7 @@ impl Discord {
             let connect = Arc::clone(&self.connect);
             let status = Arc::clone(&self.status);
             let spawned = std::thread::Builder::new()
-                .name("mornye-discord".into())
+                .name("tango-discord".into())
                 .spawn(move || run(receiver, connect, status));
             if spawned.is_err() {
                 return false;

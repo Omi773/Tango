@@ -3,19 +3,19 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/providers/library_collections_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/widgets/app_action_button.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/app_text_field.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/cached_cover_image.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/providers/library_collections_provider.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/widgets/app_action_button.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/app_text_field.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/cached_cover_image.dart';
+import 'package:tango/widgets/tango_chrome.dart';
 
 final _log = AppLogger('PlaylistPicker');
 
@@ -41,18 +41,18 @@ Future<void> showAddTracksToPlaylistSheet(
   await showAppModalBottomSheet<void>(
     context: context,
     useRootNavigator: true,
-    showDragHandle: !context.isMornye,
+    showDragHandle: !context.isTango,
     isScrollControlled: true,
     // The picker keeps its lighter glass tint.
-    mornyeGlass: false,
+    tangoGlass: false,
     builder: (sheetContext) {
       final content = _PlaylistPickerSheetContent(
         tracks: tracks,
         playlistNamePrefill: playlistNamePrefill,
         preserveOccurrences: preserveOccurrences,
       );
-      return sheetContext.isMornye
-          ? MornyeGlassPanel(tintOpacity: 0.78, child: content)
+      return sheetContext.isTango
+          ? TangoGlassPanel(tintOpacity: 0.78, child: content)
           : content;
     },
   );
@@ -180,7 +180,7 @@ class _PlaylistPickerSheetContentState
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (context.isMornye) ...[
+          if (context.isTango) ...[
             const AppSheetHandle(),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
@@ -212,10 +212,10 @@ class _PlaylistPickerSheetContentState
               title: Text(context.l10n.collectionAddToPlaylist),
               subtitle: Text(subtitle),
             ),
-          if (context.isMornye) const Divider(height: 1),
+          if (context.isTango) const Divider(height: 1),
           _PlaylistPickerRow(
             leading: Icon(
-              context.isMornye
+              context.isTango
                   ? CupertinoIcons.add_circled
                   : Icons.add_circle_outline,
               color: Theme.of(context).colorScheme.primary,
@@ -286,7 +286,7 @@ class _PlaylistPickerSheetContentState
                       return _PlaylistPickerRow(
                         leading: _PlaylistPickerThumbnail(
                           playlist: playlist,
-                          isSelected: !context.isMornye && isSelected,
+                          isSelected: !context.isTango && isSelected,
                         ),
                         title: Text(playlist.name),
                         subtitle: Text(
@@ -334,7 +334,7 @@ class _PlaylistPickerSheetContentState
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: SizedBox(
               width: double.infinity,
-              child: context.isMornye
+              child: context.isTango
                   ? AppActionButton(
                       onPressed: _isSubmitting ? null : onDone,
                       icon: const Icon(CupertinoIcons.checkmark),
@@ -466,7 +466,7 @@ class _PlaylistPickerRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isMornye) {
+    if (!context.isTango) {
       return ListTile(
         leading: leading,
         title: title,
@@ -634,7 +634,7 @@ class _PlaylistPickerThumbnail extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Icon(
-        context.isMornye ? CupertinoIcons.music_note_list : Icons.queue_music,
+        context.isTango ? CupertinoIcons.music_note_list : Icons.queue_music,
         color: colorScheme.onSurfaceVariant,
       ),
     );

@@ -3,85 +3,85 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
 import 'package:flutter/cupertino.dart' show CupertinoButton, CupertinoIcons;
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/re_enrich_review_sheet.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/re_enrich_review_sheet.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/services/deleted_library_files.dart';
-import 'package:mornye/services/file_access_check.dart';
-import 'package:mornye/services/network_storage_service.dart';
-import 'package:mornye/services/library_database.dart';
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/utils/re_enrich_result.dart';
+import 'package:tango/services/deleted_library_files.dart';
+import 'package:tango/services/file_access_check.dart';
+import 'package:tango/services/network_storage_service.dart';
+import 'package:tango/services/library_database.dart';
+import 'package:tango/utils/file_access.dart';
+import 'package:tango/utils/re_enrich_result.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:mornye/providers/download_queue_provider.dart';
-import 'package:mornye/providers/local_library_provider.dart';
-import 'package:mornye/providers/playback_provider.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/services/music_player_service.dart'
+import 'package:tango/providers/download_queue_provider.dart';
+import 'package:tango/providers/local_library_provider.dart';
+import 'package:tango/providers/playback_provider.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/services/music_player_service.dart'
     show readPlaybackFileMetadataWithRetry;
-import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
-import 'package:mornye/services/ffmpeg_service.dart';
-import 'package:mornye/services/replaygain_service.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/audio_conversion_utils.dart';
-import 'package:mornye/utils/audio_format_utils.dart';
-import 'package:mornye/utils/artist_utils.dart';
-import 'package:mornye/utils/cover_art_utils.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/utils/lyrics_metadata_helper.dart';
-import 'package:mornye/utils/mime_utils.dart';
-import 'package:mornye/utils/image_cache_utils.dart';
+import 'package:tango/services/downloaded_embedded_cover_resolver.dart';
+import 'package:tango/services/ffmpeg_service.dart';
+import 'package:tango/services/replaygain_service.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/utils/audio_conversion_utils.dart';
+import 'package:tango/utils/audio_format_utils.dart';
+import 'package:tango/utils/artist_utils.dart';
+import 'package:tango/utils/cover_art_utils.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/utils/lyrics_metadata_helper.dart';
+import 'package:tango/utils/mime_utils.dart';
+import 'package:tango/utils/image_cache_utils.dart';
 
-import 'package:mornye/utils/string_utils.dart';
-import 'package:mornye/utils/user_facing_error.dart';
-import 'package:mornye/utils/int_utils.dart';
-import 'package:mornye/utils/isrc_utils.dart';
-import 'package:mornye/utils/nav_bar_inset.dart';
-import 'package:mornye/utils/re_enrich_release_policy.dart';
-import 'package:mornye/utils/saf_display_path.dart';
-import 'package:mornye/theme/cover_palette.dart' show HeaderPalette;
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/widgets/album_detail_header.dart'
+import 'package:tango/utils/string_utils.dart';
+import 'package:tango/utils/user_facing_error.dart';
+import 'package:tango/utils/int_utils.dart';
+import 'package:tango/utils/isrc_utils.dart';
+import 'package:tango/utils/nav_bar_inset.dart';
+import 'package:tango/utils/re_enrich_release_policy.dart';
+import 'package:tango/utils/saf_display_path.dart';
+import 'package:tango/theme/cover_palette.dart' show HeaderPalette;
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/widgets/album_detail_header.dart'
     show HeaderMetaRow, HeaderMetaItem, HeaderCircleButton, HeaderFilledButton;
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/mornye_context_menu.dart';
-import 'package:mornye/widgets/mornye_metadata_row.dart';
-import 'package:mornye/widgets/player_artwork.dart';
-import 'package:mornye/widgets/audio_analysis_widget.dart';
-import 'package:mornye/widgets/hires_check_card.dart';
-import 'package:mornye/widgets/audio_quality_badges.dart';
-import 'package:mornye/widgets/batch_convert_sheet.dart';
-import 'package:mornye/widgets/cached_cover_image.dart';
-import 'package:mornye/widgets/open_on_platform_sheet.dart';
-import 'package:mornye/widgets/metadata_barcode.dart';
-import 'package:mornye/widgets/scroll_edge_fade.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/constants/music_services.dart';
-import 'package:mornye/controllers/batch_track_actions.dart'
+import 'package:tango/widgets/desktop/context_menu.dart';
+import 'package:tango/widgets/tango_context_menu.dart';
+import 'package:tango/widgets/tango_metadata_row.dart';
+import 'package:tango/widgets/player_artwork.dart';
+import 'package:tango/widgets/audio_analysis_widget.dart';
+import 'package:tango/widgets/hires_check_card.dart';
+import 'package:tango/widgets/audio_quality_badges.dart';
+import 'package:tango/widgets/batch_convert_sheet.dart';
+import 'package:tango/widgets/cached_cover_image.dart';
+import 'package:tango/widgets/open_on_platform_sheet.dart';
+import 'package:tango/widgets/metadata_barcode.dart';
+import 'package:tango/widgets/scroll_edge_fade.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/constants/music_services.dart';
+import 'package:tango/controllers/batch_track_actions.dart'
     show convertLibraryTrack;
-import 'package:mornye/screens/collapsing_header_scroll_mixin.dart';
-import 'package:mornye/screens/track_metadata_edit_sheet.dart';
-import 'package:mornye/utils/clickable_metadata.dart';
+import 'package:tango/screens/collapsing_header_scroll_mixin.dart';
+import 'package:tango/screens/track_metadata_edit_sheet.dart';
+import 'package:tango/utils/clickable_metadata.dart';
 
 part 'track_metadata_screen_cover.dart';
 part 'track_metadata_screen_display.dart';
 part 'track_metadata_screen_menu.dart';
-part 'track_metadata_mornye.dart';
+part 'track_metadata_tango.dart';
 
 part 'track_metadata_cards.dart';
 part 'track_metadata_lyrics.dart';
@@ -703,7 +703,7 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) return _buildMornyePage(context);
+    if (context.isTango) return _buildTangoPage(context);
     final colorScheme = Theme.of(context).colorScheme;
     final expandedHeight = calculateExpandedHeight(context);
     final bottomInset = context.navBarBottomInset;
@@ -780,7 +780,7 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen>
                       context,
                       ref,
                       colorScheme,
-                      anchor: mornyeMenuAnchor(buttonContext),
+                      anchor: tangoMenuAnchor(buttonContext),
                     ),
                   ),
                 ),
@@ -841,7 +841,7 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen>
     ColorScheme colorScheme,
     bool fileExists,
   ) {
-    if (context.isMornye) {
+    if (context.isTango) {
       return Row(
         children: [
           Expanded(
@@ -946,7 +946,7 @@ class _MetadataOptionTile extends StatelessWidget {
         : colorScheme.onSurfaceVariant;
     final titleColor = option.destructive ? colorScheme.error : null;
 
-    if (context.isMornye) {
+    if (context.isTango) {
       return CupertinoButton(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         onPressed: onTap,
@@ -961,7 +961,7 @@ class _MetadataOptionTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16),
-            Icon(mornyeIconFor(option.icon), color: iconColor, size: 22),
+            Icon(tangoIconFor(option.icon), color: iconColor, size: 22),
           ],
         ),
       );

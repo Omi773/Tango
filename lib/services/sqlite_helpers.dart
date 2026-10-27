@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/utils/path_match_keys.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/utils/path_match_keys.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart' show databaseFactoryFfi;
 
@@ -35,7 +35,7 @@ Future<Directory> appDatabaseDirectory() async {
 }
 
 Future<bool>? _trigramFts5Capability;
-const _trigramFts5ProbeTable = 'mornye_trigram_fts5_probe';
+const _trigramFts5ProbeTable = 'tango_trigram_fts5_probe';
 
 /// Caches an asynchronously-created value while also coalescing concurrent
 /// callers onto the same in-flight initialization.

@@ -2,19 +2,19 @@ import 'dart:io' show exit;
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:mornye/constants/app_info.dart';
-import 'package:mornye/services/update_checker.dart';
-import 'package:mornye/services/apk_downloader.dart';
-import 'package:mornye/services/desktop_diagnostics.dart';
-import 'package:mornye/services/desktop_updater.dart';
-import 'package:mornye/services/notification_service.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/utils/string_utils.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/app_action_button.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/app_progress_indicator.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:tango/constants/app_info.dart';
+import 'package:tango/services/update_checker.dart';
+import 'package:tango/services/apk_downloader.dart';
+import 'package:tango/services/desktop_diagnostics.dart';
+import 'package:tango/services/desktop_updater.dart';
+import 'package:tango/services/notification_service.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/utils/string_utils.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/app_action_button.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/app_progress_indicator.dart';
+import 'package:tango/theme/tango_theme.dart';
 
 class UpdateDialog extends StatefulWidget {
   final UpdateInfo updateInfo;
@@ -310,9 +310,9 @@ class _UpdateDialogState extends State<UpdateDialog> {
                   ),
                   // Material's version chips carry their own containers, so
                   // the row is not boxed a second time.
-                  decoration: context.isMornye
+                  decoration: context.isTango
                       ? BoxDecoration(
-                          color: MornyeTheme.controlFill(context),
+                          color: TangoTheme.controlFill(context),
                           borderRadius: BorderRadius.circular(16),
                         )
                       : null,
@@ -348,12 +348,12 @@ class _UpdateDialogState extends State<UpdateDialog> {
 
                 if (_isDownloading) ...[
                   Container(
-                    padding: context.isMornye
+                    padding: context.isTango
                         ? const EdgeInsets.all(16)
                         : EdgeInsets.zero,
-                    decoration: context.isMornye
+                    decoration: context.isTango
                         ? BoxDecoration(
-                            color: MornyeTheme.controlFill(context),
+                            color: TangoTheme.controlFill(context),
                             borderRadius: BorderRadius.circular(16),
                           )
                         : null,
@@ -428,8 +428,8 @@ class _UpdateDialogState extends State<UpdateDialog> {
                     // The scroll well uses the next tonal step above the
                     // dialog surface.
                     decoration: BoxDecoration(
-                      color: context.isMornye
-                          ? MornyeTheme.controlFill(context)
+                      color: context.isTango
+                          ? TangoTheme.controlFill(context)
                           : colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -652,7 +652,7 @@ class _VersionChip extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: context.isMornye
+            color: context.isTango
                 ? Colors.transparent
                 : isNew
                 ? colorScheme.primaryContainer
@@ -663,7 +663,7 @@ class _VersionChip extends StatelessWidget {
             'v$version',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: context.isMornye && isNew
+              color: context.isTango && isNew
                   ? colorScheme.primary
                   : isNew
                   ? colorScheme.onPrimaryContainer

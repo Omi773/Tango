@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/app_bar_layout.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/utils/app_bar_layout.dart';
 
 /// The collapsing header used by every top-level tab and every settings-style
 /// sub-page.
@@ -90,7 +90,7 @@ class AppSliverHeader extends StatelessWidget {
               padding: EdgeInsetsDirectional.only(start: edgeInset),
               child:
                   leading ??
-                  (context.isMornye
+                  (context.isTango
                       ? AppIconButton(
                           tooltip: MaterialLocalizations.of(
                             context,
@@ -167,13 +167,13 @@ class AppSliverHeader extends StatelessWidget {
                 style: TextStyle(
                   fontSize: fontSize,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: context.isMornye ? -0.7 * expandRatio : null,
+                  letterSpacing: context.isTango ? -0.7 * expandRatio : null,
                   color: colorScheme.onSurface,
                 ),
               ),
             ),
           );
-          if (context.isMornye) return bar;
+          if (context.isTango) return bar;
           // Collapsed expressive bars sit on a container tone, like a
           // scrolled-under app bar, and fade back to the surface on expand.
           return ColoredBox(

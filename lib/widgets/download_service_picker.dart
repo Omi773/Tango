@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/tango_chrome.dart';
 
 class DownloadServicePicker extends ConsumerStatefulWidget {
   final String? trackName;
@@ -41,16 +41,16 @@ class DownloadServicePicker extends ConsumerStatefulWidget {
     String? recommendedService,
     required void Function(String quality, String service) onSelect,
   }) {
-    final mornye = context.isMornye;
+    final tango = context.isTango;
 
     showAppModalBottomSheet<void>(
       context: context,
       useRootNavigator: true,
       isScrollControlled: true,
-      showDragHandle: !mornye,
+      showDragHandle: !tango,
       // Phones float the glass above the home indicator; the desktop dialog
       // draws its own glass around the picker.
-      mornyeGlass: isDesktopPlatform,
+      tangoGlass: isDesktopPlatform,
       // Explicit constraints replace the theme's, so repeat its tablet width.
       constraints: BoxConstraints(
         maxWidth: 640,
@@ -64,7 +64,7 @@ class DownloadServicePicker extends ConsumerStatefulWidget {
           onSelect: onSelect,
           recommendedService: recommendedService,
         );
-        if (!context.isMornye) return picker;
+        if (!context.isTango) return picker;
         final content = Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -75,7 +75,7 @@ class DownloadServicePicker extends ConsumerStatefulWidget {
         if (isDesktopPlatform) return content;
         return Padding(
           padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-          child: MornyeGlassPanel.overlay(child: content),
+          child: TangoGlassPanel.overlay(child: content),
         );
       },
     );
@@ -183,7 +183,7 @@ class _DownloadServicePickerState extends ConsumerState<DownloadServicePicker> {
                 artistName: widget.artistName,
                 coverUrl: widget.coverUrl,
               ),
-              if (context.isMornye)
+              if (context.isTango)
                 Divider(
                   height: 1,
                   color: colorScheme.outlineVariant.withValues(alpha: 0.5),
@@ -230,9 +230,9 @@ class _DownloadServicePickerState extends ConsumerState<DownloadServicePicker> {
               Padding(
                 padding: EdgeInsets.fromLTRB(
                   24,
-                  context.isMornye ? 24 : 16,
+                  context.isTango ? 24 : 16,
                   24,
-                  context.isMornye ? 12 : 8,
+                  context.isTango ? 12 : 8,
                 ),
                 child: Text(
                   context.l10n.downloadSelectQuality,
@@ -241,7 +241,7 @@ class _DownloadServicePickerState extends ConsumerState<DownloadServicePicker> {
                   ),
                 ),
               ),
-              if (context.isMornye)
+              if (context.isTango)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: RepaintBoundary(
@@ -254,7 +254,7 @@ class _DownloadServicePickerState extends ConsumerState<DownloadServicePicker> {
                               height: 0.5,
                               indent: 52,
                               endIndent: 16,
-                              color: MornyeTheme.metadataDividerColor(context),
+                              color: TangoTheme.metadataDividerColor(context),
                             ),
                           qualityRows[i],
                         ],
@@ -340,7 +340,7 @@ class _QualityOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    if (context.isMornye) {
+    if (context.isTango) {
       return CupertinoButton(
         padding: const EdgeInsets.all(16),
         onPressed: onTap,
@@ -349,7 +349,7 @@ class _QualityOption extends StatelessWidget {
             SizedBox(
               width: 24,
               child: Icon(
-                mornyeIconFor(icon),
+                tangoIconFor(icon),
                 color: colorScheme.primary,
                 size: 22,
               ),
@@ -431,7 +431,7 @@ class _ServiceChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final accessibleLabel = isRecommended ? '$label (Recommended)' : label;
-    if (context.isMornye) {
+    if (context.isTango) {
       final foreground = isSelected
           ? colorScheme.primary
           : colorScheme.onSurface;

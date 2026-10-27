@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/player_artwork_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/widgets/album_detail_header.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:tango/providers/runtime_profile_provider.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/cover_palette.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/player_artwork_theme.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/widgets/album_detail_header.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/desktop/context_menu.dart';
+import 'package:tango/widgets/tango_chrome.dart';
 
 /// Space below a desktop detail page, so its last rows clear the floating
 /// player.
@@ -31,7 +31,7 @@ double desktopDetailArtworkSize(double contentWidth) =>
 /// a Material header takes the accent of its artwork scheme.
 TextStyle desktopDetailSubtitleStyle(BuildContext context) {
   final scheme = Theme.of(context).colorScheme;
-  return context.isMornye
+  return context.isTango
       ? TextStyle(
           color: scheme.primary,
           fontSize: 24,
@@ -48,7 +48,7 @@ TextStyle desktopDetailSubtitleStyle(BuildContext context) {
 ///
 /// The artwork sits on the left edge of the list below, with the title,
 /// [subtitle] and [meta] centered beside it and [actions] along its bottom
-/// edge. The page background stays plain. Mornye floats a glass back button
+/// edge. The page background stays plain. Tango floats a glass back button
 /// and a capsule of [appBarActions] over the pane; Material keeps a toolbar
 /// that shows the title once the header scrolls away. [moreMenu] adds a
 /// "More" button that opens those groups as a menu.
@@ -72,7 +72,7 @@ List<Widget> desktopDetailHeaderSlivers(
   Color? backgroundColor,
 }) {
   final theme = Theme.of(context);
-  final mornye = context.isMornye;
+  final tango = context.isTango;
   // Lines the artwork up with the description and track table below.
   final inset = wideListInset(context) + 20;
   final more = moreMenu == null ? null : _MoreButton(groups: moreMenu);
@@ -85,9 +85,9 @@ List<Widget> desktopDetailHeaderSlivers(
       0.0,
       double.infinity,
     );
-    final radius = circularArtwork ? side / 2 : (mornye ? 12.0 : 20.0);
-    // Mornye draws Apple's continuous corner, as Music does on its covers.
-    final continuous = mornye && !circularArtwork;
+    final radius = circularArtwork ? side / 2 : (tango ? 12.0 : 20.0);
+    // Tango draws Apple's continuous corner, as Music does on its covers.
+    final continuous = tango && !circularArtwork;
     final corners = BorderRadius.circular(radius);
     final shadows = [
       BoxShadow(
@@ -104,7 +104,7 @@ List<Widget> desktopDetailHeaderSlivers(
           title,
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
-          style: mornye
+          style: tango
               ? const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
@@ -178,7 +178,7 @@ List<Widget> desktopDetailHeaderSlivers(
   final back =
       leading ??
       (Navigator.canPop(context)
-          ? (mornye
+          ? (tango
                 ? HeaderCircleButton(
                     icon: CupertinoIcons.back,
                     tooltip: MaterialLocalizations.of(
@@ -199,17 +199,17 @@ List<Widget> desktopDetailHeaderSlivers(
     SliverLayoutBuilder(
       builder: (context, constraints) {
         final showTitle =
-            appBarTitle != null || (!mornye && constraints.scrollOffset > 200);
+            appBarTitle != null || (!tango && constraints.scrollOffset > 200);
         return SliverAppBar(
           pinned: true,
           automaticallyImplyLeading: false,
           toolbarHeight: _toolbarHeight,
-          // Mornye controls float over the pane, as in Apple Music.
-          backgroundColor: mornye
+          // Tango controls float over the pane, as in Apple Music.
+          backgroundColor: tango
               ? Colors.transparent
               : backgroundColor ?? theme.colorScheme.surface,
           surfaceTintColor: Colors.transparent,
-          scrolledUnderElevation: mornye ? 0 : null,
+          scrolledUnderElevation: tango ? 0 : null,
           titleSpacing: 0,
           title: AnimatedOpacity(
             opacity: showTitle ? 1 : 0,
@@ -233,7 +233,7 @@ List<Widget> desktopDetailHeaderSlivers(
           actionsPadding: const EdgeInsetsDirectional.only(end: 16),
           actions: trailing.isEmpty
               ? null
-              : mornye
+              : tango
               ? [_ActionCapsule(children: trailing)]
               : trailing,
         );
@@ -242,7 +242,7 @@ List<Widget> desktopDetailHeaderSlivers(
     SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.fromLTRB(inset, 4, inset, 28),
-        child: mornye
+        child: tango
             ? LayoutBuilder(builder: details)
             // Kept without a source too, so artwork that arrives later
             // moves the scheme instead of rebuilding the header.
@@ -260,7 +260,7 @@ List<Widget> desktopDetailHeaderSlivers(
   ];
 }
 
-/// Mornye page actions grouped in one glass capsule.
+/// Tango page actions grouped in one glass capsule.
 class _ActionCapsule extends ConsumerWidget {
   const _ActionCapsule({required this.children});
 
@@ -271,11 +271,11 @@ class _ActionCapsule extends ConsumerWidget {
     final dark = Theme.of(context).brightness == Brightness.dark;
     return Center(
       widthFactor: 1,
-      child: MornyeGlass.navigation(
+      child: TangoGlass.navigation(
         radius: 18,
         tintColor: dark ? Colors.black : Colors.white,
         tintOpacity: dark ? 0.45 : 0.55,
-        blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+        blurEnabled: ref.watch(tangoBlurEnabledProvider),
         child: HeaderActionGroup(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -294,7 +294,7 @@ class _MoreButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => HeaderCircleButton(
-    icon: context.isMornye ? CupertinoIcons.ellipsis : Icons.more_horiz,
+    icon: context.isTango ? CupertinoIcons.ellipsis : Icons.more_horiz,
     tooltip: MaterialLocalizations.of(context).showMenuTooltip,
     onPressed: () => showContextMenu(
       context,

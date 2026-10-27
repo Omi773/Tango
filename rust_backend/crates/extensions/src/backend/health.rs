@@ -3,12 +3,12 @@
 use super::Backend;
 use crate::manager::ExtensionManager;
 use crate::manifest::{ExtensionManifest, HealthCheck};
-use mornye_core::app_version::AppVersion;
-use mornye_network::{
+use tango_core::app_version::AppVersion;
+use tango_network::{
     HttpRequest, NetworkService, policy::NetworkPermissions, policy::private_literal_or_local,
     url::UrlParts,
 };
-use mornye_providers::resolver::Check;
+use tango_providers::resolver::Check;
 use serde::Serialize;
 use serde_json::Value;
 use std::collections::BTreeMap;
@@ -306,7 +306,7 @@ impl Health {
                 default_json: false,
                 user_agent: if parsed
                     .as_ref()
-                    .is_some_and(|url| url.hostname.eq_ignore_ascii_case("api.zarz.moe"))
+                    .is_some_and(|url| url.hostname.eq_ignore_ascii_case("invalid.invalid"))
                 {
                     self.version.user_agent()
                 } else {
@@ -540,7 +540,7 @@ mod tests {
     use crate::RuntimeLimits;
     use crate::backend::MetadataOptions;
     use crate::environment::ExtensionEnvironment;
-    use mornye_network::{Lookup, LookupFuture, NetworkOptions};
+    use tango_network::{Lookup, LookupFuture, NetworkOptions};
     use serde_json::json;
     use std::sync::atomic::AtomicUsize;
 

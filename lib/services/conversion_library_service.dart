@@ -1,7 +1,7 @@
-import 'package:mornye/models/download_history.dart';
-import 'package:mornye/services/history_database.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/audio_conversion_utils.dart';
+import 'package:tango/models/download_history.dart';
+import 'package:tango/services/history_database.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/utils/audio_conversion_utils.dart';
 
 class ConversionLibraryService {
   const ConversionLibraryService._();

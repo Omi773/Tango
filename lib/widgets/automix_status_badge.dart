@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/services/automix_status.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/services/automix_status.dart';
 
 class AutoMixStatusBadge extends StatelessWidget {
   const AutoMixStatusBadge({super.key});

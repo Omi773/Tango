@@ -4,25 +4,25 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart' show CupertinoButton;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mornye/controllers/player_metadata_controller.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/equalizer_settings.dart';
-import 'package:mornye/models/settings.dart';
-import 'package:mornye/services/audio_route_info.dart';
-import 'package:mornye/services/music_playback_deck.dart';
-import 'package:mornye/services/music_player_service.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/services/playback_equalizer.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/int_utils.dart';
-import 'package:mornye/utils/string_utils.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/audio_analysis_widget.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/hires_check_card.dart';
-import 'package:mornye/widgets/settings_group.dart';
+import 'package:tango/controllers/player_metadata_controller.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/equalizer_settings.dart';
+import 'package:tango/models/settings.dart';
+import 'package:tango/services/audio_route_info.dart';
+import 'package:tango/services/music_playback_deck.dart';
+import 'package:tango/services/music_player_service.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/services/playback_equalizer.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/int_utils.dart';
+import 'package:tango/utils/string_utils.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/audio_analysis_widget.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/hires_check_card.dart';
+import 'package:tango/widgets/settings_group.dart';
 
 /// Technical details of the playing track, from the file through the
 /// processing chain to the output device.
@@ -161,7 +161,7 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
               ),
             ],
             SizedBox(height: context.tokens.gapLg),
-            if (context.isMornye)
+            if (context.isTango)
               _FactGroup(
                 children: [
                   CupertinoButton(
@@ -210,7 +210,7 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
   }
 }
 
-/// Mornye sheets are glass, so a settings cell color would vanish into them;
+/// Tango sheets are glass, so a settings cell color would vanish into them;
 /// rows use the translucent control fill, like the track details page.
 class _FactGroup extends StatelessWidget {
   const _FactGroup({required this.children});
@@ -219,13 +219,13 @@ class _FactGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isMornye) {
+    if (!context.isTango) {
       return SettingsGroup(connected: true, children: children);
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Material(
-        color: MornyeTheme.controlFill(context),
+        color: TangoTheme.controlFill(context),
         borderRadius: BorderRadius.circular(28),
         clipBehavior: Clip.antiAlias,
         child: Column(mainAxisSize: MainAxisSize.min, children: children),
@@ -245,11 +245,11 @@ class _FactRow extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final tokens = context.tokens;
-    final mornye = context.isMornye;
-    // Mornye rows line up with the section header, as in iOS inset lists.
-    final inset = mornye ? 16.0 : tokens.rowPaddingH;
+    final tango = context.isTango;
+    // Tango rows line up with the section header, as in iOS inset lists.
+    final inset = tango ? 16.0 : tokens.rowPaddingH;
     final valueStyle =
-        (mornye ? theme.textTheme.bodyLarge : theme.textTheme.bodyMedium)
+        (tango ? theme.textTheme.bodyLarge : theme.textTheme.bodyMedium)
             ?.copyWith(
               color: fact.emphasis ? colors.primary : colors.onSurfaceVariant,
               fontWeight: fact.emphasis ? FontWeight.w600 : null,
@@ -294,9 +294,9 @@ class _FactRow extends StatelessWidget {
             Divider(
               height: 1,
               indent: inset,
-              endIndent: mornye ? 0 : inset,
-              color: mornye
-                  ? MornyeTheme.metadataDividerColor(context)
+              endIndent: tango ? 0 : inset,
+              color: tango
+                  ? TangoTheme.metadataDividerColor(context)
                   : colors.outlineVariant.withValues(alpha: 0.3),
             ),
         ],

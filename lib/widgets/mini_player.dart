@@ -5,28 +5,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/providers/player_motion_artwork_provider.dart';
-import 'package:mornye/providers/player_artwork_video_provider.dart';
-import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/player_artwork_theme.dart';
-import 'package:mornye/screens/now_playing_screen.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/string_utils.dart';
-import 'package:mornye/widgets/audio_quality_badges.dart';
-import 'package:mornye/widgets/overflow_marquee.dart';
-import 'package:mornye/widgets/player_artwork.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/providers/player_motion_artwork_provider.dart';
+import 'package:tango/providers/player_artwork_video_provider.dart';
+import 'package:tango/providers/runtime_profile_provider.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/material_expressive.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/player_artwork_theme.dart';
+import 'package:tango/screens/now_playing_screen.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/string_utils.dart';
+import 'package:tango/widgets/audio_quality_badges.dart';
+import 'package:tango/widgets/overflow_marquee.dart';
+import 'package:tango/widgets/player_artwork.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/tango_chrome.dart';
 
 class MiniPlayer extends ConsumerStatefulWidget {
   const MiniPlayer({super.key, this.compact = false, this.bottomPadding = 8});
@@ -45,7 +45,7 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
       compact: widget.compact,
       bottomPadding: widget.bottomPadding,
     );
-    if (context.isMornye) return body;
+    if (context.isTango) return body;
     // Material takes the track's artwork scheme, like the full player.
     final artUri = ref.watch(
       currentMediaItemProvider.select((item) => item.value?.artUri),
@@ -90,7 +90,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
     Navigator.of(context, rootNavigator: true).push(
       NowPlayingRoute(
         child: const NowPlayingScreen(),
-        miniPlayerGeometry: context.isMornye
+        miniPlayerGeometry: context.isTango
             ? () {
                 if (!mounted) return null;
                 final surface = _bounds(_surfaceKey);
@@ -138,16 +138,16 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
 
     final controller = ref.read(musicPlayerControllerProvider);
     final colorScheme = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final expressive = materialExpressiveEnabled(context);
-    final compact = mornye && widget.compact;
+    final compact = tango && widget.compact;
     // Frosted and flat glass levels run on constrained Android hardware. They
     // skip keeping a paused video decoder for the full player's motion cover,
     // and stop the title marquee after a few passes: every marquee frame
     // re-filters the blurred chrome around it.
-    final fullEffects = !mornye || ref.watch(mornyeLiquidGlassProvider);
+    final fullEffects = !tango || ref.watch(tangoLiquidGlassProvider);
     final marqueeCycles = fullEffects ? null : 2;
-    if (mornye &&
+    if (tango &&
         fullEffects &&
         ref.watch(settingsProvider.select((s) => s.motionArtworkEnabled)) &&
         !MediaQuery.disableAnimationsOf(context)) {
@@ -168,7 +168,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
       key: _surfaceKey,
       position: DecorationPosition.foreground,
       decoration: BoxDecoration(
-        border: mornye
+        border: tango
             ? null
             : Border(
                 top: BorderSide(
@@ -177,7 +177,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
               ),
       ),
       child: Material(
-        color: mornye
+        color: tango
             ? Colors.transparent
             : settingsGroupColor(context).withValues(alpha: 0.72),
         child: InkWell(
@@ -185,7 +185,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (!mornye)
+              if (!tango)
                 _MiniPlayerProgress(
                   duration: mediaItem.duration ?? Duration.zero,
                   backgroundColor: colorScheme.surfaceContainerHighest,
@@ -194,7 +194,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: compact ? 8 : 12,
-                  vertical: mornye ? 0 : 8,
+                  vertical: tango ? 0 : 8,
                 ),
                 child: Row(
                   children: [
@@ -202,7 +202,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
                       tag: kNowPlayingArtworkHeroTag,
                       child: ClipRRect(
                         key: _artworkKey,
-                        borderRadius: BorderRadius.circular(mornye ? 6 : 12),
+                        borderRadius: BorderRadius.circular(tango ? 6 : 12),
                         child: SizedBox(
                           width: context.tokens.coverMini,
                           height: context.tokens.coverMini,
@@ -244,7 +244,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
                               mediaItem.artist ?? '',
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
-                                    color: mornye
+                                    color: tango
                                         ? Color.lerp(
                                             colorScheme.onSurfaceVariant,
                                             colorScheme.onSurface,
@@ -290,7 +290,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
                       )
                     else
                       AppIconButton(
-                        color: mornye ? colorScheme.onSurface : null,
+                        color: tango ? colorScheme.onSurface : null,
                         tooltip: isPlaying
                             ? context.l10n.actionPause
                             : context.l10n.tooltipPlay,
@@ -300,7 +300,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
                                 strokeWidth: 2.5,
                               )
                             : AppIcon(
-                                mornye
+                                tango
                                     ? (isPlaying
                                           ? CupertinoIcons.pause_fill
                                           : CupertinoIcons.play_fill)
@@ -314,10 +314,10 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
                       ),
                     if (!compact)
                       AppIconButton(
-                        color: mornye ? colorScheme.onSurface : null,
+                        color: tango ? colorScheme.onSurface : null,
                         tooltip: context.l10n.nowPlayingNextTrack,
                         icon: AppIcon(
-                          mornye
+                          tango
                               ? CupertinoIcons.forward_fill
                               : Icons.skip_next,
                         ),
@@ -355,13 +355,13 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
               child: surface,
             ),
           );
-    return mornye
+    return tango
         ? Padding(
             padding: EdgeInsets.only(bottom: widget.bottomPadding),
-            child: MornyeGlass.navigation(
+            child: TangoGlass.navigation(
               strongTint: true,
-              tintOpacity: MornyeTheme.chromeOpacity(context),
-              blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+              tintOpacity: TangoTheme.chromeOpacity(context),
+              blurEnabled: ref.watch(tangoBlurEnabledProvider),
               child: swipeable,
             ),
           )

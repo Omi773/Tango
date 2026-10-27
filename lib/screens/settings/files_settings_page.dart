@@ -3,30 +3,30 @@ import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/app_switch.dart';
-import 'package:mornye/widgets/app_text_field.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_choice_chip.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:tango/theme/material_expressive.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/app_switch.dart';
+import 'package:tango/widgets/app_text_field.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_choice_chip.dart';
+import 'package:tango/theme/tango_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/screens/network_storage_screen.dart';
-import 'package:mornye/models/settings.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/desktop_folders.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/utils/saf_download_tree.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/screens/network_storage_screen.dart';
+import 'package:tango/models/settings.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/utils/desktop_folders.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/file_access.dart';
+import 'package:tango/utils/saf_download_tree.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
 
 part 'files_settings_page_widgets.dart';
 
@@ -150,7 +150,7 @@ class _FilesSettingsPageState extends ConsumerState<FilesSettingsPage> {
                               ? context.l10n.setupAppDocumentsFolder
                               : isDesktopPlatform
                               ? 'Music/$desktopOutputFolderName'
-                              : 'Download/Mornye')
+                              : 'Download/Tango')
                         : settings.downloadDirectory,
                     onTap: () => _pickDirectory(context, ref),
                     showDivider: false,
@@ -522,7 +522,7 @@ class _FilesSettingsPageState extends ConsumerState<FilesSettingsPage> {
   }
 
   Future<String> _getDefaultAndroidDirectory() async {
-    const directDownloadPath = '/storage/emulated/0/Download/Mornye';
+    const directDownloadPath = '/storage/emulated/0/Download/Tango';
     try {
       final downloadDir = Directory(directDownloadPath);
       if (!await downloadDir.exists()) {
@@ -534,7 +534,7 @@ class _FilesSettingsPageState extends ConsumerState<FilesSettingsPage> {
       final externalDir = await getExternalStorageDirectory();
       if (externalDir != null) {
         final downloadDir = Directory(
-          '${externalDir.parent.parent.parent.parent.path}/Download/Mornye',
+          '${externalDir.parent.parent.parent.parent.path}/Download/Tango',
         );
         if (!await downloadDir.exists()) {
           await downloadDir.create(recursive: true);
@@ -543,7 +543,7 @@ class _FilesSettingsPageState extends ConsumerState<FilesSettingsPage> {
       }
     } catch (_) {}
     final appDir = await getApplicationDocumentsDirectory();
-    final fallbackDir = Directory('${appDir.path}/Mornye');
+    final fallbackDir = Directory('${appDir.path}/Tango');
     if (!await fallbackDir.exists()) await fallbackDir.create(recursive: true);
     return fallbackDir.path;
   }
@@ -629,7 +629,7 @@ class _FilesSettingsPageState extends ConsumerState<FilesSettingsPage> {
             AppSheetOption(
               leading: AppIcon(
                 Icons.cloud,
-                color: context.isMornye
+                color: context.isTango
                     ? colorScheme.primary
                     : colorScheme.onSurfaceVariant,
               ),
@@ -824,31 +824,31 @@ class _FilesSettingsPageState extends ConsumerState<FilesSettingsPage> {
                 'none',
                 context.l10n.folderOrganizationNone,
                 context.l10n.folderOrganizationNoneSubtitle,
-                'Mornye/Track.flac',
+                'Tango/Track.flac',
               ),
               (
                 'playlist',
                 context.l10n.folderOrganizationByPlaylist,
                 context.l10n.folderOrganizationByPlaylistSubtitle,
-                'Mornye/Playlist Name/Track.flac',
+                'Tango/Playlist Name/Track.flac',
               ),
               (
                 'artist',
                 context.l10n.folderOrganizationByArtist,
                 context.l10n.folderOrganizationByArtistSubtitle,
-                'Mornye/Artist Name/Track.flac',
+                'Tango/Artist Name/Track.flac',
               ),
               (
                 'album',
                 context.l10n.folderOrganizationByAlbum,
                 context.l10n.folderOrganizationByAlbumSubtitle,
-                'Mornye/Album Name/Track.flac',
+                'Tango/Album Name/Track.flac',
               ),
               (
                 'artist_album',
                 context.l10n.folderOrganizationByArtistAlbum,
                 context.l10n.folderOrganizationByArtistAlbumSubtitle,
-                'Mornye/Artist/Album/Track.flac',
+                'Tango/Artist/Album/Track.flac',
               ),
             ])
               _FolderOption(

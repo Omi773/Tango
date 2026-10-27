@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/expressive_button_group.dart';
+import 'package:tango/theme/material_expressive.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/expressive_button_group.dart';
 
 /// Compact expressive transport/header actions with the same accessible target
 /// and tooltip as the standard Material fallback.

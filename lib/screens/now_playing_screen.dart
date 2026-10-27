@@ -6,53 +6,53 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:mornye/controllers/player_metadata_controller.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/download_history_provider.dart';
-import 'package:mornye/providers/library_collections_provider.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/routes/now_playing_route.dart';
-import 'package:mornye/screens/downloaded_album_screen.dart';
-import 'package:mornye/screens/local_album_screen.dart';
-import 'package:mornye/screens/equalizer_screen.dart';
-import 'package:mornye/screens/lyrics_share_screen.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/player_artwork_theme.dart';
-import 'package:mornye/utils/clickable_metadata.dart';
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/utils/lyrics_parser.dart';
-import 'package:mornye/utils/playback_seek_preview.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/expressive_icon_button.dart';
-import 'package:mornye/widgets/audio_output_button.dart';
-import 'package:mornye/widgets/desktop/desktop_commands.dart'
+import 'package:tango/controllers/player_metadata_controller.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/download_history_provider.dart';
+import 'package:tango/providers/library_collections_provider.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/routes/now_playing_route.dart';
+import 'package:tango/screens/downloaded_album_screen.dart';
+import 'package:tango/screens/local_album_screen.dart';
+import 'package:tango/screens/equalizer_screen.dart';
+import 'package:tango/screens/lyrics_share_screen.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/player_artwork_theme.dart';
+import 'package:tango/utils/clickable_metadata.dart';
+import 'package:tango/utils/file_access.dart';
+import 'package:tango/utils/lyrics_parser.dart';
+import 'package:tango/utils/playback_seek_preview.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/expressive_icon_button.dart';
+import 'package:tango/widgets/audio_output_button.dart';
+import 'package:tango/widgets/desktop/desktop_commands.dart'
     show DesktopCommand, desktopTooltip;
-import 'package:mornye/widgets/desktop/desktop_inspector.dart';
-import 'package:mornye/widgets/lyrics_screen_awake.dart';
-import 'package:mornye/widgets/player_artwork.dart';
-import 'package:mornye/widgets/player_gesture_regions.dart';
-import 'package:mornye/widgets/player_queue_sheet.dart';
-import 'package:mornye/widgets/player_details_sheet.dart';
-import 'package:mornye/widgets/material_player_backdrop.dart';
-import 'package:mornye/widgets/material_player_layout.dart';
-import 'package:mornye/widgets/mornye_player_layout.dart';
-import 'package:mornye/widgets/player_lyrics_controls.dart';
-import 'package:mornye/widgets/player_lyrics_section.dart';
-import 'package:mornye/widgets/playlist_picker_sheet.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/mornye_player_background.dart';
-import 'package:mornye/widgets/mornye_artwork_contrast.dart';
-import 'package:mornye/widgets/mornye_player_actions_sheet.dart';
-import 'package:mornye/widgets/mornye_context_menu.dart';
-import 'package:mornye/widgets/mornye_player_artwork.dart';
-import 'package:mornye/providers/player_motion_artwork_provider.dart';
+import 'package:tango/widgets/desktop/desktop_inspector.dart';
+import 'package:tango/widgets/lyrics_screen_awake.dart';
+import 'package:tango/widgets/player_artwork.dart';
+import 'package:tango/widgets/player_gesture_regions.dart';
+import 'package:tango/widgets/player_queue_sheet.dart';
+import 'package:tango/widgets/player_details_sheet.dart';
+import 'package:tango/widgets/material_player_backdrop.dart';
+import 'package:tango/widgets/material_player_layout.dart';
+import 'package:tango/widgets/tango_player_layout.dart';
+import 'package:tango/widgets/player_lyrics_controls.dart';
+import 'package:tango/widgets/player_lyrics_section.dart';
+import 'package:tango/widgets/playlist_picker_sheet.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/tango_player_background.dart';
+import 'package:tango/widgets/tango_artwork_contrast.dart';
+import 'package:tango/widgets/tango_player_actions_sheet.dart';
+import 'package:tango/widgets/tango_context_menu.dart';
+import 'package:tango/widgets/tango_player_artwork.dart';
+import 'package:tango/providers/player_motion_artwork_provider.dart';
 
-export 'package:mornye/routes/now_playing_route.dart';
+export 'package:tango/routes/now_playing_route.dart';
 
 final _log = AppLogger('NowPlaying');
 
@@ -83,7 +83,7 @@ class NowPlayingScreen extends ConsumerStatefulWidget {
   final PlayerMetadataController Function()? metadataControllerFactory;
 
   /// The page shown first: 0 is the player, 1 the lyrics and 2 Up Next
-  /// (Mornye only).
+  /// (Tango only).
   final int initialPage;
 
   /// Shown in the desktop content pane rather than as a route. Minimizing
@@ -164,7 +164,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final size = MediaQuery.sizeOf(context);
-    _landscape = context.isMornye && size.width > size.height;
+    _landscape = context.isTango && size.width > size.height;
     if (_landscape || MediaQuery.accessibleNavigationOf(context)) {
       _lyricsControlsHidden = false;
     }
@@ -233,7 +233,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     );
     return LyricsScreenAwake(
       visible: _currentPage == 1 && mediaItem != null,
-      child: context.isMornye
+      child: context.isTango
           ? _buildPlayer(context, mediaItem, fullScreenCover: fullScreenCover)
           // Material takes the track's artwork scheme. The providers it needs
           // are read above, so the scoped builder reads none.
@@ -255,9 +255,9 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     MediaItem? mediaItem, {
     required bool fullScreenCover,
   }) {
-    final mornye = context.isMornye;
-    final colorScheme = mornye
-        ? MornyeTheme.fromContext(
+    final tango = context.isTango;
+    final colorScheme = tango
+        ? TangoTheme.fromContext(
             context,
             brightness: Brightness.dark,
           ).colorScheme
@@ -278,7 +278,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
 
     final source = mediaItem.extras?['source']?.toString() ?? '';
     final motionState =
-        mornye &&
+        tango &&
             ref.watch(settingsProvider.select((s) => s.motionArtworkEnabled)) &&
             !MediaQuery.disableAnimationsOf(context)
         ? ref.watch(
@@ -299,9 +299,9 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             : null);
     final squareArtwork =
         motionArtwork == null || (motionRatio != null && motionRatio >= 0.95);
-    // Motion artwork is always full-bleed in Mornye; still covers follow the
+    // Motion artwork is always full-bleed in Tango; still covers follow the
     // cover style setting through the same layout, as a square video would.
-    final fullBleed = mornye && (motionArtwork != null || fullScreenCover);
+    final fullBleed = tango && (motionArtwork != null || fullScreenCover);
     final screen = MediaQuery.sizeOf(context);
     // A still cover is cropped at the sides to reach down to the title, as
     // in the Material full-screen style; landscape keeps the square card.
@@ -313,14 +313,14 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         : motionRatio;
     // Two-pane landscape keeps its side-by-side cover.
     final materialFullScreen =
-        !mornye &&
+        !tango &&
         fullScreenCover &&
         MediaQuery.orientationOf(context) == Orientation.portrait;
     final overCover = materialFullScreen && _currentPage != 1;
     if (!fullBleed && _artworkForeground.value.isNotEmpty) {
       _artworkForeground.value = {};
     }
-    Widget artwork() => MornyePlayerArtwork(
+    Widget artwork() => TangoPlayerArtwork(
       mediaItem: mediaItem,
       videoUrl: motionArtwork?.source,
       resolvingVideo: motionState?.isLoading == true,
@@ -342,7 +342,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       },
     );
 
-    // The Mornye route moves the entire player together. A second,
+    // The Tango route moves the entire player together. A second,
     // delayed content fade would make dismissal appear to pause partway down.
     final route = ModalRoute.of(context);
     final routeAnimation = route?.animation ?? kAlwaysCompleteAnimation;
@@ -350,7 +350,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       _artworkRoute?.readArtwork = null;
       _artworkRoute = null;
     }
-    if (mornye && route is NowPlayingRoute) {
+    if (tango && route is NowPlayingRoute) {
       _artworkRoute = route;
       route.readArtwork = () {
         final key = _landscape
@@ -370,7 +370,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
           ),
           fullBleed: key == _motionArtworkKey,
           child: Theme(
-            data: MornyeTheme.fromContext(context, brightness: Brightness.dark),
+            data: TangoTheme.fromContext(context, brightness: Brightness.dark),
             child: key == _compactArtworkKey
                 ? PlayerArtwork(
                     artUri: mediaItem.artUri?.toString(),
@@ -382,7 +382,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         );
       };
     }
-    final contentOpacity = mornye
+    final contentOpacity = tango
         ? kAlwaysCompleteAnimation
         : routeAnimation.drive(
             CurveTween(curve: const Interval(0.4, 1.0, curve: Curves.easeOut)),
@@ -390,7 +390,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
 
     // The embedded desktop player keeps a toolbar for its minimize button,
     // which a route reaches by swiping down instead.
-    final double? mornyeToolbarHeight = !mornye
+    final double? tangoToolbarHeight = !tango
         ? null
         : widget.embedded
         ? 48
@@ -398,23 +398,23 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         ? 0
         : 36;
     final player = Scaffold(
-      backgroundColor: mornye || materialFullScreen
+      backgroundColor: tango || materialFullScreen
           ? Colors.transparent
           : colorScheme.surface,
       appBar: _FadingAppBar(
         opacity: contentOpacity,
         child: AppBar(
-          backgroundColor: mornye || materialFullScreen
+          backgroundColor: tango || materialFullScreen
               ? Colors.transparent
               : colorScheme.surface,
           foregroundColor: overCover ? Colors.white : colorScheme.onSurface,
           surfaceTintColor: Colors.transparent,
-          systemOverlayStyle: mornye || overCover
+          systemOverlayStyle: tango || overCover
               ? SystemUiOverlayStyle.light
               : null,
-          toolbarHeight: mornyeToolbarHeight ?? kToolbarHeight,
+          toolbarHeight: tangoToolbarHeight ?? kToolbarHeight,
           automaticallyImplyLeading: false,
-          title: mornye
+          title: tango
               ? MediaQuery.orientationOf(context) == Orientation.landscape ||
                         widget.embedded
                     ? null
@@ -438,16 +438,16 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                       : null,
                 ),
           centerTitle: true,
-          leading: mornye && !widget.embedded
+          leading: tango && !widget.embedded
               ? null
               : AppIconButton(
                   key: const ValueKey('now-playing-minimize'),
                   tooltip: _minimizeTooltip(context),
-                  color: overCover || mornye ? Colors.white : null,
+                  color: overCover || tango ? Colors.white : null,
                   icon: const AppIcon(Icons.keyboard_arrow_down),
                   onPressed: _minimize,
                 ),
-          actions: mornye
+          actions: tango
               ? null
               : [
                   AppIconButton(
@@ -478,10 +478,10 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
           child: Column(
             children: [
               Expanded(
-                child: mornye
+                child: tango
                     ? NotificationListener<ScrollUpdateNotification>(
                         onNotification: _onLyricsScroll,
-                        child: MornyePlayerLayout(
+                        child: TangoPlayerLayout(
                           mediaItem: mediaItem,
                           metadata: _trackMetadata,
                           seekPreview: _seekPreview,
@@ -492,7 +492,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                           insetArtwork: !fullBleed,
                           artworkTopInset:
                               MediaQuery.paddingOf(context).top +
-                              (widget.embedded ? mornyeToolbarHeight! : 36),
+                              (widget.embedded ? tangoToolbarHeight! : 36),
                           artworkKeys: (
                             header: _artworkHeaderKey,
                             controls: _artworkControlsKey,
@@ -509,7 +509,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                             showOptions: showOptions,
                           ),
                           lyricsOptions: _lyricsOptionsButton(colorScheme),
-                          onPageChanged: _setMornyePage,
+                          onPageChanged: _setTangoPage,
                           onTrackNavigation: _showTrackNavigationMenu,
                           onMoreActions: (buttonContext, item, anchor) =>
                               _showMoreActions(
@@ -541,7 +541,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (mornye && !_landscape)
+                      if (tango && !_landscape)
                         FractionallySizedBox(
                           widthFactor: 0.72,
                           child: Row(
@@ -561,7 +561,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                                 icon: const AppIcon(
                                   CupertinoIcons.quote_bubble,
                                 ),
-                                onPressed: _toggleMornyeLyrics,
+                                onPressed: _toggleTangoLyrics,
                               ),
                               AudioOutputButton(
                                 color: Colors.white,
@@ -582,12 +582,12 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                                 ),
                                 icon: const AppIcon(CupertinoIcons.list_bullet),
                                 onPressed: () =>
-                                    _setMornyePage(_currentPage == 2 ? 0 : 2),
+                                    _setTangoPage(_currentPage == 2 ? 0 : 2),
                               ),
                             ],
                           ),
                         )
-                      else if (!mornye)
+                      else if (!tango)
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 28),
                           child: Row(
@@ -624,7 +624,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         ),
       ),
     );
-    if (!mornye) {
+    if (!tango) {
       if (!materialFullScreen) return player;
       return Stack(
         fit: StackFit.expand,
@@ -640,14 +640,14 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     }
     return HeroMode(
       // A route Hero renders outside the panel's gradient and slide, briefly
-      // exposing a detached rectangle. Keep Mornye artwork inside its panel.
+      // exposing a detached rectangle. Keep Tango artwork inside its panel.
       enabled: false,
       child: Theme(
-        data: MornyeTheme.fromContext(context, brightness: Brightness.dark),
+        data: TangoTheme.fromContext(context, brightness: Brightness.dark),
         child: Stack(
           fit: StackFit.expand,
           children: [
-            MornyeArtworkContrast(
+            TangoArtworkContrast(
               enabled: fullBleed && !_landscape && _currentPage == 0,
               continuous: motionArtwork != null,
               targets: {
@@ -659,7 +659,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                 if (!mounted) return;
                 _artworkForeground.value = colors;
               },
-              child: MornyePlayerBackground(
+              child: TangoPlayerBackground(
                 artUri: mediaItem.artUri,
                 squareArtwork: squareArtwork,
                 artworkAspectRatio: artworkRatio,
@@ -713,11 +713,11 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     }
   }
 
-  void _toggleMornyeLyrics() {
-    _setMornyePage(_currentPage == 1 ? 0 : 1);
+  void _toggleTangoLyrics() {
+    _setTangoPage(_currentPage == 1 ? 0 : 1);
   }
 
-  void _setMornyePage(int page) {
+  void _setTangoPage(int page) {
     if (_toggleInspector(page)) return;
     setState(() {
       _currentPage = page;
@@ -736,7 +736,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   }
 
   bool get _canAutoHideLyricsControls =>
-      context.isMornye &&
+      context.isTango &&
       !_landscape &&
       _currentPage == 1 &&
       ref.read(playbackPlayingProvider) &&
@@ -791,7 +791,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     return false;
   }
 
-  Widget _autoHidingLyricsControls(Widget child) => context.isMornye
+  Widget _autoHidingLyricsControls(Widget child) => context.isTango
       ? PlayerLyricsControlsVisibility(
           hidden: _currentPage == 1 && _lyricsControlsHidden && !_landscape,
           child: child,
@@ -932,7 +932,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     _lyricsIdleTimer?.cancel();
     setState(() => _lyricsOptionsOpen = true);
     try {
-      final anchor = mornyeMenuAnchor(buttonContext);
+      final anchor = tangoMenuAnchor(buttonContext);
       var menuWidth = 240.0;
       for (final (_, label, _) in actions) {
         final painter = TextPainter(
@@ -948,18 +948,18 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         if (painter.width + 80 > menuWidth) menuWidth = painter.width + 80;
         painter.dispose();
       }
-      final action = context.isMornye
-          ? await showMornyeContextMenu<String>(
+      final action = context.isTango
+          ? await showTangoContextMenu<String>(
               context: buttonContext,
               anchor: anchor,
               preferAbove: true,
               maxWidth: menuWidth,
-              builder: (menuContext) => MornyeContextMenu(
+              builder: (menuContext) => TangoContextMenu(
                 dense: true,
                 groups: [
                   [
                     for (final (value, label, icon) in actions)
-                      MornyeMenuAction(
+                      TangoMenuAction(
                         icon: icon,
                         label: label,
                         onPressed: () => Navigator.of(menuContext).pop(value),
@@ -1017,11 +1017,11 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     BuildContext titleContext,
     MediaItem mediaItem,
   ) async {
-    final action = await showMornyeContextMenu<String>(
+    final action = await showTangoContextMenu<String>(
       context: titleContext,
       preferAbove: true,
       maxWidth: 280,
-      builder: (_) => MornyePlayerNavigationMenu(mediaItem: mediaItem),
+      builder: (_) => TangoPlayerNavigationMenu(mediaItem: mediaItem),
     );
     if (!mounted) return;
     if (action == 'album') {
@@ -1087,13 +1087,13 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
               context,
             ).formatTimeOfDay(TimeOfDay.fromDateTime(sleepTimerEndsAt)),
           );
-    final action = context.isMornye
-        ? await showMornyeContextMenu<String>(
+    final action = context.isTango
+        ? await showTangoContextMenu<String>(
             context: context,
             anchor: anchor,
             preferAbove: true,
             maxWidth: 280,
-            builder: (_) => MornyePlayerActionsSheet(
+            builder: (_) => TangoPlayerActionsSheet(
               mediaItem: mediaItem,
               sleepTimerSubtitle: sleepTimerSubtitle,
             ),
@@ -1335,8 +1335,8 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   /// player's artwork scope.
   void _showQueueSheet(BuildContext context, ColorScheme colorScheme) {
     if (_toggleInspector(2)) return;
-    if (context.isMornye) {
-      _setMornyePage(2);
+    if (context.isTango) {
+      _setTangoPage(2);
       return;
     }
     if (_queueSheetShowing) return;

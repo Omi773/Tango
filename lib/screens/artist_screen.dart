@@ -2,65 +2,65 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/app_progress_indicator.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/widgets/mornye_artist_header.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/screens/track_history_snapshot.dart';
-import 'package:mornye/widgets/album_detail_header.dart';
-import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/app_progress_indicator.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/widgets/tango_artist_header.dart';
+import 'package:tango/widgets/tango_chrome.dart';
+import 'package:tango/screens/track_history_snapshot.dart';
+import 'package:tango/widgets/album_detail_header.dart';
+import 'package:tango/theme/cover_palette.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/models/artist_concert.dart';
-import 'package:mornye/widgets/artist_concerts_button.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/providers/track_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/providers/download_queue_provider.dart';
-import 'package:mornye/providers/library_collections_provider.dart';
-import 'package:mornye/providers/recent_access_provider.dart';
-import 'package:mornye/providers/local_library_provider.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/string_utils.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/nav_bar_inset.dart';
-import 'package:mornye/utils/provider_resource_ids.dart';
-import 'package:mornye/utils/ttl_cache.dart';
-import 'package:mornye/screens/album_screen.dart';
-import 'package:mornye/screens/extension_collection_screens.dart'
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/models/artist_concert.dart';
+import 'package:tango/widgets/artist_concerts_button.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/providers/track_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/providers/download_queue_provider.dart';
+import 'package:tango/providers/library_collections_provider.dart';
+import 'package:tango/providers/recent_access_provider.dart';
+import 'package:tango/providers/local_library_provider.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/utils/string_utils.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/utils/nav_bar_inset.dart';
+import 'package:tango/utils/provider_resource_ids.dart';
+import 'package:tango/utils/ttl_cache.dart';
+import 'package:tango/screens/album_screen.dart';
+import 'package:tango/screens/extension_collection_screens.dart'
     show ExtensionAlbumScreen;
-import 'package:mornye/controllers/local_playback.dart';
-import 'package:mornye/widgets/download_service_picker.dart';
-import 'package:mornye/widgets/error_card.dart';
-import 'package:mornye/widgets/selection_bottom_bar.dart';
-import 'package:mornye/widgets/in_library_badge.dart';
-import 'package:mornye/widgets/track_collection_quick_actions.dart';
-import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/screens/selection_mode_mixin.dart';
-import 'package:mornye/utils/clickable_metadata.dart';
-import 'package:mornye/widgets/cached_cover_image.dart';
-import 'package:mornye/widgets/playlist_picker_sheet.dart';
-import 'package:mornye/widgets/motion_header_banner.dart';
-import 'package:mornye/widgets/cross_extension_share_sheet.dart';
-import 'package:mornye/widgets/view_queue_snackbar_action.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/downloadable_cover.dart';
-import 'package:mornye/widgets/expressive_button_group.dart';
-import 'package:mornye/widgets/expressive_icon_button.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/desktop/detail_header.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/material_expressive.dart';
+import 'package:tango/controllers/local_playback.dart';
+import 'package:tango/widgets/download_service_picker.dart';
+import 'package:tango/widgets/error_card.dart';
+import 'package:tango/widgets/selection_bottom_bar.dart';
+import 'package:tango/widgets/in_library_badge.dart';
+import 'package:tango/widgets/track_collection_quick_actions.dart';
+import 'package:tango/widgets/animation_utils.dart';
+import 'package:tango/screens/selection_mode_mixin.dart';
+import 'package:tango/utils/clickable_metadata.dart';
+import 'package:tango/widgets/cached_cover_image.dart';
+import 'package:tango/widgets/playlist_picker_sheet.dart';
+import 'package:tango/widgets/motion_header_banner.dart';
+import 'package:tango/widgets/cross_extension_share_sheet.dart';
+import 'package:tango/widgets/view_queue_snackbar_action.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
+import 'package:tango/widgets/downloadable_cover.dart';
+import 'package:tango/widgets/expressive_button_group.dart';
+import 'package:tango/widgets/expressive_icon_button.dart';
+import 'package:tango/widgets/desktop/context_menu.dart';
+import 'package:tango/widgets/desktop/detail_header.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/theme/material_expressive.dart';
 
 part 'artist_screen_widgets.dart';
 part 'artist_screen_discography.dart';
@@ -609,8 +609,8 @@ class _ArtistScreenState extends ConsumerState<ArtistScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
-      return MornyeArtistSurface(
+    if (context.isTango) {
+      return TangoArtistSurface(
         imageSource:
             _headerImageUrl ?? widget.headerImageUrl ?? widget.coverUrl,
         logoSource: _headerLogoUrl ?? widget.headerLogoUrl,
@@ -677,7 +677,7 @@ class _ArtistScreenState extends ConsumerState<ArtistScreen>
                             child: ArtistScreenSkeleton(
                               showCoverHeader:
                                   !isDesktopPlatform &&
-                                  !context.isMornye &&
+                                  !context.isTango &&
                                   (_headerImageUrl ??
                                           widget.headerImageUrl ??
                                           widget.coverUrl) ==
@@ -700,11 +700,11 @@ class _ArtistScreenState extends ConsumerState<ArtistScreen>
                             ),
                           ),
                         if (!_isLoadingDiscography && _error == null) ...[
-                          if (context.isMornye &&
+                          if (context.isTango &&
                               albums.isNotEmpty &&
                               !isSelectionMode)
                             SliverToBoxAdapter(
-                              child: _buildMornyeFeaturedAlbum(
+                              child: _buildTangoFeaturedAlbum(
                                 context,
                                 albums.first,
                               ),

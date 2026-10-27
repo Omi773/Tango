@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:mornye/utils/desktop_platform.dart';
+import 'package:tango/utils/desktop_platform.dart';
 
 class AppInfo {
   static const String version = '1.0.0';

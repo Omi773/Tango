@@ -3,93 +3,93 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/screens/track_history_snapshot.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_switch.dart';
-import 'package:mornye/widgets/app_checkbox.dart';
-import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/widgets/app_choice_chip.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/app_progress_indicator.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/widgets/app_refresh_indicator.dart';
-import 'package:mornye/widgets/app_shape.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_menu_button.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_context_menu.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/library_search_results.dart';
-import 'package:mornye/screens/mornye_library_screen.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
+import 'package:tango/screens/track_history_snapshot.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/cover_palette.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_switch.dart';
+import 'package:tango/widgets/app_checkbox.dart';
+import 'package:tango/widgets/app_content_card.dart';
+import 'package:tango/widgets/app_choice_chip.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/app_progress_indicator.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/widgets/app_refresh_indicator.dart';
+import 'package:tango/widgets/app_shape.dart';
+import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_menu_button.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/widgets/tango_chrome.dart';
+import 'package:tango/widgets/tango_context_menu.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/library_search_results.dart';
+import 'package:tango/screens/tango_library_screen.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/app_sliver_header.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/settings.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/providers/track_provider.dart';
-import 'package:mornye/providers/download_queue_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/providers/recent_access_provider.dart';
-import 'package:mornye/providers/explore_provider.dart';
-import 'package:mornye/providers/user_profile_provider.dart';
-import 'package:mornye/widgets/desktop/desktop_scroll_arrows.dart';
-import 'package:mornye/widgets/explore_featured_section.dart';
-import 'package:mornye/providers/local_library_provider.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/models/unified_library_item.dart';
-import 'package:mornye/screens/equalizer_screen.dart';
-import 'package:mornye/screens/listening_statistics_screen.dart';
-import 'package:mornye/screens/network_storage_screen.dart';
-import 'package:mornye/screens/now_playing_screen.dart';
-import 'package:mornye/services/library_database.dart';
-import 'package:mornye/services/listening_statistics.dart';
-import 'package:mornye/services/music_player_service.dart' show PlayableMedia;
-import 'package:mornye/screens/track_metadata_screen.dart';
-import 'package:mornye/screens/album_screen.dart';
-import 'package:mornye/screens/artist_screen.dart';
-import 'package:mornye/screens/extension_collection_screens.dart';
-import 'package:mornye/controllers/home_search_logic.dart';
-import 'package:mornye/services/csv_import_service.dart';
-import 'package:mornye/services/cover_download_service.dart';
-import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
-import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/nav_bar_inset.dart';
-import 'package:mornye/widgets/desktop/desktop_commands.dart'
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/settings.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/providers/track_provider.dart';
+import 'package:tango/providers/download_queue_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/providers/recent_access_provider.dart';
+import 'package:tango/providers/explore_provider.dart';
+import 'package:tango/providers/user_profile_provider.dart';
+import 'package:tango/widgets/desktop/desktop_scroll_arrows.dart';
+import 'package:tango/widgets/explore_featured_section.dart';
+import 'package:tango/providers/local_library_provider.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/models/unified_library_item.dart';
+import 'package:tango/screens/equalizer_screen.dart';
+import 'package:tango/screens/listening_statistics_screen.dart';
+import 'package:tango/screens/network_storage_screen.dart';
+import 'package:tango/screens/now_playing_screen.dart';
+import 'package:tango/services/library_database.dart';
+import 'package:tango/services/listening_statistics.dart';
+import 'package:tango/services/music_player_service.dart' show PlayableMedia;
+import 'package:tango/screens/track_metadata_screen.dart';
+import 'package:tango/screens/album_screen.dart';
+import 'package:tango/screens/artist_screen.dart';
+import 'package:tango/screens/extension_collection_screens.dart';
+import 'package:tango/controllers/home_search_logic.dart';
+import 'package:tango/services/csv_import_service.dart';
+import 'package:tango/services/cover_download_service.dart';
+import 'package:tango/services/downloaded_embedded_cover_resolver.dart';
+import 'package:tango/services/shell_navigation_service.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/utils/nav_bar_inset.dart';
+import 'package:tango/widgets/desktop/desktop_commands.dart'
     show openDesktopNowPlaying;
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/utils/home_greeting.dart';
-import 'package:mornye/screens/playlist_screen.dart';
-import 'package:mornye/screens/downloaded_album_screen.dart';
-import 'package:mornye/widgets/download_service_picker.dart';
-import 'package:mornye/widgets/track_collection_quick_actions.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/utils/clickable_metadata.dart';
-import 'package:mornye/widgets/audio_quality_badges.dart';
-import 'package:mornye/widgets/cached_cover_image.dart';
-import 'package:mornye/widgets/player_artwork.dart';
-import 'package:mornye/widgets/error_card.dart';
-import 'package:mornye/widgets/in_library_badge.dart';
-import 'package:mornye/widgets/preview_button.dart';
-import 'package:mornye/widgets/app_search_field.dart';
-import 'package:mornye/widgets/track_detail_actions.dart';
-import 'package:mornye/widgets/view_queue_snackbar_action.dart';
-import 'package:mornye/widgets/profile_avatar.dart';
-import 'package:mornye/widgets/downloadable_cover.dart';
-import 'package:mornye/widgets/app_crash_banner.dart';
+import 'package:tango/utils/file_access.dart';
+import 'package:tango/utils/home_greeting.dart';
+import 'package:tango/screens/playlist_screen.dart';
+import 'package:tango/screens/downloaded_album_screen.dart';
+import 'package:tango/widgets/download_service_picker.dart';
+import 'package:tango/widgets/track_collection_quick_actions.dart';
+import 'package:tango/widgets/desktop/context_menu.dart';
+import 'package:tango/widgets/animation_utils.dart';
+import 'package:tango/utils/clickable_metadata.dart';
+import 'package:tango/widgets/audio_quality_badges.dart';
+import 'package:tango/widgets/cached_cover_image.dart';
+import 'package:tango/widgets/player_artwork.dart';
+import 'package:tango/widgets/error_card.dart';
+import 'package:tango/widgets/in_library_badge.dart';
+import 'package:tango/widgets/preview_button.dart';
+import 'package:tango/widgets/app_search_field.dart';
+import 'package:tango/widgets/track_detail_actions.dart';
+import 'package:tango/widgets/view_queue_snackbar_action.dart';
+import 'package:tango/widgets/profile_avatar.dart';
+import 'package:tango/widgets/downloadable_cover.dart';
+import 'package:tango/widgets/app_crash_banner.dart';
 
-export 'package:mornye/screens/extension_collection_screens.dart';
+export 'package:tango/screens/extension_collection_screens.dart';
 
 part 'home_tab_helpers.dart';
 part 'home_tab_explore.dart';
@@ -131,7 +131,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
   static const int _minLiveSearchChars = 3;
   static const Duration _liveSearchDelay = Duration(milliseconds: 800);
 
-  /// The Mornye desktop Search page can search the library instead of the
+  /// The Tango desktop Search page can search the library instead of the
   /// online provider, as the scope control in Music does.
   bool get _offersLibraryScope => widget.mode == HomeTabMode.search;
   bool _searchesLibrary = true;
@@ -244,7 +244,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
   }
 
   void _fetchExploreIfNeeded() {
-    // The desktop Mornye Search page browses the feed too.
+    // The desktop Tango Search page browses the feed too.
     if (!_showsHome && !_offersLibraryScope) return;
     if (ref.read(settingsProvider).homeFeedProvider ==
         AppSettings.homeFeedProviderOff) {
@@ -867,7 +867,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
         (isSearchProviderLoading || (hasHomeFeedExtension && explorePending));
     final showFeedSurface = showExplore || showExploreLoading;
     // Only a surface with a search field asks for a search provider. The
-    // Mornye Home browses without one, so it never stops at this prompt.
+    // Tango Home browses without one, so it never stops at this prompt.
     final showEmptyHomeState =
         _showsSearch &&
         !_searchingLibrary &&
@@ -877,7 +877,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
         !hasExploreContent &&
         !hasResults;
     final searchToolbar =
-        _offersLibraryScope && context.isMornye && isDesktopPlatform;
+        _offersLibraryScope && context.isTango && isDesktopPlatform;
     final showLibraryResults = _searchingLibrary && hasSearchInput;
     // As in Music, the library scope waits for words without recents or
     // Browse.
@@ -890,8 +890,8 @@ class _HomeTabState extends ConsumerState<HomeTab>
     final showHomeSections =
         _showsHome && !showFeedSurface && !showEmptyHomeState;
     // The Material Home also greets in its header. A feed brings its own
-    // greeting, and the Mornye style keeps its navigation title.
-    final greetsInHeader = showHomeSections && !context.isMornye;
+    // greeting, and the Tango style keeps its navigation title.
+    final greetsInHeader = showHomeSections && !context.isTango;
     final greeting = greetsInHeader
         ? homeGreeting(
             context.l10n,
@@ -1049,7 +1049,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
     const gap = 16.0;
     final scope = SizedBox(
       width: scopeWidth,
-      child: MornyeSegmentedControl(
+      child: TangoSegmentedControl(
         key: const ValueKey('search-scope'),
         labels: [online, context.l10n.navLibrary],
         selectedIndex: _searchesLibrary ? 1 : 0,
@@ -1132,8 +1132,8 @@ class _HomeTabState extends ConsumerState<HomeTab>
       onOpenArtist: (artist) => Navigator.of(context).push(
         MaterialPageRoute<void>(
           builder: (_) => Scaffold(
-            body: MornyeLibraryScreen(
-              page: MornyeLibraryPage.albums,
+            body: TangoLibraryScreen(
+              page: TangoLibraryPage.albums,
               artist: artist,
               onOpenSection: (_) {},
             ),
@@ -1147,10 +1147,10 @@ class _HomeTabState extends ConsumerState<HomeTab>
     return AppSliverHeader.tabRoot(
       alignToContent: true,
       title: widget.mode == HomeTabMode.search
-          ? context.l10n.mornyeSearch
+          ? context.l10n.tangoSearch
           : greeting ?? context.l10n.homeTitle,
       // The desktop sidebar's account row already opens the profile.
-      actions: context.isMornye && _showsHome && !isDesktopPlatform
+      actions: context.isTango && _showsHome && !isDesktopPlatform
           ? const [HomeProfileButton()]
           : null,
     );
@@ -1405,10 +1405,10 @@ class _HomeTabState extends ConsumerState<HomeTab>
       );
     }
 
-    // The Mornye style uses the navigation title as the page identity. Keep
+    // The Tango style uses the navigation title as the page identity. Keep
     // the search surface directly beneath it instead of repeating app branding
     // in the content area.
-    if (context.isMornye) return const SizedBox.shrink();
+    if (context.isTango) return const SizedBox.shrink();
 
     // The header carries the greeting; prompts take turns beneath it.
     return Padding(

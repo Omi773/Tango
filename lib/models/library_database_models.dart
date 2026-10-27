@@ -1,5 +1,5 @@
-import 'package:mornye/services/sqlite_helpers.dart' as sqlite;
-import 'package:mornye/utils/audio_format_utils.dart';
+import 'package:tango/services/sqlite_helpers.dart' as sqlite;
+import 'package:tango/utils/audio_format_utils.dart';
 
 // v4 records ReplayGain availability; older rows rescan once.
 const libraryAudioMetadataScanVersion = 4;

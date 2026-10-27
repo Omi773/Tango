@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build the Rust backend XCFramework used by Mornye on iOS.
+# Build the Rust backend XCFramework used by Tango on iOS.
 
 set -euo pipefail
 

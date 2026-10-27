@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/now_playing_indicator.dart';
-import 'package:mornye/widgets/settings_group.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/animation_utils.dart';
+import 'package:tango/widgets/app_content_card.dart';
+import 'package:tango/widgets/desktop/context_menu.dart';
+import 'package:tango/widgets/now_playing_indicator.dart';
+import 'package:tango/widgets/settings_group.dart';
 
 /// How a [TrackCard] paints its container.
 enum TrackCardStyle {
@@ -49,7 +49,7 @@ class TrackCardSegment extends InheritedWidget {
   final bool last;
 
   static TrackCardSegment? _of(BuildContext context) {
-    if (context.isMornye) return null;
+    if (context.isTango) return null;
     return context.dependOnInheritedWidgetOfExactType<TrackCardSegment>();
   }
 
@@ -139,7 +139,7 @@ class TrackCard extends StatelessWidget {
 
   /// The row is the player's current track. The Material style fills it with
   /// `primaryContainer`, rounds its ends into a pill and shows a
-  /// [NowPlayingIndicator] before [trailing]. Mornye ignores it.
+  /// [NowPlayingIndicator] before [trailing]. Tango ignores it.
   final bool isCurrent;
 
   /// The current track is playing, so the indicator moves.
@@ -154,7 +154,7 @@ class TrackCard extends StatelessWidget {
     final tokens = context.tokens;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final material = !context.isMornye;
+    final material = !context.isTango;
     final current = material && isCurrent;
     final filled = style == TrackCardStyle.filled;
     final borderRadius =
@@ -195,7 +195,7 @@ class TrackCard extends StatelessWidget {
     } else if (current) {
       cardColor = colorScheme.primaryContainer;
       contentColor = colorScheme.onPrimaryContainer;
-    } else if (style == TrackCardStyle.flat || context.isMornye) {
+    } else if (style == TrackCardStyle.flat || context.isTango) {
       cardColor = Colors.transparent;
       contentColor = null;
     } else {
@@ -248,7 +248,7 @@ class TrackCard extends StatelessWidget {
 
     final card = AppContentCard(
       elevation: 0,
-      mornyeSurface: false,
+      tangoSurface: false,
       margin: cardMargin,
       color: cardColor,
       clipBehavior: Clip.antiAlias,

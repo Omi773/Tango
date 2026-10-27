@@ -6,7 +6,7 @@ class _ThemePreviewCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    if (context.isMornye) {
+    if (context.isTango) {
       return ExcludeSemantics(
         child: IgnorePointer(
           child: Container(
@@ -37,7 +37,7 @@ class _ThemePreviewCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                MornyeTabBar(
+                TangoTabBar(
                   destinations: [
                     NavigationDestination(
                       icon: const AppIcon(Icons.home_outlined),
@@ -230,22 +230,22 @@ class _ThemePreviewCard extends StatelessWidget {
   }
 }
 
-class _MornyeGlassClaritySlider extends ConsumerWidget {
-  const _MornyeGlassClaritySlider();
+class _TangoGlassClaritySlider extends ConsumerWidget {
+  const _TangoGlassClaritySlider();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final clarity = ref.watch(
-      themeProvider.select((settings) => settings.mornyeGlassClarity),
+      themeProvider.select((settings) => settings.tangoGlassClarity),
     );
     final notifier = ref.read(themeProvider.notifier);
     final theme = Theme.of(context);
     final l10n = context.l10n;
     // Match the renderer's policy without changing the stored clarity value.
     final contrastBlocked = ref.watch(
-      mornyeGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
+      tangoGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
     );
-    final adjustable = !contrastBlocked && ref.watch(mornyeBlurEnabledProvider);
+    final adjustable = !contrastBlocked && ref.watch(tangoBlurEnabledProvider);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: Column(
@@ -267,7 +267,7 @@ class _MornyeGlassClaritySlider extends ConsumerWidget {
                   : l10n.appearanceGlassClarityBlurOff(
                       l10n.appearanceForceBlur,
                     ),
-              key: const ValueKey('mornye-glass-clarity-unavailable'),
+              key: const ValueKey('tango-glass-clarity-unavailable'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -296,7 +296,7 @@ class _MornyeGlassClaritySlider extends ConsumerWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(18),
-                  child: MornyeGlassPanel(
+                  child: TangoGlassPanel(
                     radius: 22,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -309,7 +309,7 @@ class _MornyeGlassClaritySlider extends ConsumerWidget {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              'Mornye',
+                              'Tango',
                               style: theme.textTheme.titleMedium,
                             ),
                           ),
@@ -325,15 +325,15 @@ class _MornyeGlassClaritySlider extends ConsumerWidget {
           Semantics(
             label: l10n.appearanceGlassClarity,
             child: Slider(
-              key: const ValueKey('mornye-glass-clarity'),
+              key: const ValueKey('tango-glass-clarity'),
               value: clarity,
               divisions: 20,
               label: '${(clarity * 100).round()}%',
               onChanged: adjustable
                   ? (value) =>
-                        notifier.setMornyeGlassClarity(value, persist: false)
+                        notifier.setTangoGlassClarity(value, persist: false)
                   : null,
-              onChangeEnd: adjustable ? notifier.setMornyeGlassClarity : null,
+              onChangeEnd: adjustable ? notifier.setTangoGlassClarity : null,
             ),
           ),
           Row(
@@ -350,7 +350,7 @@ class _MornyeGlassClaritySlider extends ConsumerWidget {
             const SizedBox(height: 8),
             Text(
               l10n.appearanceGlassClearPerformance,
-              key: const ValueKey('mornye-glass-clear-performance'),
+              key: const ValueKey('tango-glass-clear-performance'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -362,23 +362,23 @@ class _MornyeGlassClaritySlider extends ConsumerWidget {
   }
 }
 
-class _MornyeAccentPicker extends StatelessWidget {
-  const _MornyeAccentPicker({required this.selected, required this.onChanged});
+class _TangoAccentPicker extends StatelessWidget {
+  const _TangoAccentPicker({required this.selected, required this.onChanged});
 
-  final MornyeAccent selected;
-  final ValueChanged<MornyeAccent> onChanged;
+  final TangoAccent selected;
+  final ValueChanged<TangoAccent> onChanged;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final labels = {
-      MornyeAccent.red: l10n.appearanceAccentRed,
-      MornyeAccent.orange: l10n.appearanceAccentOrange,
-      MornyeAccent.green: l10n.appearanceAccentGreen,
-      MornyeAccent.teal: l10n.appearanceAccentTeal,
-      MornyeAccent.blue: l10n.appearanceAccentBlue,
-      MornyeAccent.purple: l10n.appearanceAccentPurple,
-      MornyeAccent.pink: l10n.appearanceAccentPink,
+      TangoAccent.red: l10n.appearanceAccentRed,
+      TangoAccent.orange: l10n.appearanceAccentOrange,
+      TangoAccent.green: l10n.appearanceAccentGreen,
+      TangoAccent.teal: l10n.appearanceAccentTeal,
+      TangoAccent.blue: l10n.appearanceAccentBlue,
+      TangoAccent.purple: l10n.appearanceAccentPurple,
+      TangoAccent.pink: l10n.appearanceAccentPink,
     };
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -386,10 +386,10 @@ class _MornyeAccentPicker extends StatelessWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
-          for (final accent in MornyeAccent.values)
+          for (final accent in TangoAccent.values)
             Builder(
               builder: (context) {
-                final color = MornyeTheme.accentColor(
+                final color = TangoTheme.accentColor(
                   accent,
                   Theme.of(context).brightness,
                 );
@@ -542,7 +542,7 @@ class _ThemeModeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
+    if (context.isTango) {
       final labels = {
         ThemeMode.system: context.l10n.appearanceThemeSystem,
         ThemeMode.light: context.l10n.appearanceThemeLight,
@@ -550,7 +550,7 @@ class _ThemeModeSelector extends StatelessWidget {
       };
       return Padding(
         padding: const EdgeInsets.all(12),
-        child: MornyeSegmentedControl(
+        child: TangoSegmentedControl(
           labels: labels.values.toList(),
           selectedIndex: labels.keys.toList().indexOf(currentMode),
           onChanged: (index) => onChanged(labels.keys.elementAt(index)),
@@ -655,7 +655,7 @@ class _LanguageSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final content = ListTile(
-      leading: context.isMornye
+      leading: context.isTango
           ? null
           : AppIcon(Icons.language, color: colorScheme.onSurfaceVariant),
       title: Text(context.l10n.appearanceLanguage),

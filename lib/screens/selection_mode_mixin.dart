@@ -1,1 +1,1 @@
-export 'package:mornye/controllers/selection_mode_mixin.dart';
+export 'package:tango/controllers/selection_mode_mixin.dart';

@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/expressive_button.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/tango_chrome.dart';
+import 'package:tango/widgets/expressive_button.dart';
 
 /// Shared sheet actions follow the selected design on every platform.
 class AppActionButton extends StatelessWidget {
@@ -33,7 +33,7 @@ class AppActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isMornye) {
+    if (!context.isTango) {
       return ExpressiveButton(
         onPressed: onPressed,
         icon: icon,
@@ -56,12 +56,12 @@ class AppActionButton extends StatelessWidget {
       color: prominent
           ? scheme.primary
           : tonal
-          ? MornyeTheme.controlFill(context)
+          ? TangoTheme.controlFill(context)
           : Colors.transparent,
       disabledColor: !prominent && !tonal && !glass
           ? Colors.transparent
           : tonal && !prominent
-          ? MornyeTheme.controlFill(context, enabled: false)
+          ? TangoTheme.controlFill(context, enabled: false)
           : scheme.surfaceContainerHighest,
       onPressed: onPressed,
       child: DefaultTextStyle(
@@ -77,7 +77,7 @@ class AppActionButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon case Icon(:final icon?) || AppIcon(:final icon?))
-                Icon(mornyeIconFor(icon), size: 20)
+                Icon(tangoIconFor(icon), size: 20)
               else
                 icon,
               const SizedBox(width: 8),
@@ -90,6 +90,6 @@ class AppActionButton extends StatelessWidget {
     // These buttons sit inside glass sheets/groups; avoid another blur pass.
     return prominent || tonal || !glass
         ? action
-        : MornyeGlass.navigation(radius: 28, blurEnabled: false, child: action);
+        : TangoGlass.navigation(radius: 28, blurEnabled: false, child: action);
   }
 }

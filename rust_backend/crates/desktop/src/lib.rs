@@ -23,9 +23,9 @@ mod watcher;
 
 pub use call::{Args, BYTES_KEY, CallError, Reply};
 pub use ffi::{
-    mornye_call, mornye_cancel, mornye_free, mornye_init, mornye_subscribe, mornye_unsubscribe,
+    tango_call, tango_cancel, tango_free, tango_init, tango_subscribe, tango_unsubscribe,
 };
-pub use runtime::{Config, MornyeCallback};
+pub use runtime::{Config, TangoCallback};
 
 /// Callback kinds (see the contract table).
 pub mod kind {

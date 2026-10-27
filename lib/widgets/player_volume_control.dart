@@ -3,24 +3,24 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/system_volume_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_slider.dart';
-import 'package:mornye/widgets/mornye_player_slider.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/services/music_playback_deck.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/system_volume_provider.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_slider.dart';
+import 'package:tango/widgets/tango_player_slider.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/services/music_playback_deck.dart';
 
-export 'package:mornye/providers/system_volume_provider.dart';
+export 'package:tango/providers/system_volume_provider.dart';
 
 /// System (or USB hardware) volume slider for the player and USB settings.
-/// Mornye draws its glass slider between speaker glyphs; Material draws the
+/// Tango draws its glass slider between speaker glyphs; Material draws the
 /// expressive slider between volume icons.
 class PlayerVolumeControl extends ConsumerStatefulWidget {
   const PlayerVolumeControl({super.key, this.foreground = Colors.white});
 
-  /// Mornye only: the tint of the slider and glyphs over the player artwork.
+  /// Tango only: the tint of the slider and glyphs over the player artwork.
   final Color foreground;
 
   @override
@@ -98,7 +98,7 @@ class _PlayerVolumeControlState extends ConsumerState<PlayerVolumeControl> {
           : () => _setVolume((value - 0.05).clamp(0, 1)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 28),
-        child: !context.isMornye
+        child: !context.isTango
             ? _materialSlider(context, value, enabled: volume != null)
             : Row(
                 children: [
@@ -114,7 +114,7 @@ class _PlayerVolumeControlState extends ConsumerState<PlayerVolumeControl> {
                         ignoring: volume == null,
                         child: Opacity(
                           opacity: volume == null ? 0.4 : 1,
-                          child: MornyePlayerSlider(
+                          child: TangoPlayerSlider(
                             value: value,
                             activeColor: widget.foreground.withValues(
                               alpha: 0.70,

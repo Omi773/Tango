@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:mornye/models/download_result.dart';
-import 'package:mornye/services/download_saf_file_replacer.dart';
-import 'package:mornye/utils/audio_format_utils.dart';
-import 'package:mornye/utils/file_access.dart';
+import 'package:tango/models/download_result.dart';
+import 'package:tango/services/download_saf_file_replacer.dart';
+import 'package:tango/utils/audio_format_utils.dart';
+import 'package:tango/utils/file_access.dart';
 
 /// Finalizes a requested lossless container using the measured audio stream.
 /// Native FLAC bytes can be renamed; FLAC-in-MP4 still needs remuxing.

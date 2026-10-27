@@ -1,5 +1,5 @@
-use mornye_network::policy::NetworkPermissions;
-use mornye_network::{HttpRequest, NetworkService};
+use tango_network::policy::NetworkPermissions;
+use tango_network::{HttpRequest, NetworkService};
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/artist_concert.dart';
-import 'package:mornye/screens/artist_concerts_screen.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/widgets/expressive_button.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/artist_concert.dart';
+import 'package:tango/screens/artist_concerts_screen.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/animation_utils.dart';
+import 'package:tango/widgets/expressive_button.dart';
 
 class ArtistConcertsButton extends StatelessWidget {
   const ArtistConcertsButton({
@@ -38,7 +38,7 @@ class ArtistConcertsButton extends StatelessWidget {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
-    if (!context.isMornye) {
+    if (!context.isTango) {
       return ExpressiveButton(
         tonal: true,
         onPressed: open,

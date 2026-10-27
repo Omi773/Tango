@@ -7,7 +7,7 @@
   "usbBitPerfectDescription": "Conservez la précision de la source sur les sorties compatibles. Choisissez ci-dessous « USB direct » ou « AAudio exclusif » ; sinon, la sortie USB Android nécessite Android 14 ou une version ultérieure. S'applique à partir du morceau suivant, sans AutoMix ni normalisation. Le volume système peut ne pas contrôler la sortie USB directe.",
   "usbHardwareVolume": "Volume du matériel DAC",
   "usbVolumeWarningTitle": "Vérifiez le volume de votre appareil audio",
-  "usbVolumeWarning": "Le son USB direct peut être beaucoup plus fort qu'une lecture normale, et les boutons de volume du téléphone peuvent ne pas permettre de le régler. Baissez le volume de votre DAC ou de votre amplificateur avant de commencer. Lorsque cette fonctionnalité est prise en charge, Mornye règle le DAC à −40 dB au maximum lors de la connexion ; cela ne garantit toutefois pas un niveau d'écoute sûr sur tous les amplificateurs ou casques.",
+  "usbVolumeWarning": "Le son USB direct peut être beaucoup plus fort qu'une lecture normale, et les boutons de volume du téléphone peuvent ne pas permettre de le régler. Baissez le volume de votre DAC ou de votre amplificateur avant de commencer. Lorsque cette fonctionnalité est prise en charge, Tango règle le DAC à −40 dB au maximum lors de la connexion ; cela ne garantit toutefois pas un niveau d'écoute sûr sur tous les amplificateurs ou casques.",
   "usbVolumeAccept": "Je comprends",
   "usbVolumeUnavailable": "La lecture est en pause car ce DAC ne dispose pas d'un contrôle du volume matériel vérifié. Baissez le volume du DAC ou de l'amplificateur, puis activez la sortie à volume fixe si nécessaire et sélectionnez à nouveau la piste.",
   "usbFixedVolume": "Autoriser la sortie USB à volume fixe",
@@ -28,7 +28,7 @@
   "usbBitPerfectRouteChanged": "La connexion audio USB a changé. La lecture est en pause ; sélectionnez un morceau pour rétablir la connexion.",
   "upgradeIntroThemeTitle": "Faites-en\nvotre propre version.",
   "upgradeIntroThemeBody": "Choisissez un thème. Votre choix s'applique immédiatement, et vous pourrez le modifier ultérieurement dans la section « Apparence ».",
-  "upgradeIntroThemeMornyeBody": "Navigation en verre, bibliothèque repensée et lecteur immersif.",
+  "upgradeIntroThemeTangoBody": "Navigation en verre, bibliothèque repensée et lecteur immersif.",
   "upgradeIntroSkip": "Passer",
   "upgradeIntroContinue": "Continuer",
   "upgradeIntroDone": "Commencez à écouter",
@@ -36,7 +36,7 @@
   "cacheMotionArtworkDesc": "Les clips vidéo des albums sont enregistrés avec les téléchargements. Si vous les supprimez, vos fichiers musicaux et vos pochettes d'album resteront intacts.",
   "nowPlayingVolume": "Volume",
   "@nowPlayingVolume": {
-    "description": "System volume control label in the Mornye player"
+    "description": "System volume control label in the Tango player"
   },
   "appearanceStyle": "Style de l'application",
   "appearanceAccentRed": "Rouge (par défaut)",
@@ -47,12 +47,12 @@
   "appearanceAccentPurple": "Violet",
   "appearanceAccentPink": "Rose",
   "appearanceGlassClarity": "Transparence du verre",
-  "appearanceGlassClaritySubtitle": "Régler la transparence des menus et de la navigation dans Mornye. Le contraste du texte est conservé.",
+  "appearanceGlassClaritySubtitle": "Régler la transparence des menus et de la navigation dans Tango. Le contraste du texte est conservé.",
   "appearanceGlassTinted": "Teinté",
   "appearanceGlassClear": "Effacer",
   "appearanceGlassClarityBlurOff": "Le verre est opaque sur cet appareil. Activez « {setting} » pour régler la transparence.",
   "@appearanceGlassClarityBlurOff": {
-    "description": "Shown under the disabled glass clarity slider when the device renders Mornye glass without blur. The placeholder is the name of the force-blur toggle.",
+    "description": "Shown under the disabled glass clarity slider when the device renders Tango glass without blur. The placeholder is the name of the force-blur toggle.",
     "placeholders": {
       "setting": {
         "type": "String"
@@ -70,7 +70,7 @@
   },
   "@@locale": "fr",
   "@@last_modified": "2026-04-28",
-  "appName": "Mornye",
+  "appName": "Tango",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
   },
@@ -713,7 +713,7 @@
   "@setupStorageRequired": {
     "description": "Title when storage permission needed"
   },
-  "setupStorageDescription": "Mornye a besoin d'une autorisation d'accès au stockage pour enregistrer vos fichiers musicaux téléchargés.",
+  "setupStorageDescription": "Tango a besoin d'une autorisation d'accès au stockage pour enregistrer vos fichiers musicaux téléchargés.",
   "@setupStorageDescription": {
     "description": "Explanation for storage permission"
   },
@@ -1070,7 +1070,7 @@
   "@snackbarFileNotFound": {
     "description": "Snackbar - file doesn't exist"
   },
-  "snackbarSelectExtFile": "Veuillez sélectionner un fichier .mornye-ext",
+  "snackbarSelectExtFile": "Veuillez sélectionner un fichier .tango-ext",
   "@snackbarSelectExtFile": {
     "description": "Snackbar - wrong file type selected"
   },
@@ -2000,7 +2000,7 @@
   "@extensionsNoExtensions": {
     "description": "Empty state - no extensions"
   },
-  "extensionsNoExtensionsSubtitle": "Installez les fichiers .mornye-ext pour ajouter de nouveaux fournisseurs",
+  "extensionsNoExtensionsSubtitle": "Installez les fichiers .tango-ext pour ajouter de nouveaux fournisseurs",
   "@extensionsNoExtensionsSubtitle": {
     "description": "Empty state subtitle"
   },
@@ -2632,7 +2632,7 @@
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
-  "libraryRemoveFolderMessage": "Supprimer ce dossier et les morceaux indexés qu'il contient de Mornye ? Les fichiers audio présents sur le périphérique de stockage ne seront pas supprimés.",
+  "libraryRemoveFolderMessage": "Supprimer ce dossier et les morceaux indexés qu'il contient de Tango ? Les fichiers audio présents sur le périphérique de stockage ne seront pas supprimés.",
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
@@ -2792,13 +2792,13 @@
   "@libraryStorageAccessRequired": {
     "description": "Dialog title for storage permission"
   },
-  "libraryStorageAccessMessage": "Mornye a besoin d'un accès au stockage pour analyser votre bibliothèque musicale. Veuillez lui accorder l'autorisation dans les paramètres.",
+  "libraryStorageAccessMessage": "Tango a besoin d'un accès au stockage pour analyser votre bibliothèque musicale. Veuillez lui accorder l'autorisation dans les paramètres.",
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
   "librarySourceDownloaded": "Téléchargé",
   "@librarySourceDownloaded": {
-    "description": "Badge for tracks downloaded via Mornye"
+    "description": "Badge for tracks downloaded via Tango"
   },
   "librarySourceLocal": "Locale",
   "@librarySourceLocal": {
@@ -2926,11 +2926,11 @@
       }
     }
   },
-  "tutorialWelcomeTitle": "Bienvenue sur Mornye !",
+  "tutorialWelcomeTitle": "Bienvenue sur Tango !",
   "@tutorialWelcomeTitle": {
     "description": "Tutorial welcome page title"
   },
-  "tutorialWelcomeDesc": "Découvrez comment rechercher de la musique avec des extensions, choisir la qualité souhaitée et gérer vos téléchargements dans Mornye.",
+  "tutorialWelcomeDesc": "Découvrez comment rechercher de la musique avec des extensions, choisir la qualité souhaitée et gérer vos téléchargements dans Tango.",
   "@tutorialWelcomeDesc": {
     "description": "Tutorial welcome page description"
   },
@@ -4013,7 +4013,7 @@
   "@safMigrationTitle": {
     "description": "Title of SAF migration dialog"
   },
-  "safMigrationMessage1": "Mornye utilise désormais le framework d'accès au stockage Android (SAF) pour les téléchargements. Cela permet de résoudre les erreurs « autorisation refusée » sur Android 10 et versions ultérieures.",
+  "safMigrationMessage1": "Tango utilise désormais le framework d'accès au stockage Android (SAF) pour les téléchargements. Cela permet de résoudre les erreurs « autorisation refusée » sur Android 10 et versions ultérieures.",
   "@safMigrationMessage1": {
     "description": "First paragraph of SAF migration dialog"
   },
@@ -4093,7 +4093,7 @@
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
-  "backupInvalidFile": "Ce fichier n'est pas une sauvegarde Mornye valide",
+  "backupInvalidFile": "Ce fichier n'est pas une sauvegarde Tango valide",
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
@@ -4277,9 +4277,9 @@
     "description": "Subtitle shown in the download location picker sheet"
   },
   "storageAutomaticFolder": "Dossier automatique",
-  "storageAutomaticDownloadFolder": "Utilise « Download/Mornye » si l'espace de stockage est accessible en écriture, sinon le stockage de l'application",
+  "storageAutomaticDownloadFolder": "Utilise « Download/Tango » si l'espace de stockage est accessible en écriture, sinon le stockage de l'application",
   "storageSafRecommended": "Choisir un dossier (recommandé)",
-  "storageDownloadFolderHint": "Dans le sélecteur de dossiers Android, ouvrez le dossier « Téléchargements » et sélectionnez « Mornye ». S'il n'existe pas, créez-le à l'aide de l'option « Nouveau dossier », puis appuyez sur « Utiliser ce dossier » pour autoriser l'accès.",
+  "storageDownloadFolderHint": "Dans le sélecteur de dossiers Android, ouvrez le dossier « Téléchargements » et sélectionnez « Tango ». S'il n'existe pas, créez-le à l'aide de l'option « Nouveau dossier », puis appuyez sur « Utiliser ce dossier » pour autoriser l'accès.",
   "downloadFolderAccessLostTitle": "Accès au dossier de téléchargement perdu",
   "@downloadFolderAccessLostTitle": {
     "description": "Title of the warning banner shown in Files settings when the saved SAF folder grant is no longer valid"
@@ -5222,7 +5222,7 @@
       }
     }
   },
-  "notifDownloadingUpdate": "Télécharger Mornye v{version}",
+  "notifDownloadingUpdate": "Télécharger Tango v{version}",
   "@notifDownloadingUpdate": {
     "description": "Notification title while downloading an app update",
     "placeholders": {
@@ -5250,7 +5250,7 @@
   "@notifUpdateReady": {
     "description": "Notification title when app update download is complete"
   },
-  "notifUpdateReadyBody": "Mornye v{version} a été téléchargé. Appuyez pour l'installer.",
+  "notifUpdateReadyBody": "Tango v{version} a été téléchargé. Appuyez pour l'installer.",
   "@notifUpdateReadyBody": {
     "description": "Notification body when app update is ready to install",
     "placeholders": {
@@ -6018,7 +6018,7 @@
   "@extensionCustomUrlHandlingSubtitle": {
     "description": "Extension detail subtitle for custom URL handling"
   },
-  "extensionCustomUrlHandlingShareHint": "Partagez des liens provenant de ces sites vers Mornye et cette extension s'en chargera.",
+  "extensionCustomUrlHandlingShareHint": "Partagez des liens provenant de ces sites vers Tango et cette extension s'en chargera.",
   "@extensionCustomUrlHandlingShareHint": {
     "description": "Extension detail hint explaining share-to-app URL handling"
   },
@@ -6228,7 +6228,7 @@
   "@libraryBuiltInPreviewPlayer": {
     "description": "Setting option to use the built-in preview player"
   },
-  "libraryBuiltInPreviewPlayerSubtitle": "Écoutez votre musique directement dans Mornye",
+  "libraryBuiltInPreviewPlayerSubtitle": "Écoutez votre musique directement dans Tango",
   "@libraryBuiltInPreviewPlayerSubtitle": {
     "description": "Subtitle for built-in preview player option"
   },
@@ -6695,11 +6695,11 @@
   "@extensionVerificationHelpTitleWaiting": {
     "description": "Dialog title when verification is taking longer than expected"
   },
-  "extensionVerificationHelpMessageManual": "Mornye n'a pas pu ouvrir automatiquement le navigateur. Ouvrez ce lien dans votre navigateur ou copiez-le manuellement.",
+  "extensionVerificationHelpMessageManual": "Tango n'a pas pu ouvrir automatiquement le navigateur. Ouvrez ce lien dans votre navigateur ou copiez-le manuellement.",
   "@extensionVerificationHelpMessageManual": {
     "description": "Dialog message when automatic browser launch for verification fails"
   },
-  "extensionVerificationHelpMessageWaiting": "Si le navigateur ne s'est pas ouvert, ou si la vérification s'est terminée sans que vous ne soyez redirigé vers Mornye, ouvrez à nouveau ce lien ou copiez-le manuellement.",
+  "extensionVerificationHelpMessageWaiting": "Si le navigateur ne s'est pas ouvert, ou si la vérification s'est terminée sans que vous ne soyez redirigé vers Tango, ouvrez à nouveau ce lien ou copiez-le manuellement.",
   "@extensionVerificationHelpMessageWaiting": {
     "description": "Dialog message when verification may need manual browser help"
   },
@@ -6760,8 +6760,8 @@
   "@metadataCopyField": {
     "description": "Metadata menu action that copies the selected key and value"
   },
-  "mornyeSearch": "Rechercher",
-  "mornyeContinuePlaying": "Continuer à lire",
+  "tangoSearch": "Rechercher",
+  "tangoContinuePlaying": "Continuer à lire",
   "metadataCopyAll": "Copier toutes les métadonnées",
   "@metadataCopyAll": {
     "description": "Metadata menu action that copies every visible key and value"
@@ -6774,13 +6774,13 @@
   "@optionsEmbeddedCoverSizeDescription": {
     "description": "Description shown in the embedded cover size picker"
   },
-  "mornyeFavorite": "Favoris",
-  "mornyeGoToArtist": "Aller à la page de l'artiste",
-  "@mornyeFavorite": {
+  "tangoFavorite": "Favoris",
+  "tangoGoToArtist": "Aller à la page de l'artiste",
+  "@tangoFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeFavorited": "Ajouté aux favoris",
-  "@mornyeFavorited": {
+  "tangoFavorited": "Ajouté aux favoris",
+  "@tangoFavorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Mélangez des morceaux grâce à la synchronisation des rythmes et à l'ajustement du tempo tout en conservant la hauteur tonale. Utilise un fondu enchaîné lorsque les rythmes ne peuvent pas être synchronisés.",

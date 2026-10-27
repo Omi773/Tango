@@ -1,29 +1,29 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/error_card.dart';
-import 'package:mornye/widgets/mornye_artist_header.dart';
-import 'package:mornye/widgets/album_detail_header.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/error_card.dart';
+import 'package:tango/widgets/tango_artist_header.dart';
+import 'package:tango/widgets/album_detail_header.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/models/artist_concert.dart';
-import 'package:mornye/providers/track_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/screens/album_screen.dart';
-import 'package:mornye/screens/collapsing_header_scroll_mixin.dart';
-import 'package:mornye/screens/artist_screen.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/clickable_metadata.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/desktop/detail_header.dart';
-import 'package:mornye/utils/extension_auth_launcher.dart';
-import 'package:mornye/utils/string_utils.dart';
-import 'package:mornye/utils/editorial_notes.dart';
-import 'package:mornye/screens/playlist_screen.dart';
-import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/widgets/cached_cover_image.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/models/artist_concert.dart';
+import 'package:tango/providers/track_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/screens/album_screen.dart';
+import 'package:tango/screens/collapsing_header_scroll_mixin.dart';
+import 'package:tango/screens/artist_screen.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/utils/clickable_metadata.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/widgets/desktop/detail_header.dart';
+import 'package:tango/utils/extension_auth_launcher.dart';
+import 'package:tango/utils/string_utils.dart';
+import 'package:tango/utils/editorial_notes.dart';
+import 'package:tango/screens/playlist_screen.dart';
+import 'package:tango/widgets/animation_utils.dart';
+import 'package:tango/widgets/cached_cover_image.dart';
 
 /// Legacy `duration_ms` parsing used by extension album/playlist/artist track
 /// parsing, kept separate from [extractDurationMs] which also falls back to
@@ -66,8 +66,8 @@ class _LoadingOrErrorScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      if (context.isMornye && collectionHeader && !isDesktopPlatform) {
-        return MornyeArtistSurface(
+      if (context.isTango && collectionHeader && !isDesktopPlatform) {
+        return TangoArtistSurface(
           imageSource: coverUrl,
           neutralActions: true,
           child: Builder(
@@ -99,7 +99,7 @@ class _LoadingOrErrorScaffold extends StatelessWidget {
         );
       }
       // Desktop shows its compact header in both styles.
-      if ((isDesktopPlatform || !context.isMornye) && collectionHeader) {
+      if ((isDesktopPlatform || !context.isTango) && collectionHeader) {
         // The real header with the title and cover already known; only the
         // rows that wait for the tracks are skeletons.
         final cover = coverUrl;
@@ -144,8 +144,8 @@ class _LoadingOrErrorScaffold extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
           title: Text(title),
-          leadingWidth: context.isMornye ? 68 : null,
-          leading: context.isMornye
+          leadingWidth: context.isTango ? 68 : null,
+          leading: context.isTango
               ? Padding(
                   padding: const EdgeInsetsDirectional.only(start: 12),
                   child: HeaderCircleButton(
@@ -232,8 +232,8 @@ class _ArtistLoadingScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mornye keeps the Apple Music hero on desktop too.
-    if (isDesktopPlatform && !context.isMornye) {
+    // Tango keeps the Apple Music hero on desktop too.
+    if (isDesktopPlatform && !context.isTango) {
       final url = coverUrl;
       return Scaffold(
         body: CustomScrollView(
@@ -263,14 +263,14 @@ class _ArtistLoadingScaffold extends StatelessWidget {
         ),
       );
     }
-    if (context.isMornye) {
-      return MornyeArtistSurface(
+    if (context.isTango) {
+      return TangoArtistSurface(
         imageSource: coverUrl,
         child: Builder(
           builder: (context) => Scaffold(
             body: CustomScrollView(
               slivers: [
-                ...MornyeArtistHeader(
+                ...TangoArtistHeader(
                   name: artistName,
                   showTitle: false,
                   artwork: coverUrl != null && coverUrl!.isNotEmpty

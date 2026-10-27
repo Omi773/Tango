@@ -1,20 +1,20 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/screens/artist_screen.dart';
-import 'package:mornye/screens/album_screen.dart';
-import 'package:mornye/screens/extension_collection_screens.dart'
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/screens/artist_screen.dart';
+import 'package:tango/screens/album_screen.dart';
+import 'package:tango/screens/extension_collection_screens.dart'
     show ExtensionArtistScreen, ExtensionAlbumScreen;
-import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/utils/artist_utils.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
+import 'package:tango/services/shell_navigation_service.dart';
+import 'package:tango/utils/artist_utils.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
 
 final _log = AppLogger('ClickableMetadata');
 
@@ -141,7 +141,7 @@ Future<void> navigateToArtistCredits(
       : await showAppBottomSheet<_ArtistTapTarget>(
           context: context,
           useRootNavigator: true,
-          title: context.l10n.mornyeGoToArtist,
+          title: context.l10n.tangoGoToArtist,
           maxHeightFactor: 0.6,
           builder: (context) => ListView(
             shrinkWrap: true,

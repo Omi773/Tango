@@ -1,4 +1,4 @@
-name: mornye
+name: tango
 description: Player, a local-files music player for iPhone
 publish_to: "none"
 version: 1.0.0+1
@@ -27,8 +27,8 @@ dependencies:
   # v11 removes legacy Android readers, breaking users who skip the v10 migration.
   # Keep the compatibility release until old encrypted installs can be migrated.
   flutter_secure_storage: 10.3.4
-  mornye_discord:
-    path: third_party/mornye_discord
+  tango_discord:
+    path: third_party/tango_discord
   path_provider: ^2.1.6
   # Windows known-folder lookup for the default desktop Music folder.
   path_provider_windows: ^2.3.0
@@ -168,7 +168,7 @@ flutter:
   generate: true
 
   shaders:
-    - assets/shaders/mornye_selection_mask.frag
+    - assets/shaders/tango_selection_mask.frag
 
   assets:
     - assets/images/

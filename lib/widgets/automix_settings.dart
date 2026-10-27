@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/automix_options.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_slider.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/slider_value_header.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/automix_options.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_slider.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/slider_value_header.dart';
 
 class AutoMixSettings extends ConsumerStatefulWidget {
   const AutoMixSettings({super.key});
@@ -98,7 +98,7 @@ class _AutoMixSettingsState extends ConsumerState<AutoMixSettings> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (context.isMornye)
+            if (context.isTango)
               Text('$label: $valueLabel')
             else
               SliderValueHeader(

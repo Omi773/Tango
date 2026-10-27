@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/download_item.dart';
-import 'package:mornye/providers/download_queue_provider.dart';
-import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_progress_indicator.dart';
-import 'package:mornye/widgets/player_artwork.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/download_item.dart';
+import 'package:tango/providers/download_queue_provider.dart';
+import 'package:tango/services/shell_navigation_service.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_progress_indicator.dart';
+import 'package:tango/widgets/player_artwork.dart';
 
 /// Downloads that are waiting, running or finalizing, in queue order.
 List<DownloadItem> activeDesktopDownloads(List<DownloadItem> items) => [
@@ -53,7 +53,7 @@ class _DesktopDownloadsButtonState
 
   @override
   Widget build(BuildContext context) {
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final colorScheme = Theme.of(context).colorScheme;
     final active = activeDesktopDownloads(
       ref.watch(downloadQueueProvider.select((state) => state.items)),
@@ -65,13 +65,13 @@ class _DesktopDownloadsButtonState
       style: MenuStyle(
         padding: const WidgetStatePropertyAll(EdgeInsets.zero),
         backgroundColor: WidgetStatePropertyAll(
-          mornye
+          tango
               ? colorScheme.surfaceContainerHigh
               : colorScheme.surfaceContainer,
         ),
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(mornye ? 14 : 16),
+            borderRadius: BorderRadius.circular(tango ? 14 : 16),
           ),
         ),
       ),
@@ -79,7 +79,7 @@ class _DesktopDownloadsButtonState
         DesktopDownloadsPopover(
           onShowAll: () {
             _menu.close();
-            // Mornye lists downloads on their own sidebar page; Library
+            // Tango lists downloads on their own sidebar page; Library
             // would reopen whichever page it showed last, such as Songs.
             if (!ShellNavigationService.requestLibraryLink('downloads')) {
               ShellNavigationService.requestTab(ShellTab.library);
@@ -92,11 +92,11 @@ class _DesktopDownloadsButtonState
         child: AppIconButton(
           key: const ValueKey('desktop-downloads-button'),
           tooltip: label,
-          color: mornye ? colorScheme.onSurface : null,
+          color: tango ? colorScheme.onSurface : null,
           onPressed: _toggle,
-          // Mornye sizes it with the other glyphs in the player capsule.
+          // Tango sizes it with the other glyphs in the player capsule.
           icon: SizedBox.square(
-            dimension: mornye ? 20 : 24,
+            dimension: tango ? 20 : 24,
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -106,17 +106,17 @@ class _DesktopDownloadsButtonState
                       key: const ValueKey('desktop-downloads-progress'),
                       wavy: false,
                       value: desktopDownloadsProgress(active),
-                      strokeWidth: mornye ? 2 : 2.5,
+                      strokeWidth: tango ? 2 : 2.5,
                       strokeCap: StrokeCap.round,
                     ),
                   ),
                 AppIcon(
-                  mornye
+                  tango
                       ? (active.isEmpty
                             ? CupertinoIcons.arrow_down_circle
                             : CupertinoIcons.arrow_down)
                       : Icons.download_rounded,
-                  size: switch ((mornye, active.isEmpty)) {
+                  size: switch ((tango, active.isEmpty)) {
                     (true, true) => 18,
                     (true, false) => 11,
                     (false, true) => 24,
@@ -224,7 +224,7 @@ class _DownloadRow extends ConsumerWidget {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final progress = item.progress.clamp(0.0, 1.0);
     final status = switch (item.status) {
       DownloadStatus.queued => l10n.desktopDownloadsQueued,
@@ -243,7 +243,7 @@ class _DownloadRow extends ConsumerWidget {
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(mornye ? 6 : 8),
+            borderRadius: BorderRadius.circular(tango ? 6 : 8),
             child: SizedBox.square(
               dimension: 40,
               child: PlayerArtwork(
@@ -296,7 +296,7 @@ class _DownloadRow extends ConsumerWidget {
             tooltip: l10n.desktopDownloadsCancel,
             color: colorScheme.onSurfaceVariant,
             icon: AppIcon(
-              mornye ? CupertinoIcons.xmark_circle_fill : Icons.close,
+              tango ? CupertinoIcons.xmark_circle_fill : Icons.close,
               size: 20,
             ),
             onPressed: () =>

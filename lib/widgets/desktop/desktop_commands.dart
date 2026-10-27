@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/desktop/desktop_inspector.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/services/shell_navigation_service.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/widgets/desktop/desktop_inspector.dart';
 
-export 'package:mornye/widgets/desktop/desktop_inspector.dart'
+export 'package:tango/widgets/desktop/desktop_inspector.dart'
     show DesktopInspectorPanel, toggleDesktopInspector;
 
 /// App-wide desktop commands. Each one has one keyboard shortcut, mirrored in
@@ -200,15 +200,15 @@ String desktopDestinationTooltip(
 }
 
 /// Desktop destinations in rail or sidebar order. Cmd/Ctrl+1..5 select them
-/// by position. Mornye reaches Search from the sidebar search field.
+/// by position. Tango reaches Search from the sidebar search field.
 List<ShellTab> desktopDestinationTabs({
-  required bool mornye,
+  required bool tango,
   required bool showStore,
 }) => [
   ShellTab.home,
   ShellTab.library,
   if (showStore) ShellTab.repository,
-  if (mornye) ShellTab.search,
+  if (tango) ShellTab.search,
   ShellTab.settings,
 ];
 

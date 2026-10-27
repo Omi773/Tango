@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/local_library_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/audio_format_utils.dart';
-import 'package:mornye/utils/desktop_platform.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/local_library_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/audio_format_utils.dart';
+import 'package:tango/utils/desktop_platform.dart';
 
 /// The folders a drop adds to the Library: dropped folders, and the folders
 /// that hold dropped music files. Other files are ignored, and a folder
@@ -125,7 +125,7 @@ class _DropOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     return IgnorePointer(
       child: ColoredBox(
         color: colorScheme.surface.withValues(alpha: 0.9),
@@ -134,15 +134,15 @@ class _DropOverlay extends StatelessWidget {
           child: DecoratedBox(
             decoration: BoxDecoration(
               border: Border.all(color: colorScheme.primary, width: 2),
-              borderRadius: BorderRadius.circular(mornye ? 16 : 28),
+              borderRadius: BorderRadius.circular(tango ? 16 : 28),
             ),
             child: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    mornye
-                        ? mornyeIconFor(Icons.library_add_outlined)
+                    tango
+                        ? tangoIconFor(Icons.library_add_outlined)
                         : Icons.library_add_outlined,
                     size: 48,
                     color: colorScheme.primary,

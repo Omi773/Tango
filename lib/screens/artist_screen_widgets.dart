@@ -57,8 +57,8 @@ extension _ArtistScreenSections on _ArtistScreenState {
       ),
     );
 
-    // Mornye keeps its Apple Music hero on desktop, filling the pane.
-    if (isDesktopPlatform && !context.isMornye) {
+    // Tango keeps its Apple Music hero on desktop, filling the pane.
+    if (isDesktopPlatform && !context.isTango) {
       return _buildDesktopHeader(
         context,
         colorScheme,
@@ -70,7 +70,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
       );
     }
 
-    if (context.isMornye) {
+    if (context.isTango) {
       final artwork = hasValidImage
           ? DownloadableCover(
               coverUrl: imageUrl,
@@ -86,7 +86,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
               ),
             )
           : const Center(child: Icon(CupertinoIcons.person, size: 80));
-      return MornyeArtistHeader(
+      return TangoArtistHeader(
         name: widget.artistName,
         logoUrl: _headerLogoUrl ?? widget.headerLogoUrl,
         badge: _concerts.isEmpty || isSelectionMode ? null : _concertsButton(),
@@ -179,12 +179,12 @@ extension _ArtistScreenSections on _ArtistScreenState {
     required String? listenersText,
     required bool isFavoriteArtist,
   }) {
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final placeholder = ColoredBox(
       color: colorScheme.surfaceContainerHighest,
       child: Center(
         child: Icon(
-          mornye ? CupertinoIcons.person : Icons.person,
+          tango ? CupertinoIcons.person : Icons.person,
           size: 64,
           color: colorScheme.onSurfaceVariant,
         ),
@@ -234,11 +234,11 @@ extension _ArtistScreenSections on _ArtistScreenState {
                     HeaderCircleButton(
                       tonal: true,
                       icon: isFavoriteArtist
-                          ? (mornye ? CupertinoIcons.star_fill : Icons.favorite)
-                          : (mornye
+                          ? (tango ? CupertinoIcons.star_fill : Icons.favorite)
+                          : (tango
                                 ? CupertinoIcons.star
                                 : Icons.favorite_border),
-                      iconColor: isFavoriteArtist && !mornye
+                      iconColor: isFavoriteArtist && !tango
                           ? headerScheme.error
                           : headerScheme.primary,
                       tooltip: isFavoriteArtist
@@ -249,7 +249,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
                     if (hasDiscography && !_isLoadingDiscography)
                       HeaderCircleButton(
                         tonal: true,
-                        icon: mornye
+                        icon: tango
                             ? CupertinoIcons.arrow_down
                             : Icons.download_rounded,
                         iconColor: headerScheme.primary,
@@ -268,7 +268,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
           ? const []
           : [
               HeaderCircleButton(
-                icon: mornye
+                icon: tango
                     ? CupertinoIcons.square_arrow_up
                     : Icons.open_in_new_rounded,
                 tooltip: context.l10n.openInOtherServices,
@@ -577,7 +577,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
     );
   }
 
-  Widget _buildMornyeFeaturedAlbum(BuildContext context, ArtistAlbum album) {
+  Widget _buildTangoFeaturedAlbum(BuildContext context, ArtistAlbum album) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
       child: Material(
@@ -797,14 +797,14 @@ extension _ArtistScreenSections on _ArtistScreenState {
                 ),
             child: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(
-                context.isMornye ? 20 : 16,
+                context.isTango ? 20 : 16,
                 8,
                 10,
                 8,
               ),
               child: Row(
                 children: [
-                  if (!context.isMornye) ...[
+                  if (!context.isTango) ...[
                     SizedBox(
                       width: 24,
                       child: Text(
@@ -864,8 +864,8 @@ extension _ArtistScreenSections on _ArtistScreenState {
                           track.name,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
-                                fontSize: context.isMornye ? 17 : null,
-                                fontWeight: context.isMornye
+                                fontSize: context.isTango ? 17 : null,
+                                fontWeight: context.isTango
                                     ? FontWeight.w400
                                     : FontWeight.w500,
                               ),
@@ -888,7 +888,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
                                     style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(
                                           color: colorScheme.onSurfaceVariant,
-                                          fontSize: context.isMornye
+                                          fontSize: context.isTango
                                               ? 15
                                               : null,
                                         ),
@@ -915,7 +915,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
             ),
           ),
         );
-        if (!context.isMornye) return row;
+        if (!context.isTango) return row;
         return Stack(
           children: [
             row,

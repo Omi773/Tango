@@ -7,31 +7,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
-import 'package:mornye/controllers/metadata_editor_controller.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/services/metadata_cover_resources.dart';
-import 'package:mornye/services/metadata_autofill_service.dart';
-import 'package:mornye/services/metadata_persistence_service.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/utils/artist_utils.dart';
-import 'package:mornye/utils/extension_auth_launcher.dart';
-import 'package:mornye/utils/logger.dart';
-import 'package:mornye/widgets/app_action_button.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_choice_chip.dart';
-import 'package:mornye/widgets/app_progress_indicator.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/lyrics_provider_picker.dart';
-import 'package:mornye/widgets/metadata_candidate_tile.dart';
-import 'package:mornye/widgets/metadata_editor_fields.dart';
-import 'package:mornye/widgets/metadata_text_field.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:tango/controllers/metadata_editor_controller.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/services/metadata_cover_resources.dart';
+import 'package:tango/services/metadata_autofill_service.dart';
+import 'package:tango/services/metadata_persistence_service.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/utils/artist_utils.dart';
+import 'package:tango/utils/extension_auth_launcher.dart';
+import 'package:tango/utils/logger.dart';
+import 'package:tango/widgets/app_action_button.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_choice_chip.dart';
+import 'package:tango/widgets/app_progress_indicator.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/app_snack_bar.dart';
+import 'package:tango/widgets/lyrics_provider_picker.dart';
+import 'package:tango/widgets/metadata_candidate_tile.dart';
+import 'package:tango/widgets/metadata_editor_fields.dart';
+import 'package:tango/widgets/metadata_text_field.dart';
+import 'package:tango/widgets/tango_chrome.dart';
 
 part 'track_metadata_edit_autofill.dart';
 part 'track_metadata_edit_cover.dart';
@@ -103,7 +103,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
       context: context,
       useRootNavigator: true,
       isScrollControlled: true,
-      showDragHandle: !context.isMornye,
+      showDragHandle: !context.isTango,
       builder: (sheetContext) {
         final cs = Theme.of(sheetContext).colorScheme;
         final items = options(sheetContext);
@@ -119,7 +119,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // The glass carries the handle that Material's sheet draws.
-                if (sheetContext.isMornye) const AppSheetHandle(),
+                if (sheetContext.isTango) const AppSheetHandle(),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
                   child: Text(
@@ -162,7 +162,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
                                         (checkInSheetTheme
                                                     ? sheetContext
                                                     : context)
-                                                .isMornye
+                                                .isTango
                                             ? CupertinoIcons.checkmark
                                             : Icons.check_rounded,
                                       )
@@ -361,7 +361,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
                           child: SizedBox(
                             width: 22,
                             height: 22,
-                            child: context.isMornye
+                            child: context.isTango
                                 ? const CupertinoActivityIndicator()
                                 : const AppLoadingIndicator(
                                     size: 22,

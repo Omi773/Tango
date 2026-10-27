@@ -3,8 +3,8 @@
 use super::Backend;
 use cap_std::fs::OpenOptions;
 use chrono::{SecondsFormat, Utc};
-use mornye_core::cue::{self, CueSheet};
-use mornye_core::tags::{
+use tango_core::cue::{self, CueSheet};
+use tango_core::tags::{
     extract_cover, library_extension, library_id, library_metadata, read_library_metadata,
     read_library_metadata_with_cover,
 };
@@ -124,8 +124,8 @@ impl Backend {
                 let input = files.resolve_legacy(path)?;
                 input.open_native_read().map_err(|error| error.to_string())
             };
-            if let Ok(lyrics) = mornye_core::lyrics::file::sidecar(path, &open, check) {
-                result["hasLyrics"] = mornye_core::lyrics::lrc::has_usable_content(&lyrics).into();
+            if let Ok(lyrics) = tango_core::lyrics::file::sidecar(path, &open, check) {
+                result["hasLyrics"] = tango_core::lyrics::lrc::has_usable_content(&lyrics).into();
             }
         }
         check()?;
@@ -355,7 +355,7 @@ impl Backend {
         let mut duration = 0.0;
         if let Ok(mut file) = input.open(OpenOptions::new().read(true)) {
             if format == "flac" {
-                if let Ok(quality) = mornye_core::media::probe_quality(&mut file, check) {
+                if let Ok(quality) = tango_core::media::probe_quality(&mut file, check) {
                     depth = quality.bit_depth;
                     rate = quality.sample_rate;
                     if rate > 0 && quality.total_samples > 0 {
@@ -364,7 +364,7 @@ impl Backend {
                 }
             } else if format == "mp3"
                 && let Ok(metadata) =
-                    mornye_core::tags::read_file_metadata(&mut file, audio, "", check)
+                    tango_core::tags::read_file_metadata(&mut file, audio, "", check)
             {
                 rate = metadata["sample_rate"].as_i64().unwrap_or_default();
                 duration = metadata["duration"].as_f64().unwrap_or_default();

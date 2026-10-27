@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dart_smb2/dart_smb2.dart';
-import 'package:mornye/services/local_network_access.dart';
-import 'package:mornye/services/network_certificate.dart';
+import 'package:tango/services/local_network_access.dart';
+import 'package:tango/services/network_certificate.dart';
 
 enum NetworkStorageError {
   unreachable,

@@ -1,5 +1,5 @@
-import 'package:mornye/constants/app_info.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/constants/app_info.dart';
+import 'package:tango/utils/logger.dart';
 
 class AppCrashReport {
   AppCrashReport.fromMap(Map<String, dynamic> values)

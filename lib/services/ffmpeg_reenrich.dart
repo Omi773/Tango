@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:mornye/services/ffmpeg_service.dart';
-import 'package:mornye/services/library_database.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/utils/lyrics_metadata_helper.dart';
+import 'package:tango/services/ffmpeg_service.dart';
+import 'package:tango/services/library_database.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/utils/file_access.dart';
+import 'package:tango/utils/lyrics_metadata_helper.dart';
 
 bool _hasValue(String? value) => value != null && value.trim().isNotEmpty;
 

@@ -11,17 +11,17 @@ import 'package:material_3_expressive/material_3_expressive.dart'
         Morph,
         MorphToPathExtension,
         RoundedPolygonToPathExtension;
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/theme_settings.dart';
-import 'package:mornye/providers/theme_provider.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_shape.dart';
-import 'package:mornye/widgets/expressive_button.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/theme_settings.dart';
+import 'package:tango/providers/theme_provider.dart';
+import 'package:tango/theme/app_theme.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_shape.dart';
+import 'package:tango/widgets/expressive_button.dart';
 
-/// A local, replayable tour of the SpotiFLAC to Mornye rebrand. Theme changes
+/// A local, replayable tour of the SpotiFLAC to Tango rebrand. Theme changes
 /// require an explicit choice.
 class UpgradeIntroScreen extends StatefulWidget {
   const UpgradeIntroScreen({super.key});
@@ -60,7 +60,7 @@ class _UpgradeIntroScreenState extends State<UpgradeIntroScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final scheme = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final last = _page == _pageCount - 1;
     return PopScope(
       canPop: _page == 0,
@@ -90,7 +90,7 @@ class _UpgradeIntroScreenState extends State<UpgradeIntroScreen> {
                             onPressed: () => _goTo(_page - 1),
                             color: scheme.primary,
                             icon: Icon(
-                              mornye ? CupertinoIcons.back : Icons.arrow_back,
+                              tango ? CupertinoIcons.back : Icons.arrow_back,
                             ),
                           )
                         else
@@ -184,21 +184,21 @@ class _UpgradeIntroScreenState extends State<UpgradeIntroScreen> {
                           features: [
                             _TourFeature(
                               icon: Icons.language,
-                              title: 'mornye.com',
+                              title: 'tango.com',
                               body: l10n.rebrandWebsiteBody,
-                              url: 'https://mornye.com',
+                              url: 'https://tango.com',
                             ),
                             _TourFeature(
                               icon: Icons.campaign_outlined,
                               title: l10n.rebrandUpdatesTitle,
                               body: l10n.rebrandUpdatesBody,
-                              url: 'https://t.me/mornyeupdates',
+                              url: 'https://t.me/tangoupdates',
                             ),
                             _TourFeature(
                               icon: Icons.groups_outlined,
                               title: l10n.rebrandCommunityChatTitle,
                               body: l10n.rebrandCommunityChatBody,
-                              url: 'https://t.me/mornyecommunity',
+                              url: 'https://t.me/tangocommunity',
                             ),
                           ],
                         ),
@@ -214,13 +214,13 @@ class _UpgradeIntroScreenState extends State<UpgradeIntroScreen> {
                         icon: last
                             ? null
                             : Icon(
-                                mornye
-                                    ? mornyeArrowForward
+                                tango
+                                    ? tangoArrowForward
                                     : Icons.arrow_forward,
                               ),
                         style: FilledButton.styleFrom(
                           minimumSize: const Size.fromHeight(56),
-                          shape: mornye
+                          shape: tango
                               ? RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 )
@@ -305,7 +305,7 @@ class _TourPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
       child: Column(
@@ -315,7 +315,7 @@ class _TourPage extends StatelessWidget {
           const SizedBox(height: 24),
           Text(
             title,
-            style: mornye
+            style: tango
                 ? theme.textTheme.headlineLarge?.copyWith(
                     fontSize: 36,
                     height: 1.08,
@@ -421,7 +421,7 @@ class _TourHeroState extends State<_TourHero> with TickerProviderStateMixin {
   }
 
   void _next() {
-    if (context.isMornye || MediaQuery.disableAnimationsOf(context)) return;
+    if (context.isTango || MediaQuery.disableAnimationsOf(context)) return;
     final from = _to;
     _to = _cycle[(_cycle.indexOf(from) + 1) % _cycle.length];
     _shapeMorph = Morph(from.polygon, _to.polygon);
@@ -432,7 +432,7 @@ class _TourHeroState extends State<_TourHero> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     final accent = widget.accent;
     // The logo asset is the bare white mark, tinted like the icons.
     final glyph = widget.logo
@@ -473,8 +473,8 @@ class _TourHeroState extends State<_TourHero> with TickerProviderStateMixin {
                   dimension: 132,
                   child: CustomPaint(
                     painter: _MorphPainter(
-                      morph: mornye ? null : _shapeMorph,
-                      kind: mornye ? M3EShapeKind.circle : _to,
+                      morph: tango ? null : _shapeMorph,
+                      kind: tango ? M3EShapeKind.circle : _to,
                       progress: morph,
                       color: scheme.primaryContainer,
                     ),
@@ -616,7 +616,7 @@ class _FeatureRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final outer = Radius.circular(context.isMornye ? 18 : 24);
+    final outer = Radius.circular(context.isTango ? 18 : 24);
     const inner = Radius.circular(6);
     final url = feature.url;
     final row = Padding(
@@ -714,13 +714,13 @@ class _ThemePicker extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Theme(
-              data: style == AppThemeStyle.mornye
-                  ? MornyeTheme.build(
+              data: style == AppThemeStyle.tango
+                  ? TangoTheme.build(
                       brightness,
-                      accent: settings.mornyeAccent,
+                      accent: settings.tangoAccent,
                       useSystemFont: settings.useSystemFont,
-                      glassClarity: settings.mornyeGlassClarity,
-                      glassOutlines: settings.mornyeGlassOutlines,
+                      glassClarity: settings.tangoGlassClarity,
+                      glassOutlines: settings.tangoGlassOutlines,
                     )
                   : brightness == Brightness.dark
                   ? AppTheme.dark(
@@ -735,9 +735,9 @@ class _ThemePicker extends ConsumerWidget {
               child: _ThemeOption(
                 style: style,
                 selected: settings.style == style,
-                label: style == AppThemeStyle.mornye ? 'Mornye' : 'Material',
-                description: style == AppThemeStyle.mornye
-                    ? l10n.upgradeIntroThemeMornyeBody
+                label: style == AppThemeStyle.tango ? 'Tango' : 'Material',
+                description: style == AppThemeStyle.tango
+                    ? l10n.upgradeIntroThemeTangoBody
                     : l10n.whatsNewThemeMaterialBody,
                 onTap: () => ref.read(themeProvider.notifier).setStyle(style),
               ),
@@ -767,7 +767,7 @@ class _ThemeOption extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final mornye = style == AppThemeStyle.mornye;
+    final tango = style == AppThemeStyle.tango;
     final duration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : const Duration(milliseconds: 280);
@@ -781,7 +781,7 @@ class _ThemeOption extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected ? scheme.secondaryContainer : scheme.surfaceContainer,
           borderRadius: BorderRadius.circular(
-            mornye ? (selected ? 22 : 16) : (selected ? 32 : 16),
+            tango ? (selected ? 22 : 16) : (selected ? 32 : 16),
           ),
           border: Border.all(
             color: selected ? scheme.primary : Colors.transparent,
@@ -855,7 +855,7 @@ class _ThemeOption extends StatelessWidget {
                           Icons.home_rounded,
                           Icons.library_music,
                           Icons.extension,
-                          mornye ? Icons.search : Icons.settings_outlined,
+                          tango ? Icons.search : Icons.settings_outlined,
                         ])
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -864,7 +864,7 @@ class _ThemeOption extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: icon == Icons.home_rounded
-                                  ? mornye
+                                  ? tango
                                         ? scheme.onSurface.withValues(
                                             alpha: 0.08,
                                           )
@@ -873,10 +873,10 @@ class _ThemeOption extends StatelessWidget {
                               borderRadius: BorderRadius.circular(24),
                             ),
                             child: Icon(
-                              mornye
+                              tango
                                   ? icon == Icons.home_rounded
                                         ? CupertinoIcons.house_fill
-                                        : mornyeIconFor(icon)
+                                        : tangoIconFor(icon)
                                   : icon,
                               size: 22,
                               color: icon == Icons.home_rounded

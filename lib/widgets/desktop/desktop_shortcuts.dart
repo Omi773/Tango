@@ -4,21 +4,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/constants/app_info.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/providers/system_volume_provider.dart';
-import 'package:mornye/services/app_navigation_service.dart';
-import 'package:mornye/services/music_playback_deck.dart'
+import 'package:tango/constants/app_info.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/providers/system_volume_provider.dart';
+import 'package:tango/services/app_navigation_service.dart';
+import 'package:tango/services/music_playback_deck.dart'
     show usbHardwareVolume;
-import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_refresh_indicator.dart';
-import 'package:mornye/widgets/desktop/desktop_commands.dart';
-import 'package:mornye/widgets/desktop/desktop_inspector.dart';
-import 'package:mornye/widgets/desktop/desktop_player_bar.dart';
-import 'package:mornye/widgets/desktop/desktop_window.dart';
+import 'package:tango/services/shell_navigation_service.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_refresh_indicator.dart';
+import 'package:tango/widgets/desktop/desktop_commands.dart';
+import 'package:tango/widgets/desktop/desktop_inspector.dart';
+import 'package:tango/widgets/desktop/desktop_player_bar.dart';
+import 'package:tango/widgets/desktop/desktop_window.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Keyboard shortcuts for desktop builds, plus the macOS menu bar that
@@ -133,7 +133,7 @@ class _DesktopShortcutsState extends ConsumerState<DesktopShortcuts> {
   void _selectDestination(int position) {
     final context = _rootNavigator?.context ?? this.context;
     final tabs = desktopDestinationTabs(
-      mornye: context.isMornye,
+      tango: context.isTango,
       showStore: ref.read(settingsProvider).showExtensionStore,
     );
     if (position < 1 || position > tabs.length) return;
@@ -269,21 +269,21 @@ class _DesktopMenuBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final material = MaterialLocalizations.of(context);
-    final mornye = context.isMornye;
+    final tango = context.isTango;
     return Consumer(
       builder: (context, ref, child) {
         final showStore = ref.watch(
           settingsProvider.select((s) => s.showExtensionStore),
         );
         final tabs = desktopDestinationTabs(
-          mornye: mornye,
+          tango: tango,
           showStore: showStore,
         );
         String tabLabel(ShellTab tab) => switch (tab) {
           ShellTab.home => l10n.navHome,
           ShellTab.library => l10n.navLibrary,
           ShellTab.repository => l10n.navStore,
-          ShellTab.search => l10n.mornyeSearch,
+          ShellTab.search => l10n.tangoSearch,
           ShellTab.settings => l10n.navSettings,
         };
         return PlatformMenuBar(
@@ -322,7 +322,7 @@ class _DesktopMenuBar extends StatelessWidget {
             ),
             PlatformMenu(
               label: l10n.desktopMenuFile,
-              menus: [_command(l10n.mornyeSearch, DesktopCommand.search)],
+              menus: [_command(l10n.tangoSearch, DesktopCommand.search)],
             ),
             PlatformMenu(
               label: l10n.desktopMenuEdit,

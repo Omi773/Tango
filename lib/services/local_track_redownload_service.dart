@@ -1,8 +1,8 @@
-import 'package:mornye/models/settings.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/models/extension.dart';
-import 'package:mornye/services/library_database.dart';
-import 'package:mornye/services/platform_bridge.dart';
+import 'package:tango/models/settings.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/models/extension.dart';
+import 'package:tango/services/library_database.dart';
+import 'package:tango/services/platform_bridge.dart';
 
 class LocalTrackRedownloadResolution {
   final LocalLibraryItem localItem;

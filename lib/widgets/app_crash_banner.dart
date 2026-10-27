@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/models/app_crash_report.dart';
-import 'package:mornye/providers/app_crash_provider.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/expressive_button.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/models/app_crash_report.dart';
+import 'package:tango/providers/app_crash_provider.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_content_card.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/expressive_button.dart';
 
 /// Home notice for a crash saved by the previous session. Styled like
 /// `ErrorCard`; the full report opens in a sheet instead of expanding inline,
@@ -60,7 +60,7 @@ class _AppCrashBannerState extends ConsumerState<AppCrashBanner> {
         elevation: 0,
         margin: EdgeInsets.zero,
         color: colorScheme.errorContainer,
-        mornyeSurface: false,
+        tangoSurface: false,
         shape: RoundedRectangleBorder(borderRadius: tokens.borderRadiusCard),
         child: Padding(
           padding: EdgeInsets.all(tokens.gapLg),

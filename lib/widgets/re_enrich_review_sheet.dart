@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/services/batch_metadata_re_enrich.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/app_action_button.dart';
-import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/services/batch_metadata_re_enrich.dart';
+import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/app_alert_dialog.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/app_action_button.dart';
+import 'package:tango/widgets/app_content_card.dart';
+import 'package:tango/theme/tango_theme.dart';
 
 /// Results belong above the Library selection card and metadata sheets.
 /// A page snackbar can be painted behind either of those surfaces.
@@ -199,7 +199,7 @@ class _ReEnrichReviewContent extends StatelessWidget {
                     ),
                   ],
                 ];
-                return context.isMornye
+                return context.isTango
                     ? Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,

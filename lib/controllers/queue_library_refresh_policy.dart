@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:mornye/utils/audio_format_utils.dart';
-import 'package:mornye/utils/audio_quality_badge_policy.dart';
-import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
-import 'package:mornye/services/library_database.dart';
-import 'package:mornye/utils/file_access.dart';
+import 'package:tango/utils/audio_format_utils.dart';
+import 'package:tango/utils/audio_quality_badge_policy.dart';
+import 'package:tango/services/downloaded_embedded_cover_resolver.dart';
+import 'package:tango/services/library_database.dart';
+import 'package:tango/utils/file_access.dart';
 
 bool queueLibraryCountsHaveContent(QueueLibraryCounts counts) =>
     counts.allTrackCount > 0 ||

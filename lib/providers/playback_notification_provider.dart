@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/models/theme_settings.dart';
-import 'package:mornye/providers/library_collections_provider.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/theme_provider.dart';
-import 'package:mornye/services/playback_notification.dart';
+import 'package:tango/models/theme_settings.dart';
+import 'package:tango/providers/library_collections_provider.dart';
+import 'package:tango/providers/music_player_provider.dart';
+import 'package:tango/providers/theme_provider.dart';
+import 'package:tango/services/playback_notification.dart';
 
 /// Kept alive by the app shell so notification favorites share the exact
 /// Library identity and refresh when the same track is starred inside the app.
@@ -19,8 +19,8 @@ final playbackNotificationProvider = Provider.autoDispose
         String shuffleOff,
       })
     >((ref, labels) {
-      final mornye = ref.watch(
-        themeProvider.select((theme) => theme.style == AppThemeStyle.mornye),
+      final tango = ref.watch(
+        themeProvider.select((theme) => theme.style == AppThemeStyle.tango),
       );
       final item = ref.watch(currentMediaItemProvider).value;
       final track = item == null
@@ -40,7 +40,7 @@ final playbackNotificationProvider = Provider.autoDispose
         final runtime = ref.read(musicPlayerRuntimeProvider);
         runtime.configureNotification(
           presentation: PlaybackNotification(
-            mornye: mornye,
+            tango: tango,
             mediaId: item?.id,
             source: item?.extras?['source']?.toString(),
             loved: loved,

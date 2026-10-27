@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
-import 'package:mornye/models/library_collections.dart';
-import 'package:mornye/models/track.dart';
-import 'package:mornye/services/library_collections_database.dart';
-import 'package:mornye/services/library_collections_hydration.dart';
-import 'package:mornye/services/collection_track_batch.dart';
-import 'package:mornye/services/playlist_cover_store.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/models/library_collections.dart';
+import 'package:tango/models/track.dart';
+import 'package:tango/services/library_collections_database.dart';
+import 'package:tango/services/library_collections_hydration.dart';
+import 'package:tango/services/collection_track_batch.dart';
+import 'package:tango/services/playlist_cover_store.dart';
+import 'package:tango/utils/logger.dart';
 
-export 'package:mornye/models/library_collections.dart';
+export 'package:tango/models/library_collections.dart';
 
 final _log = AppLogger('LibraryCollections');
 

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_switch.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_switch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/widgets/discard_changes_dialog.dart';
-import 'package:mornye/widgets/priority_settings_scaffold.dart';
-import 'package:mornye/widgets/reorderable_priority_item.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/constants/music_services.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/providers/extension_provider.dart';
+import 'package:tango/providers/settings_provider.dart';
+import 'package:tango/utils/adaptive_layout.dart';
+import 'package:tango/widgets/discard_changes_dialog.dart';
+import 'package:tango/widgets/priority_settings_scaffold.dart';
+import 'package:tango/widgets/reorderable_priority_item.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/constants/music_services.dart';
 
 class LyricsProviderPriorityPage extends ConsumerStatefulWidget {
   const LyricsProviderPriorityPage({super.key});
@@ -27,7 +27,7 @@ class _LyricsProviderPriorityPageState
     'netease',
     'musixmatch',
     'apple_music',
-    'mornye_lyrics',
+    'tango_lyrics',
     'qqmusic',
     'spotify',
     'deezer',
@@ -229,10 +229,10 @@ class _LyricsProviderPriorityPageState
           description: context.l10n.lyricsProviderAppleMusicDesc,
           icon: Icons.music_note,
         );
-      case 'mornye_lyrics':
+      case 'tango_lyrics':
         return _LyricsProviderInfo(
-          name: 'Zarz-LRC',
-          description: context.l10n.lyricsProviderZarzLrcDesc,
+          name: 'Tango-LRC',
+          description: context.l10n.lyricsProviderTangoLrcDesc,
           icon: Icons.verified_outlined,
         );
       case 'qqmusic':

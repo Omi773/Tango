@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/services/hires_check_service.dart';
-import 'package:mornye/services/audio_analysis_jobs.dart';
-import 'package:mornye/services/network_audio_analysis_input.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_action_button.dart';
-import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/expressive_button.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/services/hires_check_service.dart';
+import 'package:tango/services/audio_analysis_jobs.dart';
+import 'package:tango/services/network_audio_analysis_input.dart';
+import 'package:tango/theme/tango_icons.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_action_button.dart';
+import 'package:tango/widgets/app_content_card.dart';
+import 'package:tango/widgets/settings_group.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/expressive_button.dart';
 
 /// On-demand sampled spectrum and bit-depth analysis for one FLAC/WAV file.
 class HiResCheckCard extends StatefulWidget {
@@ -94,7 +94,7 @@ class _HiResCheckCardState extends State<HiResCheckCard> {
     final cs = Theme.of(context).colorScheme;
     final l10n = context.l10n;
     final result = _result;
-    final mornye = context.isMornye;
+    final tango = context.isTango;
 
     return AppContentCard(
       elevation: 0,
@@ -104,7 +104,7 @@ class _HiResCheckCardState extends State<HiResCheckCard> {
         side: BorderSide(color: cs.outlineVariant.withValues(alpha: 0.5)),
       ),
       child: Padding(
-        padding: EdgeInsets.all(mornye ? 20 : 16),
+        padding: EdgeInsets.all(tango ? 20 : 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -124,11 +124,11 @@ class _HiResCheckCardState extends State<HiResCheckCard> {
                   SizedBox(
                     width: 20,
                     height: 20,
-                    child: mornye
+                    child: tango
                         ? const CupertinoActivityIndicator()
                         : const AppLoadingIndicator(size: 20, strokeWidth: 2.5),
                   )
-                else if (mornye && (result != null || _error != null))
+                else if (tango && (result != null || _error != null))
                   Tooltip(
                     message: l10n.audioAnalysisRescan,
                     child: CupertinoButton(
@@ -170,7 +170,7 @@ class _HiResCheckCardState extends State<HiResCheckCard> {
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
-                child: mornye
+                child: tango
                     ? AppActionButton(
                         outlined: true,
                         tonal: true,

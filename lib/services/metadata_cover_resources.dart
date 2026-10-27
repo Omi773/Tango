@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:mornye/services/ffmpeg_service.dart';
-import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/logger.dart';
+import 'package:tango/services/ffmpeg_service.dart';
+import 'package:tango/services/platform_bridge.dart';
+import 'package:tango/utils/logger.dart';
 
 typedef MetadataCoverDetails = ({int width, int height, int bytes});
 

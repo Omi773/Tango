@@ -1,7 +1,7 @@
 use crate::runtime::{Control, ExtensionServices};
 use cap_std::fs::OpenOptions;
-use mornye_core::lyrics::{file, lrc};
-use mornye_providers::lyrics::SearchRequest;
+use tango_core::lyrics::{file, lrc};
+use tango_providers::lyrics::SearchRequest;
 use rquickjs::{Ctx, Function, Object};
 use serde_json::json;
 use std::sync::Arc;

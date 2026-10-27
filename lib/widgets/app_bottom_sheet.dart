@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart'
     show CupertinoButton, CupertinoDynamicColor, kCupertinoModalBarrierColor;
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:tango/theme/app_motion.dart';
+import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/utils/desktop_platform.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/tango_chrome.dart';
+import 'package:tango/theme/tango_icons.dart';
 
 /// The drag handle shown at the top of every modal sheet.
 ///
@@ -85,7 +85,7 @@ class AppBottomSheet extends StatelessWidget {
     // Material desktop dialogs end their header with a close button for the
     // pointer; Esc and a click outside close them too.
     final closes =
-        titleTrailing == null && isDesktopPlatform && !context.isMornye;
+        titleTrailing == null && isDesktopPlatform && !context.isTango;
     final trailing = closes ? const _SheetDialogCloseButton() : titleTrailing;
 
     Widget content = Column(
@@ -339,7 +339,7 @@ Future<T?> showAppScrollableBottomSheet<T>({
 ///
 /// Desktop windows present the sheet as a centered dialog instead
 /// ([showAppSheetDialog]) of [dialogSize]; there is no edge to slide from or
-/// drag to. Mornye draws the sheet on overlay glass unless [mornyeGlass] is
+/// drag to. Tango draws the sheet on overlay glass unless [tangoGlass] is
 /// false for content that brings its own.
 Future<T?> showAppModalBottomSheet<T>({
   required BuildContext context,
@@ -350,7 +350,7 @@ Future<T?> showAppModalBottomSheet<T>({
   bool useRootNavigator = false,
   bool useSafeArea = false,
   bool? showDragHandle,
-  bool mornyeGlass = true,
+  bool tangoGlass = true,
   BoxConstraints? constraints,
   Color? backgroundColor,
   AppDialogSize dialogSize = AppDialogSize.medium,
@@ -362,12 +362,12 @@ Future<T?> showAppModalBottomSheet<T>({
       isScrollControlled: isScrollControlled,
       isDismissible: isDismissible,
       topInset: showDragHandle == true,
-      mornyeGlass: mornyeGlass,
+      tangoGlass: tangoGlass,
       backgroundColor: backgroundColor,
       dialogSize: dialogSize,
     );
   }
-  final mornye = context.isMornye;
+  final tango = context.isTango;
   return showModalBottomSheet<T>(
     context: context,
     sheetAnimationStyle: AppMotion.surfaceEntrance(context),
@@ -378,13 +378,13 @@ Future<T?> showAppModalBottomSheet<T>({
     useSafeArea: useSafeArea,
     showDragHandle: showDragHandle,
     constraints: constraints,
-    backgroundColor: mornye ? Colors.transparent : backgroundColor,
-    barrierColor: mornye
+    backgroundColor: tango ? Colors.transparent : backgroundColor,
+    barrierColor: tango
         ? CupertinoDynamicColor.resolve(kCupertinoModalBarrierColor, context)
         : null,
-    elevation: mornye ? 0 : null,
-    builder: (context) => mornye && mornyeGlass
-        ? MornyeGlassPanel.overlay(child: Builder(builder: builder))
+    elevation: tango ? 0 : null,
+    builder: (context) => tango && tangoGlass
+        ? TangoGlassPanel.overlay(child: Builder(builder: builder))
         : builder(context),
   );
 }
@@ -416,7 +416,7 @@ enum AppDialogSize {
 /// [DraggableScrollableSheet], lays out unchanged: its header stays put and
 /// its body scrolls.
 ///
-/// Mornye draws the dialog on overlay glass unless [mornyeGlass] is false
+/// Tango draws the dialog on overlay glass unless [tangoGlass] is false
 /// for content that brings its own; Material uses `surfaceContainerHigh`.
 /// [topInset] replaces the space of a drag handle the sheet would show.
 Future<T?> showAppSheetDialog<T>({
@@ -425,21 +425,21 @@ Future<T?> showAppSheetDialog<T>({
   bool isScrollControlled = false,
   bool isDismissible = true,
   bool topInset = false,
-  bool mornyeGlass = true,
+  bool tangoGlass = true,
   Color? backgroundColor,
   AppDialogSize dialogSize = AppDialogSize.medium,
 }) {
-  final mornye = context.isMornye;
+  final tango = context.isTango;
   return showDialog<T>(
     context: context,
     barrierDismissible: isDismissible,
-    barrierColor: mornye
+    barrierColor: tango
         ? CupertinoDynamicColor.resolve(kCupertinoModalBarrierColor, context)
         : null,
     builder: (dialogContext) => AppSheetDialog(
       isScrollControlled: isScrollControlled,
       topInset: topInset,
-      mornyeGlass: mornyeGlass,
+      tangoGlass: tangoGlass,
       backgroundColor: backgroundColor,
       dialogSize: dialogSize,
       child: Builder(builder: builder),
@@ -454,7 +454,7 @@ class AppSheetDialog extends StatelessWidget {
     required this.child,
     this.isScrollControlled = false,
     this.topInset = false,
-    this.mornyeGlass = true,
+    this.tangoGlass = true,
     this.backgroundColor,
     this.dialogSize = AppDialogSize.medium,
   });
@@ -462,19 +462,19 @@ class AppSheetDialog extends StatelessWidget {
   final Widget child;
   final bool isScrollControlled;
   final bool topInset;
-  final bool mornyeGlass;
+  final bool tangoGlass;
   final Color? backgroundColor;
   final AppDialogSize dialogSize;
 
-  /// Mornye's sheet token is the 32pt iOS sheet corner; its dialogs keep
+  /// Tango's sheet token is the 32pt iOS sheet corner; its dialogs keep
   /// the corner they have always had.
-  static const double _mornyeRadius = 28;
+  static const double _tangoRadius = 28;
   static const double _margin = 24;
 
   @override
   Widget build(BuildContext context) {
-    final mornye = context.isMornye;
-    final radius = mornye ? _mornyeRadius : context.tokens.radiusSheet;
+    final tango = context.isTango;
+    final radius = tango ? _tangoRadius : context.tokens.radiusSheet;
     final window = MediaQuery.sizeOf(context);
     final width = (window.width - _margin * 2).clamp(0.0, dialogSize.width);
     final maxHeight =
@@ -488,9 +488,9 @@ class AppSheetDialog extends StatelessWidget {
         child: child,
       ),
     );
-    if (mornye && mornyeGlass) {
-      content = MornyeGlassPanel.overlay(radius: radius, child: content);
-    } else if (!mornye) {
+    if (tango && tangoGlass) {
+      content = TangoGlassPanel.overlay(radius: radius, child: content);
+    } else if (!tango) {
       // Desktop scrollbars normally fade out when idle. In a dialog the
       // body's bar stays visible, so a cut-off list reads as scrollable.
       content = ScrollbarTheme(
@@ -503,12 +503,12 @@ class AppSheetDialog extends StatelessWidget {
     return Dialog(
       key: const ValueKey('app-sheet-dialog'),
       insetPadding: const EdgeInsets.all(_margin),
-      backgroundColor: mornye
+      backgroundColor: tango
           ? Colors.transparent
           : backgroundColor ??
                 Theme.of(context).colorScheme.surfaceContainerHigh,
       surfaceTintColor: Colors.transparent,
-      elevation: mornye ? 0 : null,
+      elevation: tango ? 0 : null,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius),
       ),
@@ -573,7 +573,7 @@ class AppSheetOption extends StatelessWidget {
               ? AppIcon(Icons.check, color: scheme.primary)
               : null
         : this.trailing;
-    if (!context.isMornye) {
+    if (!context.isTango) {
       return ListTile(
         title: this.title,
         subtitle: subtitle,
@@ -604,7 +604,7 @@ class AppSheetOption extends StatelessWidget {
       };
       if (icon != null) {
         return Icon(
-          mornyeIconFor(icon),
+          tangoIconFor(icon),
           size: size,
           color: enabled ? color ?? scheme.primary : theme.disabledColor,
         );

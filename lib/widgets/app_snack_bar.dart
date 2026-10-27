@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:tango/l10n/l10n.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/app_icon.dart';
+import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/tango_chrome.dart';
 
 /// Applies the same transient-message policy to existing snackbar call sites.
 /// A new message replaces the old one instead of building a stale FIFO queue.
@@ -83,7 +83,7 @@ void showCannotOpenFileSnackBar(BuildContext context, Object error) {
   );
 }
 
-/// Transient messages use the same glass as confirmation dialogs in Mornye.
+/// Transient messages use the same glass as confirmation dialogs in Tango.
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
   BuildContext context, {
   required Widget content,
@@ -92,7 +92,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
   SnackBarAction? action,
 }) {
   final messenger = ScaffoldMessenger.of(context);
-  if (!context.isMornye) {
+  if (!context.isTango) {
     return messenger.showSnackBar(
       SnackBar(
         content: content,
@@ -106,12 +106,12 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
   }
   final theme = Theme.of(context);
   final reduceMotion = MediaQuery.disableAnimationsOf(context);
-  final snackBar = _MornyeSnackBar(
+  final snackBar = _TangoSnackBar(
     duration: duration,
     reduceMotion: reduceMotion,
     content: Theme(
       data: theme,
-      child: MornyeGlassPanel.overlay(
+      child: TangoGlassPanel.overlay(
         radius: 24,
         // Messages have no modal scrim; let more of the page show through.
         tintOpacity: 0.48,
@@ -163,8 +163,8 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
   return messenger.showSnackBar(snackBar);
 }
 
-class _MornyeSnackBar extends SnackBar {
-  const _MornyeSnackBar({
+class _TangoSnackBar extends SnackBar {
+  const _TangoSnackBar({
     required super.content,
     required super.duration,
     required this.reduceMotion,

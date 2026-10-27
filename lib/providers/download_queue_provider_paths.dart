@@ -32,7 +32,7 @@ extension _DownloadQueuePaths on DownloadQueueNotifier {
     return downloadDir;
   }
 
-  /// `<Music>/Mornye` on desktop; null when the OS gives no Music folder.
+  /// `<Music>/Tango` on desktop; null when the OS gives no Music folder.
   Future<Directory?> _ensureDefaultDesktopOutputDir() async {
     final path = await resolveDesktopDefaultOutputDirectory();
     if (path == null) return null;
@@ -72,7 +72,7 @@ extension _DownloadQueuePaths on DownloadQueueNotifier {
       }
       probe = File(
         '${directory.path}${Platform.pathSeparator}'
-        '.mornye-write-${DateTime.now().microsecondsSinceEpoch}',
+        '.tango-write-${DateTime.now().microsecondsSinceEpoch}',
       );
       await probe.writeAsBytes(const [0], flush: true);
       return await probe.exists();
