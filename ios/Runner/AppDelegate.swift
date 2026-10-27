@@ -33,6 +33,12 @@ import UniformTypeIdentifiers
     private let securityScopedAccessLock = NSLock()
     private var securityScopedAccesses: [String: (URL, CoreDirectoryScope)] = [:]
 
+    // Folders picked through Files stay open for the whole process so songs in
+    // them can be played in place, without copying them into the app.
+    private let libraryBookmarksKey = "tango.pickedFolderBookmarks"
+    private let heldLibraryAccessLock = NSLock()
+    private var heldLibraryAccess: [String: URL] = [:]
+
     private var pendingDirectoryPickerResult: FlutterResult?
     private var importPickerResult: FlutterResult?
     private weak var importPicker: UIDocumentPickerViewController?
@@ -54,6 +60,7 @@ import UniformTypeIdentifiers
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        restoreLibraryFolderAccess()
         playerEngine.run()
         configureFlutterEngine(playerEngine.binaryMessenger, registry: playerEngine)
         if let url = launchOptions?[.url] as? URL {
@@ -845,6 +852,61 @@ import UniformTypeIdentifiers
         lease?.1.close()
         lease?.0.stopAccessingSecurityScopedResource()
     }
+
+    // MARK: - Persistent access to picked library folders
+
+    /// Remembers a folder picked through Files and keeps its security-scoped
+    /// access open for the life of the process.
+    fileprivate func rememberLibraryFolder(url: URL, bookmark: Data) {
+        var stored = UserDefaults.standard.dictionary(forKey: libraryBookmarksKey) as? [String: String] ?? [:]
+        stored[url.path] = bookmark.base64EncodedString()
+        UserDefaults.standard.set(stored, forKey: libraryBookmarksKey)
+        holdLibraryAccess(to: url)
+    }
+
+    fileprivate func holdLibraryAccess(to url: URL) {
+        heldLibraryAccessLock.lock()
+        defer { heldLibraryAccessLock.unlock() }
+        if heldLibraryAccess[url.path] != nil { return }
+        if url.startAccessingSecurityScopedResource() {
+            heldLibraryAccess[url.path] = url
+        }
+    }
+
+    /// Re-opens every folder picked in an earlier session so playback and
+    /// scans can read it right after launch.
+    private func restoreLibraryFolderAccess() {
+        var stored = UserDefaults.standard.dictionary(forKey: libraryBookmarksKey) as? [String: String] ?? [:]
+        guard !stored.isEmpty else { return }
+        var changed = false
+        for (path, encoded) in stored {
+            guard let data = Data(base64Encoded: encoded) else {
+                stored[path] = nil
+                changed = true
+                continue
+            }
+            var isStale = false
+            guard let url = try? URL(
+                resolvingBookmarkData: data,
+                options: [],
+                relativeTo: nil,
+                bookmarkDataIsStale: &isStale
+            ) else { continue }
+            holdLibraryAccess(to: url)
+            if isStale,
+               let fresh = try? url.bookmarkData(
+                   options: [],
+                   includingResourceValuesForKeys: nil,
+                   relativeTo: nil
+               ) {
+                stored[path] = fresh.base64EncodedString()
+                changed = true
+            }
+        }
+        if changed {
+            UserDefaults.standard.set(stored, forKey: libraryBookmarksKey)
+        }
+    }
 }
 
 extension AppDelegate: ASWebAuthenticationPresentationContextProviding {
@@ -903,6 +965,7 @@ extension AppDelegate: UIDocumentPickerDelegate, UIDocumentBrowserViewController
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil
             )
+            rememberLibraryFolder(url: url, bookmark: bookmarkData)
             result([
                 "path": url.path,
                 "bookmark": bookmarkData.base64EncodedString(),
