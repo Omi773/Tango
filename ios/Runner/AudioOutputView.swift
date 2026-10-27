@@ -1,4 +1,5 @@
 import AVKit
+import ExternalAccessory
 import Flutter
 import MediaPlayer
 import UIKit
