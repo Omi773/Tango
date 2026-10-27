@@ -9,6 +9,19 @@ class IosPickedDirectory {
   const IosPickedDirectory({required this.path, required this.bookmark});
 }
 
+/// Outcome of importing songs through the iOS file picker.
+class IosImportResult {
+  final int imported;
+  final int skipped;
+  final int failed;
+
+  const IosImportResult({
+    required this.imported,
+    required this.skipped,
+    required this.failed,
+  });
+}
+
 class IosSecurityScopedAccess {
   final String path;
   final String token;
