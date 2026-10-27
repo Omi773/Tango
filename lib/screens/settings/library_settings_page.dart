@@ -682,6 +682,11 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                         totalFiles: scan.total,
                         progress: scan.progress,
                         enabled: settings.localLibraryEnabled,
+locked:
+    Platform.isIOS &&
+    !source.path.startsWith('network://') &&
+    (source.bookmark == null ||
+        source.bookmark!.trim().isEmpty),
                         onEnabledChanged: (value) => ref
                             .read(localLibraryProvider.notifier)
                             .setSourceEnabled(source.id, value),
