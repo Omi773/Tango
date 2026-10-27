@@ -68,7 +68,7 @@ AppSettings resetInstallationBoundSettings(AppSettings settings) {
     downloadTreeUri: '',
     isFirstLaunch: true,
     useAllFilesAccess: false,
-    localLibraryEnabled: false,
+    localLibraryEnabled: true,
     localLibraryPath: '',
     localLibraryBookmark: '',
     localLibraryAutoScan: 'off',
@@ -1100,7 +1100,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
   }
 
   void setLocalLibraryEnabled(bool enabled) {
-    state = state.copyWith(localLibraryEnabled: enabled);
+    state = state.copyWith(localLibraryEnabled: true);
     _saveSettings();
   }
 
