@@ -16,10 +16,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release download discord-sdk --pattern discord-ios.zip --dir /tmp
-          mkdir -p third_party/mornye_discord/ios/Frameworks
-          unzip -q /tmp/discord-ios.zip -d third_party/mornye_discord/ios/Frameworks
-          test -d third_party/mornye_discord/ios/Frameworks/discord_partner_sdk.xcframework
-          test -f third_party/mornye_discord/ios/Frameworks/Discord-License-Notices.txt
+          mkdir -p third_party/tango_discord/ios/Frameworks
+          unzip -q /tmp/discord-ios.zip -d third_party/tango_discord/ios/Frameworks
+          test -d third_party/tango_discord/ios/Frameworks/discord_partner_sdk.xcframework
+          test -f third_party/tango_discord/ios/Frameworks/Discord-License-Notices.txt
 
       - name: Select Xcode 26.1.1
         run: |
@@ -33,7 +33,7 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ios/Pods
-          key: pods-rust-${{ runner.os }}-${{ hashFiles('ios/Podfile', 'ios/Podfile.lock', 'rust_backend/MornyeBackend.podspec', 'rust_backend/Cargo.lock') }}
+          key: key: pods-rust-${{ runner.os }}-${{ hashFiles('ios/Podfile', 'ios/Podfile.lock', 'rust_backend/TangoBackend.podspec', 'rust_backend/Cargo.lock') }}
           restore-keys: pods-rust-${{ runner.os }}-
 
       - name: Setup Flutter
