@@ -1,0 +1,93 @@
+name: Rebrand step 2
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rebrand:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply
+        run: |
+          set -e
+          python3 - <<'PY'
+          import re
+
+          def remove_call(text, anchor, opener):
+              i = text.find(anchor)
+              if i < 0:
+                  raise SystemExit("anchor not found: " + anchor)
+              start = text.rfind(opener, 0, i)
+              if start < 0:
+                  raise SystemExit("opener not found for: " + anchor)
+              j = start + len(opener)
+              depth = 1
+              while depth:
+                  c = text[j]
+                  if c in "([{":
+                      depth += 1
+                  elif c in ")]}":
+                      depth -= 1
+                  j += 1
+              while text[j] in ", ":
+                  j += 1
+              if text[j] == "\n":
+                  j += 1
+              ls = text.rfind("\n", 0, start) + 1
+              if text[ls:start].strip() == "":
+                  start = ls
+              elif text[:start].endswith("const "):
+                  start -= 6
+              return text[:start] + text[j:]
+
+          def edit(path, steps):
+              t = open(path, encoding="utf-8").read()
+              for anchor, opener in steps:
+                  t = remove_call(t, anchor, opener)
+              open(path, "w", encoding="utf-8").write(t)
+
+          S = "SliverToBoxAdapter("
+          edit("lib/screens/settings/about_page.dart", [
+              ("context.l10n.rebrandTourReplay", S),
+              ("title: context.l10n.aboutContributors", S),
+              ("name: AppInfo.mobileAuthor", S),
+              ("title: context.l10n.aboutTranslators", S),
+              ("_TranslatorsSection()", S),
+              ("githubUsername: 'binimum'", "_ContributorItem("),
+              ("githubUsername: 'sachinsenal0x64'", "_ContributorItem("),
+              ("title: 'Zarz-LRC'", "_AboutSettingsItem("),
+              ("subtitle: 'lyrics.zarz.moe'", "_AboutSettingsItem("),
+              ("subtitle: 'status.zarz.moe'", "_AboutSettingsItem("),
+              ("title: context.l10n.aboutSocial", S),
+              ("icon: Icons.telegram,", S),
+          ])
+          p = "lib/screens/settings/about_page.dart"
+          t = open(p, encoding="utf-8").read()
+          while "crowdinUsername: '" in t:
+              t = remove_call(t, "crowdinUsername: '", "_Translator(")
+          open(p, "w", encoding="utf-8").write(t)
+          edit("lib/services/app_remote_config_service.dart", [
+              ("id: 'kofi'", "DonateMethod("),
+              ("id: 'github-sponsors'", "DonateMethod("),
+              ("id: 'usdt-trc20'", "DonateMethod("),
+          ])
+          p = "lib/screens/main_shell_startup_prompts.dart"
+          t = open(p, encoding="utf-8").read()
+          old = "if (!mounted || !UpgradeIntroService.shouldShow(preferences)) return;"
+          assert old in t
+          open(p, "w", encoding="utf-8").write(t.replace(old, "return;"))
+          PY
+          git diff --stat
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Remove original developer credits and donation info"
+          git push
