@@ -276,7 +276,7 @@ class AppSettings {
     this.songLinkRegion = 'US',
     this.nativeDownloadWorkerEnabled = false,
     this.concurrentDownloads = 1,
-    this.localLibraryEnabled = false,
+    this.localLibraryEnabled = true,
     this.localLibraryPath = '',
     this.localLibraryBookmark = '',
     this.localLibraryShowDuplicates = true,
