@@ -1100,6 +1100,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
   }
 
   void setLocalLibraryEnabled(bool enabled) {
+    // The local library is always on; the toggle no longer exists.
     state = state.copyWith(localLibraryEnabled: true);
     _saveSettings();
   }
