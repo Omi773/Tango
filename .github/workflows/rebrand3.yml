@@ -1,0 +1,94 @@
+name: Rebrand step 3
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rebrand:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rename everything
+        run: |
+          set -e
+          python3 - <<'PY'
+          import os, subprocess
+
+          SKIP_DIRS = {".git", ".github", "vendor"}
+          SKIP_FILES = {"LICENSE"}
+
+          CONTENT = [
+              ("com.zarz.mornye", "app.tango"),
+              ("com_zarz_mornye", "app_tango"),
+              ("com/zarz/mornye", "app/tango"),
+              ("com.mornye", "app.tango"),
+              ("api.zarz.moe", "invalid.invalid"),
+              ("lyrics.zarz.moe", "invalid.invalid"),
+              ("status.zarz.moe", "invalid.invalid"),
+              ("Zarz-LRC", "Tango-LRC"),
+              ("zarz-lrc", "tango-lrc"),
+              ("zarz_lrc", "tango_lrc"),
+              ("ZarzLrc", "TangoLrc"),
+              ("MORNYE", "TANGO"),
+              ("Mornye", "Tango"),
+              ("mornye", "tango"),
+          ]
+
+          changed = 0
+          for root, dirs, files in os.walk("."):
+              dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
+              for name in files:
+                  if name in SKIP_FILES:
+                      continue
+                  path = os.path.join(root, name)
+                  try:
+                      with open(path, encoding="utf-8") as f:
+                          text = f.read()
+                  except (UnicodeDecodeError, OSError):
+                      continue
+                  new = text
+                  for old, rep in CONTENT:
+                      new = new.replace(old, rep)
+                  if new != text:
+                      with open(path, "w", encoding="utf-8", newline="") as f:
+                          f.write(new)
+                      changed += 1
+          print("files edited:", changed)
+
+          # Java/Kotlin package folder: com/zarz/mornye -> app/tango
+          for base, dirs, files in os.walk("third_party"):
+              if base.endswith(os.path.join("com", "zarz", "mornye")):
+                  kotlin_root = base[: -len(os.path.join("com", "zarz", "mornye"))]
+                  target = os.path.join(kotlin_root, "app", "tango")
+                  os.makedirs(os.path.dirname(target), exist_ok=True)
+                  os.rename(base, target)
+                  break
+
+          # rename any remaining file or folder whose name contains mornye
+          for root, dirs, files in os.walk(".", topdown=False):
+              if ".git" in root.split(os.sep) or ".github" in root.split(os.sep):
+                  continue
+              for name in files + dirs:
+                  if "mornye" in name.lower():
+                      new = name.replace("Mornye", "Tango").replace("mornye", "tango")
+                      os.rename(os.path.join(root, name), os.path.join(root, new))
+
+          # remove empty leftover folders (e.g. the old com/zarz)
+          for root, dirs, files in os.walk("third_party", topdown=False):
+              if not os.listdir(root):
+                  os.rmdir(root)
+          PY
+          if grep -rIil --exclude-dir=.git --exclude-dir=.github mornye . ; then echo 'mornye still present'; exit 1; fi
+          git add -A
+          git status --short | wc -l
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Rename Mornye identifiers to Tango"
+          git push
