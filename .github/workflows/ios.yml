@@ -164,3 +164,17 @@ jobs:
           name: Tango build ${{ github.run_number }}
           files: build/ios/ipa/Tango-ios-signed.ipa
           prerelease: true
+
+      - name: Upload IPA to Google Drive
+        env:
+          RCLONE_CONFIG_GDRIVE_TYPE: drive
+          RCLONE_CONFIG_GDRIVE_SCOPE: drive.file
+          RCLONE_CONFIG_GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
+          RCLONE_CONFIG_GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
+          GDRIVE_REFRESH_TOKEN: ${{ secrets.GDRIVE_REFRESH_TOKEN }}
+        run: |
+          set -euo pipefail
+          [ -n "$RCLONE_CONFIG_GDRIVE_CLIENT_ID" ] && [ -n "$GDRIVE_REFRESH_TOKEN" ] || { echo "::error::Missing Google Drive secrets"; exit 1; }
+          brew install rclone
+          export RCLONE_CONFIG_GDRIVE_TOKEN="{\"access_token\":\"\",\"token_type\":\"Bearer\",\"refresh_token\":\"$GDRIVE_REFRESH_TOKEN\",\"expiry\":\"2000-01-01T00:00:00Z\"}"
+          rclone copyto build/ios/ipa/Tango-ios-signed.ipa "gdrive:Tango-builds/Tango-build-${{ github.run_number }}.ipa" -v
