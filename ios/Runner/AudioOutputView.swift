@@ -193,6 +193,7 @@ private final class AudioOutputView: NSObject, FlutterPlatformView, AVRoutePicke
         channel.setMethodCallHandler(nil)
     }
 }
+
 /// Watches the iOS audio session and reports changes to Tango's log.
 final class AudioDiagnosticsBridge {
     private let channel: FlutterMethodChannel
@@ -214,7 +215,7 @@ final class AudioDiagnosticsBridge {
         lastBuffer = session.ioBufferDuration
         lastChannels = session.outputNumberOfChannels
         lastCategory = categoryText()
-        usbConnected = session.currentRoute.outputs.contains { $0.portType == .usbAudio }
+        usbConnected = session.currentRoute.outputs.contains { isDac($0) }
         channel.setMethodCallHandler { [weak self] call, result in
             guard let self = self else { result(nil); return }
             switch call.method {
@@ -297,11 +298,19 @@ final class AudioDiagnosticsBridge {
         poll()
     }
 
+    /// iOS reports some USB/Lightning DACs as plain "Headphones", so the
+    /// device name is checked as well as the port type.
+    private func isDac(_ port: AVAudioSessionPortDescription) -> Bool {
+        if port.portType == .usbAudio { return true }
+        let name = port.portName.uppercased()
+        return ["CX31993", "JM7", "JCALLY"].contains { name.contains($0) }
+    }
+
     /// Runs twice a second and reports only what changed.
     private func poll() {
         let s = session
         let outs = s.currentRoute.outputs
-        let usb = outs.contains { $0.portType == .usbAudio }
+        let usb = outs.contains { isDac($0) }
         if usb != usbConnected {
             usbConnected = usb
             if usb {
@@ -368,7 +377,7 @@ final class AudioDiagnosticsBridge {
         add("Category options", optionsText(s.categoryOptions))
         add("Route sharing policy", policyName(s.routeSharingPolicy))
         add("Other audio playing", s.isOtherAudioPlaying ? "yes" : "no")
-        add("DAC (USB audio)", usbConnected ? "connected" : "not connected")
+        add("DAC", usbConnected ? "connected" : "not connected")
         add("DAC connects / disconnects", "\(connects) / \(disconnects)")
         return ["rows": rows, "sessionRate": s.sampleRate]
     }
