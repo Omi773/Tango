@@ -3,6 +3,9 @@ name: Build iOS (unsigned IPA)
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-ios:
     runs-on: macos-15
@@ -99,3 +102,11 @@ jobs:
         with:
           name: Tango-ios
           path: build/ios/ipa/*.ipa
+
+      - name: Publish to Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: Tango build ${{ github.run_number }}
+          files: build/ios/ipa/Tango-ios-unsigned.ipa
+          prerelease: true
