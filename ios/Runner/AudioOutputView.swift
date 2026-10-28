@@ -296,6 +296,10 @@ final class AudioDiagnosticsBridge {
             .map { self.routeText($0) } ?? "-"
         emit("INFO", "Route change: \(reason) · was \(previous) · now \(routeText(session.currentRoute))")
         poll()
+        // Lets the Audio info sheet re-read the output device right away.
+        if dartListening {
+            channel.invokeMethod("routeChanged", arguments: nil)
+        }
     }
 
     /// iOS reports some USB/Lightning DACs as plain "Headphones", so the
