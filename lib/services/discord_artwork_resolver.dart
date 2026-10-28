@@ -68,6 +68,15 @@ Set<String> _artistSet(String? text) {
   return parts.isEmpty ? {normalized} : parts;
 }
 
+/// "Album (Deluxe Edition)", "Album [Explicit]" and "Album - Single" are the
+/// same release family as "Album" for artwork purposes.
+String _albumKey(String? text) => _normalized(text)
+    .replaceAll(RegExp(r'\s*[\(\[][^\)\]]*[\)\]]'), '')
+    .replaceAll(RegExp(r'\s*-\s*(single|ep)\s*$'), '')
+    .trim();
+
+bool _sameAlbum(String? a, String? b) => _albumKey(a) == _albumKey(b);
+
 bool _sameArtists(String? a, String? b) {
   final left = _artistSet(a);
   final right = _artistSet(b);
@@ -85,7 +94,7 @@ String? discordMatchedArtwork(MediaItem item, Iterable<Track> candidates) {
   for (final track in candidates) {
     if (_normalized(track.name) != title ||
         !_sameArtists(track.artistName, item.artist) ||
-        (album.isNotEmpty && _normalized(track.albumName) != album)) {
+        (album.isNotEmpty && !_sameAlbum(track.albumName, item.album))) {
       continue;
     }
     var delta = 0;
