@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build-ios:
@@ -150,20 +150,6 @@ jobs:
           codesign --verify --deep --strict "$APP"
 
           (cd "$WORK" && zip -qr "$GITHUB_WORKSPACE/build/ios/ipa/Tango-ios-signed.ipa" Payload)
-
-      - name: Upload IPA artifact
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: Tango-ios
-          path: build/ios/ipa/*.ipa
-
-      - name: Publish to Releases
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: build-${{ github.run_number }}
-          name: Tango build ${{ github.run_number }}
-          files: build/ios/ipa/Tango-ios-signed.ipa
-          prerelease: true
 
       - name: Upload IPA to Google Drive
         env:
