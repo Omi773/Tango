@@ -21,11 +21,16 @@ class AudioDiagnostics {
   static const _channel = MethodChannel('app.tango/audio_diag');
   static bool _started = false;
 
+  /// Increments whenever the output route changes (headphones or a DAC
+  /// connecting or disconnecting, a Bluetooth switch, and so on).
+  static final ValueNotifier<int> routeChanges = ValueNotifier<int>(0);
+
   static Future<void> start() async {
     if (_started || !Platform.isIOS) return;
     _started = true;
     _channel.setMethodCallHandler((call) async {
       if (call.method == 'event') _handle(call.arguments);
+      if (call.method == 'routeChanged') routeChanges.value++;
       return null;
     });
     // Wait for the first frame so the log setting is loaded before the
