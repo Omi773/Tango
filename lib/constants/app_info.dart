@@ -23,11 +23,11 @@ class AppInfo {
 
   static const String mobileAuthor = 'Omi773';
 
-  static const String githubRepo = 'Omi773/LocalPlayer-re';
+  static const String githubRepo = 'Omi773/Tango';
   static const String githubUrl = 'https://github.com/$githubRepo';
 
   /// Desktop packages are published here; the source stays in [githubRepo].
-  static const String desktopGithubRepo = 'Omi773/LocalPlayer-re';
+  static const String desktopGithubRepo = 'Omi773/Tango';
   // The server keeps the endpoint name from before the rename.
   static const String remoteConfigApiUrl =
       'https://invalid.invalid/config';
