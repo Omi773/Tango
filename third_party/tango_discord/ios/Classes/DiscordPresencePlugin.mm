@@ -125,11 +125,14 @@
         activity.SetType(discordpp::ActivityTypes::Listening);
         activity.SetDetails([args[@"title"] UTF8String]);
         activity.SetState([args[@"state"] UTF8String]);
+        discordpp::ActivityAssets assets;
         if ([args[@"artwork"] length]) {
-            discordpp::ActivityAssets assets;
             assets.SetLargeImage([args[@"artwork"] UTF8String]);
-            activity.SetAssets(assets);
+        } else {
+            // Fallback: asset key "tango" uploaded in the Discord Developer Portal.
+            assets.SetLargeImage("tango");
         }
+        activity.SetAssets(assets);
         discordpp::ActivityTimestamps timestamps;
         if ([args[@"start"] unsignedLongLongValue]) timestamps.SetStart([args[@"start"] unsignedLongLongValue]);
         if ([args[@"end"] unsignedLongLongValue]) timestamps.SetEnd([args[@"end"] unsignedLongLongValue]);
