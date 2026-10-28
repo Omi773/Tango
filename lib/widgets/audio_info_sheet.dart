@@ -54,14 +54,17 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
   int? _fileSize;
   String? _loadedPath;
   int _loadGeneration = 0;
-    bool _loading = false;
+  int _routeGeneration = 0;
+  bool _loading = false;
   Timer? _liveTimer;
+  Timer? _routeSettleTimer;
   AudioLive? _live;
 
   @override
   void initState() {
     super.initState();
     widget.metadata.addListener(_load);
+    AudioDiagnostics.routeChanges.addListener(_onRouteChanged);
     _load();
     _refreshLive();
     _liveTimer = Timer.periodic(
@@ -73,8 +76,38 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
   @override
   void dispose() {
     _liveTimer?.cancel();
+    _routeSettleTimer?.cancel();
+    AudioDiagnostics.routeChanges.removeListener(_onRouteChanged);
     widget.metadata.removeListener(_load);
     super.dispose();
+  }
+
+  /// Headphones or a DAC connected or disconnected: re-read the output
+  /// route now, and once more after the session has settled on the new
+  /// device's rate, buffer and latency.
+  void _onRouteChanged() {
+    _refreshRoute();
+    _refreshLive();
+    _routeSettleTimer?.cancel();
+    _routeSettleTimer = Timer(const Duration(milliseconds: 800), () {
+      _refreshRoute();
+      _refreshLive();
+    });
+  }
+
+  /// Re-reads the route while keeping the current values on screen, so the
+  /// sheet updates in place instead of flashing empty.
+  Future<void> _refreshRoute() async {
+    final generation = ++_routeGeneration;
+    final loadGeneration = _loadGeneration;
+    final route = await readAudioRouteInfo(path: widget.metadata.filePath);
+    // Drop the result if a newer refresh started or the track changed.
+    if (!mounted ||
+        generation != _routeGeneration ||
+        loadGeneration != _loadGeneration) {
+      return;
+    }
+    if (route != null) setState(() => _route = route);
   }
 
   Future<void> _refreshLive() async {
