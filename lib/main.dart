@@ -43,6 +43,12 @@ import 'package:tango/widgets/desktop/desktop_inspector.dart'
 import 'package:tango/widgets/desktop/desktop_window.dart'
     show listenDesktopWindowFullScreen;
 
+// Firebase imports
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_performance/firebase_performance.dart';
+import 'firebase_options.dart';
+
 final _log = AppLogger('Main');
 _StartupBenchmark? _startupBenchmark;
 
@@ -55,6 +61,12 @@ void main() {
   runZonedGuarded(
     () async {
       final binding = WidgetsFlutterBinding.ensureInitialized();
+
+      // Initialize Firebase Core & Crashlytics collection handlers
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+
       if (Platform.isAndroid) {
         // A media service can start the engine before MainActivity registers
         // the backend and platform channels. Calls made earlier would fail or
@@ -119,10 +131,18 @@ void main() {
         unawaited(
           AppCrashService.recordRuntimeError(details.exception, details.stack),
         );
+        // Forward fatal errors to Firebase Crashlytics
+        unawaited(
+          FirebaseCrashlytics.instance.recordFlutterFatalError(details),
+        );
       };
       WidgetsBinding.instance.platformDispatcher.onError = (error, stack) {
         _log.e('Uncaught platform error: $error');
         unawaited(AppCrashService.recordRuntimeError(error, stack));
+        // Forward asynchronous errors to Firebase Crashlytics
+        unawaited(
+          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true),
+        );
         return true;
       };
 
@@ -191,6 +211,9 @@ void main() {
     (error, stack) {
       _log.e('Uncaught zone error: $error');
       unawaited(AppCrashService.recordRuntimeError(error, stack));
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true),
+      );
     },
   );
 }
