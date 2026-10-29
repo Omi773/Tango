@@ -4,9 +4,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:material_ui/material_ui.dart' as material_ui;
 import 'package:tango/providers/theme_provider.dart';
 import 'package:tango/providers/custom_font_provider.dart';
-import 'package:tango/theme/app_theme.dart';
 import 'package:tango/models/theme_settings.dart';
-import 'package:tango/theme/tango_theme.dart';
 import 'package:tango/theme/rhythm_theme.dart';
 import 'package:tango/theme/rhythm_palette.dart';
 
@@ -21,33 +19,10 @@ class DynamicColorWrapper extends ConsumerWidget {
     final themeSettings = ref.watch(themeProvider);
     final fontFamily = ref.watch(customFontFamilyProvider).asData?.value;
 
-    // Both styles build below the same DynamicColorBuilder. Switching styles
-    // must update the app in place: a different parent remounted the whole
-    // app, losing its state and briefly mounting a second macOS menu bar.
+    // Rhythm is the only look; everything builds below one DynamicColorBuilder
+    // so changing colors updates the app in place.
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
-        if (themeSettings.style == AppThemeStyle.tango) {
-          return builder(
-            TangoTheme.build(
-              Brightness.light,
-              accent: themeSettings.tangoAccent,
-              useSystemFont: themeSettings.useSystemFont,
-              fontFamily: fontFamily,
-              glassClarity: themeSettings.tangoGlassClarity,
-              glassOutlines: themeSettings.tangoGlassOutlines,
-            ),
-            TangoTheme.build(
-              Brightness.dark,
-              accent: themeSettings.tangoAccent,
-              useSystemFont: themeSettings.useSystemFont,
-              fontFamily: fontFamily,
-              glassClarity: themeSettings.tangoGlassClarity,
-              glassOutlines: themeSettings.tangoGlassOutlines,
-            ),
-            themeSettings.themeMode,
-          );
-        }
-
         ColorScheme lightScheme;
         ColorScheme darkScheme;
 
@@ -56,8 +31,7 @@ class DynamicColorWrapper extends ConsumerWidget {
             darkDynamic != null) {
           lightScheme = _toFlutterColorScheme(lightDynamic);
           darkScheme = _toFlutterColorScheme(darkDynamic);
-        } else if (themeSettings.style == AppThemeStyle.rhythm &&
-            themeSettings.seedColorValue == kDefaultSeedColor) {
+        } else if (themeSettings.seedColorValue == kDefaultSeedColor) {
           // Rhythm's own baseline palette until the person picks a seed.
           lightScheme = RhythmPalette.light;
           darkScheme = RhythmPalette.dark;
@@ -77,32 +51,17 @@ class DynamicColorWrapper extends ConsumerWidget {
           darkScheme = _applyAmoledColors(darkScheme);
         }
 
-        final isRhythm = themeSettings.style == AppThemeStyle.rhythm;
-
-        final lightTheme = isRhythm
-            ? RhythmTheme.light(
-                dynamicScheme: lightScheme,
-                useSystemFont: themeSettings.useSystemFont,
-                fontFamily: fontFamily,
-              )
-            : AppTheme.light(
-                dynamicScheme: lightScheme,
-                useSystemFont: themeSettings.useSystemFont,
-                fontFamily: fontFamily,
-              );
-        final darkTheme = isRhythm
-            ? RhythmTheme.dark(
-                dynamicScheme: darkScheme,
-                isAmoled: themeSettings.useAmoled,
-                useSystemFont: themeSettings.useSystemFont,
-                fontFamily: fontFamily,
-              )
-            : AppTheme.dark(
-                dynamicScheme: darkScheme,
-                isAmoled: themeSettings.useAmoled,
-                useSystemFont: themeSettings.useSystemFont,
-                fontFamily: fontFamily,
-              );
+        final lightTheme = RhythmTheme.light(
+          dynamicScheme: lightScheme,
+          useSystemFont: themeSettings.useSystemFont,
+          fontFamily: fontFamily,
+        );
+        final darkTheme = RhythmTheme.dark(
+          dynamicScheme: darkScheme,
+          isAmoled: themeSettings.useAmoled,
+          useSystemFont: themeSettings.useSystemFont,
+          fontFamily: fontFamily,
+        );
 
         return builder(lightTheme, darkTheme, themeSettings.themeMode);
       },

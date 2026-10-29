@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show HapticFeedback;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:material_3_expressive/material_3_expressive.dart'
     show
@@ -12,10 +11,6 @@ import 'package:material_3_expressive/material_3_expressive.dart'
         MorphToPathExtension,
         RoundedPolygonToPathExtension;
 import 'package:tango/l10n/l10n.dart';
-import 'package:tango/models/theme_settings.dart';
-import 'package:tango/providers/theme_provider.dart';
-import 'package:tango/theme/app_theme.dart';
-import 'package:tango/theme/tango_icons.dart';
 import 'package:tango/theme/tango_theme.dart';
 import 'package:tango/widgets/app_icon_button.dart';
 import 'package:tango/widgets/app_shape.dart';
@@ -31,7 +26,7 @@ class UpgradeIntroScreen extends StatefulWidget {
 }
 
 class _UpgradeIntroScreenState extends State<UpgradeIntroScreen> {
-  static const _pageCount = 4;
+  static const _pageCount = 3;
 
   final _pages = PageController();
   int _page = 0;
@@ -136,16 +131,6 @@ class _UpgradeIntroScreenState extends State<UpgradeIntroScreen> {
                               body: l10n.rebrandSameAppBody,
                             ),
                           ],
-                        ),
-                        _TourPage(
-                          hero: const _TourHero(
-                            icon: Icons.palette_outlined,
-                            shape: M3EShapeKind.flower,
-                            accent: M3EShapeKind.pill,
-                          ),
-                          title: l10n.upgradeIntroThemeTitle,
-                          description: l10n.upgradeIntroThemeBody,
-                          child: const _ThemePicker(),
                         ),
                         _TourPage(
                           hero: const _TourHero(
@@ -693,203 +678,6 @@ class _FeatureRow extends StatelessWidget {
                     ),
                     child: row,
                   ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ThemePicker extends ConsumerWidget {
-  const _ThemePicker();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final settings = ref.watch(themeProvider);
-    final brightness = Theme.of(context).brightness;
-    final l10n = context.l10n;
-    return Column(
-      children: [
-        for (final style in AppThemeStyle.values.where((s) => s != AppThemeStyle.rhythm))
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Theme(
-              data: style == AppThemeStyle.tango
-                  ? TangoTheme.build(
-                      brightness,
-                      accent: settings.tangoAccent,
-                      useSystemFont: settings.useSystemFont,
-                      glassClarity: settings.tangoGlassClarity,
-                      glassOutlines: settings.tangoGlassOutlines,
-                    )
-                  : brightness == Brightness.dark
-                  ? AppTheme.dark(
-                      seedColor: settings.seedColor,
-                      isAmoled: settings.useAmoled,
-                      useSystemFont: settings.useSystemFont,
-                    )
-                  : AppTheme.light(
-                      seedColor: settings.seedColor,
-                      useSystemFont: settings.useSystemFont,
-                    ),
-              child: _ThemeOption(
-                style: style,
-                selected: settings.style == style,
-                label: style == AppThemeStyle.tango ? 'Tango' : 'Material',
-                description: style == AppThemeStyle.tango
-                    ? l10n.upgradeIntroThemeTangoBody
-                    : l10n.whatsNewThemeMaterialBody,
-                onTap: () => ref.read(themeProvider.notifier).setStyle(style),
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _ThemeOption extends StatelessWidget {
-  const _ThemeOption({
-    required this.style,
-    required this.selected,
-    required this.label,
-    required this.description,
-    required this.onTap,
-  });
-
-  final AppThemeStyle style;
-  final bool selected;
-  final String label;
-  final String description;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final tango = style == AppThemeStyle.tango;
-    final duration = MediaQuery.disableAnimationsOf(context)
-        ? Duration.zero
-        : const Duration(milliseconds: 280);
-    return Semantics(
-      selected: selected,
-      // The container clips its ink, so the press follows the morphing corners.
-      child: AnimatedContainer(
-        duration: duration,
-        curve: Curves.easeOutCubic,
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          color: selected ? scheme.secondaryContainer : scheme.surfaceContainer,
-          borderRadius: BorderRadius.circular(
-            tango ? (selected ? 22 : 16) : (selected ? 32 : 16),
-          ),
-          border: Border.all(
-            color: selected ? scheme.primary : Colors.transparent,
-            width: 2,
-          ),
-        ),
-        child: Material(
-          type: MaterialType.transparency,
-          child: InkWell(
-            key: ValueKey('intro-theme-${style.name}'),
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          label,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: selected
-                                ? scheme.onSecondaryContainer
-                                : scheme.onSurface,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      AnimatedContainer(
-                        duration: duration,
-                        curve: Curves.easeOutBack,
-                        width: 28,
-                        height: 28,
-                        decoration: BoxDecoration(
-                          color: selected ? scheme.primary : null,
-                          borderRadius: BorderRadius.circular(
-                            selected ? 9 : 14,
-                          ),
-                          border: selected
-                              ? null
-                              : Border.all(color: scheme.outline, width: 2),
-                        ),
-                        child: selected
-                            ? Icon(
-                                Icons.check_rounded,
-                                size: 20,
-                                color: scheme.onPrimary,
-                              )
-                            : null,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    description,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: selected
-                          ? scheme.onSecondaryContainer
-                          : scheme.onSurfaceVariant,
-                      height: 1.4,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ExcludeSemantics(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        for (final icon in [
-                          Icons.home_rounded,
-                          Icons.library_music,
-                          Icons.extension,
-                          tango ? Icons.search : Icons.settings_outlined,
-                        ])
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: icon == Icons.home_rounded
-                                  ? tango
-                                        ? scheme.onSurface.withValues(
-                                            alpha: 0.08,
-                                          )
-                                        : scheme.primary.withValues(alpha: 0.14)
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Icon(
-                              tango
-                                  ? icon == Icons.home_rounded
-                                        ? CupertinoIcons.house_fill
-                                        : tangoIconFor(icon)
-                                  : icon,
-                              size: 22,
-                              color: icon == Icons.home_rounded
-                                  ? scheme.primary
-                                  : scheme.onSurfaceVariant,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ),
         ),
       ),
