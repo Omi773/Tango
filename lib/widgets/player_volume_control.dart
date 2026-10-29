@@ -11,6 +11,7 @@ import 'package:tango/widgets/app_slider.dart';
 import 'package:tango/widgets/tango_player_slider.dart';
 import 'package:tango/utils/logger.dart';
 import 'package:tango/services/music_playback_deck.dart';
+import 'package:tango/widgets/rhythm/rhythm_player_controls.dart';
 
 export 'package:tango/providers/system_volume_provider.dart';
 
@@ -98,7 +99,18 @@ class _PlayerVolumeControlState extends ConsumerState<PlayerVolumeControl> {
           : () => _setVolume((value - 0.05).clamp(0, 1)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 28),
-        child: !context.isTango
+        child: context.isRhythm
+            ? RhythmVolumeSlider(
+                value: value,
+                enabled: volume != null,
+                onChangeStart: () => _dragging = true,
+                onChanged: _setVolume,
+                onChangeEnd: (v) {
+                  _dragging = false;
+                  _setVolume(v);
+                },
+              )
+            : !context.isTango
             ? _materialSlider(context, value, enabled: volume != null)
             : Row(
                 children: [

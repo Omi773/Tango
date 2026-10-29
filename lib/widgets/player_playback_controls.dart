@@ -20,6 +20,7 @@ import 'package:tango/widgets/tango_playback_button.dart';
 import 'package:tango/widgets/tango_playback_time.dart';
 import 'package:tango/widgets/tango_player_slider.dart';
 import 'package:tango/widgets/playback_seek_slider.dart';
+import 'package:tango/widgets/rhythm/rhythm_player_controls.dart';
 
 const _tangoTimelinePadding = 28.0;
 
@@ -134,6 +135,8 @@ class PlayerPlaybackControls extends ConsumerWidget {
                                 seconds: elapsedSeconds,
                                 style: timeStyle,
                               )
+                            else if (context.isRhythm)
+                              RhythmTimePill(text: formatClock(elapsedSeconds))
                             else
                               Text(
                                 formatClock(elapsedSeconds),
@@ -150,6 +153,8 @@ class PlayerPlaybackControls extends ConsumerWidget {
                                 remaining: true,
                                 style: timeStyle,
                               )
+                            else if (context.isRhythm)
+                              RhythmTimePill(text: formatClock(duration.inSeconds))
                             else
                               Text(
                                 formatClock(duration.inSeconds),
@@ -174,7 +179,29 @@ class PlayerPlaybackControls extends ConsumerWidget {
           SizedBox(
             height: compact ? 8 : transportTopPadding + (tango ? 0 : 8),
           ),
-          if (!tango && materialExpressiveEnabled(context))
+          if (!tango && context.isRhythm)
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: edgeAligned ? 0 : 16),
+              child: RhythmTransportRow(
+                playing: isPlaying,
+                loading: isLoading,
+                compact: compact,
+                previousTooltip: context.l10n.nowPlayingPreviousTrack,
+                nextTooltip: context.l10n.nowPlayingNextTrack,
+                onPlayPause: () => controller.togglePlayPause(isPlaying),
+                onPrevious: controller.previous,
+                onNext: controller.next,
+                leading: PlayerPlaybackModeButton(
+                  mode: PlayerPlaybackMode.shuffle,
+                  colorScheme: colorScheme,
+                ),
+                trailing: PlayerPlaybackModeButton(
+                  mode: PlayerPlaybackMode.repeat,
+                  colorScheme: colorScheme,
+                ),
+              ),
+            )
+          else if (!tango && materialExpressiveEnabled(context))
             Padding(
               padding: EdgeInsets.symmetric(horizontal: edgeAligned ? 0 : 16),
               child: ExpressivePlaybackTransport(

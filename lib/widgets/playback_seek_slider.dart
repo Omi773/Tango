@@ -3,6 +3,8 @@ import 'package:tango/theme/tango_theme.dart';
 import 'package:tango/utils/playback_seek_preview.dart';
 import 'package:tango/widgets/expressive_seek_track.dart';
 import 'package:tango/widgets/tango_player_slider.dart';
+import 'package:tango/widgets/rhythm/rhythm_player_controls.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Previews scrubbing locally and seeks once when the gesture ends.
 class PlaybackSeekSlider extends StatefulWidget {
@@ -132,6 +134,47 @@ class _PlaybackSeekSliderState extends State<PlaybackSeekSlider> {
               onChanged: _preview,
               onChangeEnd: _commit,
             ),
+          ),
+        ),
+      );
+    }
+    if (context.isRhythm) {
+      final currentMs = (_previewMs ?? widget.position.inMilliseconds)
+          .clamp(0, maxMs)
+          .toDouble();
+      String percentage(double milliseconds) =>
+          '${(milliseconds / maxMs * 100).clamp(0, 100).round()}%';
+      final sliderTheme = SliderTheme.of(context);
+      return Semantics(
+        slider: true,
+        enabled: enabled,
+        excludeSemantics: true,
+        value: percentage(currentMs),
+        increasedValue: enabled
+            ? percentage((currentMs + 5000).clamp(0, maxMs).toDouble())
+            : null,
+        decreasedValue: enabled
+            ? percentage((currentMs - 5000).clamp(0, maxMs).toDouble())
+            : null,
+        onIncrease: enabled
+            ? () => _adjust((currentMs + 5000).clamp(0, maxMs).toDouble())
+            : null,
+        onDecrease: enabled
+            ? () => _adjust((currentMs - 5000).clamp(0, maxMs).toDouble())
+            : null,
+        child: Consumer(
+          builder: (context, ref, _) => RhythmProgressSlider(
+            value: enabled ? currentMs : 0,
+            max: maxMs,
+            style: ref.watch(rhythmProgressStyleProvider),
+            enabled: enabled,
+            playing: widget.playing,
+            activeColor: sliderTheme.activeTrackColor,
+            inactiveColor: sliderTheme.inactiveTrackColor,
+            thumbColor: sliderTheme.thumbColor,
+            onChangeStart: _start,
+            onChanged: _preview,
+            onChangeEnd: _commit,
           ),
         ),
       );

@@ -14,6 +14,7 @@ import 'package:tango/widgets/player_gesture_regions.dart';
 import 'package:tango/widgets/player_metadata_title.dart';
 import 'package:tango/widgets/player_playback_controls.dart';
 import 'package:tango/widgets/player_volume_control.dart';
+import 'package:tango/theme/tango_theme.dart';
 
 class MaterialPlayerLayout extends StatelessWidget {
   const MaterialPlayerLayout({
@@ -26,6 +27,7 @@ class MaterialPlayerLayout extends StatelessWidget {
     required this.lyricsBuilder,
     required this.onOpenQueue,
     this.fullScreenArtwork = false,
+    this.rhythmChipRowBuilder,
   });
 
   final MediaItem mediaItem;
@@ -38,6 +40,9 @@ class MaterialPlayerLayout extends StatelessWidget {
 
   /// The page backdrop paints the cover; this area only keeps its gestures.
   final bool fullScreenArtwork;
+
+  /// Rhythm style only: the chip row under the volume slider.
+  final WidgetBuilder? rhythmChipRowBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -297,6 +302,10 @@ class MaterialPlayerLayout extends StatelessWidget {
       if (showVolume) ...[
         SizedBox(height: compact ? 8 : 12),
         const PlayerVolumeControl(),
+      ],
+      if (showVolume && context.isRhythm && rhythmChipRowBuilder != null) ...[
+        SizedBox(height: compact ? 12 : 16),
+        rhythmChipRowBuilder!(context),
       ],
     ];
   }
