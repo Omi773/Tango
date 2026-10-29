@@ -1008,13 +1008,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  tango_discord:
-    dependency: "direct main"
-    description:
-      path: "third_party/tango_discord"
-      relative: true
-    source: path
-    version: "0.1.0"
   motor:
     dependency: transitive
     description:
@@ -1532,6 +1525,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.2"
+  tango_discord:
+    dependency: "direct main"
+    description:
+      path: "third_party/tango_discord"
+      relative: true
+    source: path
+    version: "0.1.0"
   term_glyph:
     dependency: transitive
     description:

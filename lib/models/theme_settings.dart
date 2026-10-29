@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tango/utils/desktop_platform.dart';
 
 const String kThemeModeKey = 'theme_mode';
 const String kUseDynamicColorKey = 'use_dynamic_color';
@@ -34,15 +33,11 @@ TangoAccent tangoAccentFromString(String? value) =>
       orElse: () => TangoAccent.red,
     );
 
-/// Style used until the person picks one: Tango on macOS, Material on
-/// Windows, Linux and mobile.
-AppThemeStyle defaultAppThemeStyle() =>
-    isDesktopPlatform && defaultTargetPlatform == TargetPlatform.macOS
-    ? AppThemeStyle.tango
-    : AppThemeStyle.material;
+/// Rhythm is the only style. Stored values from older versions ("material",
+/// "tango") migrate to it.
+AppThemeStyle defaultAppThemeStyle() => AppThemeStyle.rhythm;
 
-AppThemeStyle themeStyleFromString(String? value) => AppThemeStyle.values
-    .firstWhere((style) => style.name == value, orElse: defaultAppThemeStyle);
+AppThemeStyle themeStyleFromString(String? value) => AppThemeStyle.rhythm;
 
 /// Default Spotify green color for fallback
 const int kDefaultSeedColor = 0xFF1DB954;
@@ -66,7 +61,7 @@ class ThemeSettings {
     this.useDynamicColor = true,
     this.seedColorValue = kDefaultSeedColor,
     this.useAmoled = false,
-    this.style = AppThemeStyle.material,
+    this.style = AppThemeStyle.rhythm,
     this.tangoAccent = TangoAccent.red,
     this.useSystemFont = false,
     this.customFontId = '',

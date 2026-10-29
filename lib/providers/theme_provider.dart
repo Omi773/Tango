@@ -103,11 +103,6 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
     await _saveToStorage();
   }
 
-  Future<void> setStyle(AppThemeStyle style) async {
-    _editState((current) => current.copyWith(style: style));
-    await _saveToStorage();
-  }
-
   Future<void> setUseDynamicColor(bool value) async {
     _editState((current) => current.copyWith(useDynamicColor: value));
     await _saveToStorage();
