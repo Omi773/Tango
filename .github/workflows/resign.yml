@@ -1,4 +1,4 @@
-name: Build unsigned IPA + Re-sign
+name: Re-sign LocalPlayer IPA
 
 on:
   workflow_dispatch:
@@ -6,138 +6,16 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: ios-build
-  cancel-in-progress: true
-
 jobs:
-  build-ios:
+  resign:
     runs-on: macos-15
-    timeout-minutes: 60
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Fetch Discord SDK (iOS)
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release download discord-sdk --pattern discord-ios.zip --dir /tmp
-          mkdir -p third_party/tango_discord/ios/Frameworks
-          unzip -q /tmp/discord-ios.zip -d third_party/tango_discord/ios/Frameworks
-          test -d third_party/tango_discord/ios/Frameworks/discord_partner_sdk.xcframework
-          test -f third_party/tango_discord/ios/Frameworks/Discord-License-Notices.txt
-
-      - name: Select Xcode 26.1.1
-        run: |
-          sudo xcode-select -s /Applications/Xcode_26.1.1.app
-          xcodebuild -version
-
-      - name: Restore Rust cache
-        id: rust-cache
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            ~/.cargo/registry/index
-            ~/.cargo/registry/cache
-            ~/.cargo/git/db
-            rust_backend/target
-          key: rust-ios-dev-${{ runner.os }}-${{ hashFiles('rust_backend/Cargo.lock', 'rust_backend/rust-toolchain.toml', 'scripts/build_rust_backend.sh') }}
-          restore-keys: |
-            rust-ios-dev-${{ runner.os }}-
-
-      - name: Build Rust backend for iOS (device only)
-        run: |
-          python3 - <<'PY'
-          import pathlib
-          src = pathlib.Path('scripts/build_rust_backend.sh').read_text()
-          src = src.replace('rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios', 'rustup target add aarch64-apple-ios')
-          src = src.replace('for target in aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios; do', 'for target in aarch64-apple-ios; do')
-          out = []
-          skip = 0
-          in_ios = False
-          for line in src.split(chr(10)):
-              if skip:
-                  skip -= 1
-                  continue
-              if 'PLATFORM" == "ios' in line:
-                  in_ios = True
-              if in_ios and line.strip() == 'xcrun lipo -create ' + chr(92):
-                  skip = 3
-                  continue
-              if '-library "$SIMULATOR_LIBRARY"' in line:
-                  continue
-              out.append(line)
-          pathlib.Path('scripts/_ci_rust_ios_device.sh').write_text(chr(10).join(out))
-          PY
-          bash scripts/_ci_rust_ios_device.sh ios
-
-      - name: Save Rust cache
-        if: steps.rust-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            ~/.cargo/registry/index
-            ~/.cargo/registry/cache
-            ~/.cargo/git/db
-            rust_backend/target
-          key: rust-ios-dev-${{ runner.os }}-${{ hashFiles('rust_backend/Cargo.lock', 'rust_backend/rust-toolchain.toml', 'scripts/build_rust_backend.sh') }}
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
-        with:
-          channel: "stable"
-          flutter-version-file: .fvmrc
-          cache: true
-
-      - name: Get Flutter dependencies
-        run: flutter pub get
-
-      - name: Normalize ffmpeg plugin shell scripts (strip CRLF)
-        run: |
-          find "$HOME/.pub-cache/hosted" -path "*ffmpeg_kit_flutter_new_audio*/scripts/*.sh" -type f -print0 |
-            while IFS= read -r -d '' f; do
-              perl -pi -e 's/\r$//' "$f"
-              chmod +x "$f"
-            done
-
-      - name: Generate app icons
-        run: dart run flutter_launcher_icons
-
-      - name: Install pods
-        working-directory: ios
-        run: pod install
-
-      - name: Build iOS (unsigned)
-        run: |
-          flutter build ios --release --no-codesign --config-only --target lib/main.dart \
-            --dart-define="GIT_COMMIT=$(git rev-parse --short=8 HEAD)"
-
-          cd ios
-          xcodebuild -workspace Runner.xcworkspace \
-            -scheme Runner \
-            -configuration Release \
-            -sdk iphoneos \
-            -destination 'generic/platform=iOS' \
-            -archivePath build/Runner.xcarchive \
-            archive \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="" \
-            DEBUG_INFORMATION_FORMAT=dwarf \
-            COMPILER_INDEX_STORE_ENABLE=NO
-
-      - name: Create IPA
-        run: |
-          mkdir -p build/ios/ipa
-          cd ios/build/Runner.xcarchive/Products/Applications
-          mkdir Payload
-          cp -r Runner.app Payload/
-          zip -r "$GITHUB_WORKSPACE/build/ios/ipa/Tango-ios-unsigned.ipa" Payload
-
-      - name: Re-sign IPA with provisioning profile
+      - name: Re-sign LocalPlayer.ipa with p12 + mobileprovision
         env:
           P12_BASE64: ${{ secrets.P12_BASE64 }}
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
@@ -147,6 +25,7 @@ jobs:
           for v in P12_BASE64 P12_PASSWORD PROFILE_BASE64; do
             [ -n "${!v}" ] || { echo "::error::Missing secret for $v"; exit 1; }
           done
+          test -f LocalPlayer.ipa || { echo "::error::LocalPlayer.ipa not found in repo root"; exit 1; }
 
           # Temporary keychain + certificate
           KC="$RUNNER_TEMP/signing.keychain-db"
@@ -172,10 +51,10 @@ jobs:
           # Unpack unsigned IPA
           WORK="$RUNNER_TEMP/resign"
           rm -rf "$WORK" && mkdir -p "$WORK"
-          unzip -q build/ios/ipa/Tango-ios-unsigned.ipa -d "$WORK"
-          APP="$WORK/Payload/Runner.app"
+          unzip -q LocalPlayer.ipa -d "$WORK"
+          APP="$(find "$WORK/Payload" -maxdepth 1 -name '*.app' | head -n1)"
 
-          # The profile covers one app id only, so drop extensions (e.g. PlayerWidget)
+          # The profile covers one app id only, so drop extensions
           rm -rf "$APP/PlugIns"
 
           /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $BUNDLE_ID" "$APP/Info.plist"
@@ -189,24 +68,23 @@ jobs:
           codesign --force --sign "$IDENTITY" --entitlements "$RUNNER_TEMP/entitlements.plist" --timestamp=none "$APP"
           codesign --verify --deep --strict "$APP"
 
-          (cd "$WORK" && zip -qr "$GITHUB_WORKSPACE/build/ios/ipa/Tango-ios-signed.ipa" Payload)
+          mkdir -p out
+          (cd "$WORK" && zip -qr "$GITHUB_WORKSPACE/out/LocalPlayer-signed.ipa" Payload)
 
-      - name: Upload IPA artifact
+      - name: Upload signed IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Tango-ios-signed
-          path: build/ios/ipa/Tango-ios-signed.ipa
+          name: LocalPlayer-signed
+          path: out/LocalPlayer-signed.ipa
 
-      - name: Publish IPA to GitHub Release
+      - name: Publish signed IPA to GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG="build-${{ github.run_number }}"
-          cp build/ios/ipa/Tango-ios-signed.ipa "build/ios/ipa/Tango-build-${{ github.run_number }}.ipa"
-          gh release create "$TAG" \
-            "build/ios/ipa/Tango-build-${{ github.run_number }}.ipa" \
+          TAG="localplayer-signed-${{ github.run_number }}"
+          gh release create "$TAG" out/LocalPlayer-signed.ipa \
             --target "$GITHUB_SHA" \
-            --title "Tango build ${{ github.run_number }}" \
-            --notes "Signed iOS build from commit ${GITHUB_SHA::8}." \
+            --title "LocalPlayer signed ${{ github.run_number }}" \
+            --notes "Re-signed LocalPlayer.ipa." \
             --prerelease
