@@ -324,13 +324,13 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
             ),
             const SliverToBoxAdapter(child: DiscordPresenceSettings()),
           ],
-          if (Platform.isAndroid)
+          if (Platform.isAndroid || Platform.isIOS)
             SliverToBoxAdapter(
               child: SettingsSectionHeader(
                 title: context.l10n.sectionAudioOutput,
               ),
             ),
-          if (Platform.isAndroid)
+          if (Platform.isAndroid || Platform.isIOS)
             SliverToBoxAdapter(
               child: SettingsGroup(
                 connected: true,
@@ -342,12 +342,14 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                       title: context.l10n.usbBitPerfect,
                       titleTrailing: const BetaBadge(),
                       subtitle: [
-                        context.l10n.usbBitPerfectDescription,
+                        Platform.isIOS
+                            ? 'Decodes FLAC, ALAC and WAV itself and asks iOS to run your DAC at the file\'s own sample rate, with no EQ, AutoMix, normalization or volume processing. Applies from the next track. Use the iPhone volume buttons.'
+                            : context.l10n.usbBitPerfectDescription,
                         if (settings.usbBitPerfect)
                           switch (status.reason) {
                             'active' =>
                               '${status.device} · ${status.transport == 'pcm'
-                                  ? '${status.bitDepth}-bit PCM'
+                                  ? '${status.bitDepth ?? '?'}-bit PCM'
                                   : status.transport == 'dop'
                                   ? 'DSD (DoP)'
                                   : 'DSD (Native)'} · ${(status.sampleRate! / 1000).toStringAsFixed(1)} kHz',
@@ -370,6 +372,7 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                       value: settings.usbBitPerfect,
                       onChanged: (value) async {
                         if (value &&
+                            Platform.isAndroid &&
                             !await _confirmAudioVolume(
                               context.l10n.usbVolumeWarning,
                             )) {
@@ -381,10 +384,10 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                               .setUsbBitPerfect(value);
                         }
                       },
-                      showDivider: settings.usbBitPerfect,
+                      showDivider: settings.usbBitPerfect && Platform.isAndroid,
                     ),
                   ),
-                  if (settings.usbBitPerfect) ...[
+                  if (settings.usbBitPerfect && Platform.isAndroid) ...[
                     SettingsSwitchItem(
                       icon: Icons.usb,
                       title: context.l10n.usbDirect,
