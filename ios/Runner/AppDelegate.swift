@@ -27,6 +27,7 @@ import UniformTypeIdentifiers
     private var playbackNotification: PlaybackNotificationBridge?
     private var audioRouteInfo: AudioRouteInfoBridge?
     private var audioDiagnostics: AudioDiagnosticsBridge?
+    private var bitPerfect: BitPerfectBridge?
     private var musicHaptics: MusicHapticsBridge?
     private let coreBackend: CoreBackend = createCoreBackend()
     private var pendingSessionGrantEvents: [[String: Any]] = []
@@ -127,6 +128,7 @@ import UniformTypeIdentifiers
         playbackNotification = PlaybackNotificationBridge(messenger: messenger)
         audioRouteInfo = AudioRouteInfoBridge(messenger: messenger)
         audioDiagnostics = AudioDiagnosticsBridge(messenger: messenger)
+        bitPerfect = BitPerfectBridge(messenger: messenger)
         musicHaptics = MusicHapticsBridge(messenger: messenger)
         registry.registrar(forPlugin: "AudioOutputView")?.register(
             AudioOutputViewFactory(messenger: messenger),
