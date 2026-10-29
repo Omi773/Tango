@@ -396,7 +396,7 @@ class _CookiePainter extends CustomPainter {
 class RhythmEqIcon extends StatefulWidget {
   const RhythmEqIcon({
     super.key,
-    required this.color,
+    this.color,
     this.isPlaying = true,
     this.size = 16,
     this.bars = 3,
@@ -405,7 +405,8 @@ class RhythmEqIcon extends StatefulWidget {
     this.gapFraction = 0.30,
   });
 
-  final Color color;
+  /// Bar color. Defaults to [ColorScheme.onPrimaryContainer].
+  final Color? color;
   final bool isPlaying;
   final double size;
   final int bars;
@@ -446,6 +447,8 @@ class _RhythmEqIconState extends State<RhythmEqIcon>
 
   @override
   Widget build(BuildContext context) {
+    final barColor =
+        widget.color ?? Theme.of(context).colorScheme.onPrimaryContainer;
     return ExcludeSemantics(
       child: TweenAnimationBuilder<double>(
         tween: Tween<double>(end: widget.isPlaying ? 1.0 : 0.0),
@@ -457,7 +460,7 @@ class _RhythmEqIconState extends State<RhythmEqIcon>
             painter: _EqPainter(
               clock: _clock,
               activity: activity,
-              color: widget.color,
+              color: barColor,
               bars: widget.bars,
               minFraction: widget.minHeightFraction,
               maxFraction: widget.maxHeightFraction,
