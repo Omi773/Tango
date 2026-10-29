@@ -8,6 +8,7 @@ import 'package:tango/theme/app_theme.dart';
 import 'package:tango/models/theme_settings.dart';
 import 'package:tango/theme/tango_theme.dart';
 import 'package:tango/theme/rhythm_theme.dart';
+import 'package:tango/theme/rhythm_palette.dart';
 
 class DynamicColorWrapper extends ConsumerWidget {
   final Widget Function(ThemeData light, ThemeData dark, ThemeMode mode)
@@ -55,6 +56,11 @@ class DynamicColorWrapper extends ConsumerWidget {
             darkDynamic != null) {
           lightScheme = _toFlutterColorScheme(lightDynamic);
           darkScheme = _toFlutterColorScheme(darkDynamic);
+        } else if (themeSettings.style == AppThemeStyle.rhythm &&
+            themeSettings.seedColorValue == kDefaultSeedColor) {
+          // Rhythm's own baseline palette until the person picks a seed.
+          lightScheme = RhythmPalette.light;
+          darkScheme = RhythmPalette.dark;
         } else {
           final seedColor = themeSettings.seedColor;
           lightScheme = ColorScheme.fromSeed(
