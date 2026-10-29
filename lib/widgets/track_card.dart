@@ -7,6 +7,7 @@ import 'package:tango/widgets/animation_utils.dart';
 import 'package:tango/widgets/app_content_card.dart';
 import 'package:tango/widgets/desktop/context_menu.dart';
 import 'package:tango/widgets/now_playing_indicator.dart';
+import 'package:tango/widgets/rhythm/rhythm_ui.dart';
 import 'package:tango/widgets/settings_group.dart';
 
 /// How a [TrackCard] paints its container.
@@ -304,7 +305,7 @@ class TrackCard extends StatelessWidget {
                 ),
                 if (current) ...[
                   SizedBox(width: tokens.gapSm),
-                  NowPlayingIndicator(playing: isPlaying, color: contentColor),
+                  RhythmEqIcon(isPlaying: isPlaying, color: contentColor),
                 ],
                 if (trailing != null && !isSelectionMode) ...[
                   SizedBox(width: tokens.gapSm),
