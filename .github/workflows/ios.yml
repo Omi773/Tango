@@ -6,6 +6,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: ios-build
+  cancel-in-progress: true
+
 jobs:
   build-ios:
     runs-on: macos-15
@@ -79,17 +83,18 @@ jobs:
           body: Restoring Rust cache
           symbol: externaldrive.fill
 
-      - name: Cache Rust (cargo + target)
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      - name: Restore Rust cache
+        id: rust-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             ~/.cargo/registry/index
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             rust_backend/target
-          key: rust-ios-${{ runner.os }}-${{ hashFiles('rust_backend/Cargo.lock', 'rust_backend/rust-toolchain.toml', 'scripts/build_rust_backend.sh') }}
+          key: rust-ios-dev-${{ runner.os }}-${{ hashFiles('rust_backend/Cargo.lock', 'rust_backend/rust-toolchain.toml', 'scripts/build_rust_backend.sh') }}
           restore-keys: |
-            rust-ios-${{ runner.os }}-
+            rust-ios-dev-${{ runner.os }}-
 
       - name: Live Activity - 4/14 Cache Rust (cargo + target) done
         if: steps.notify.outputs.activity-id != ''
@@ -103,8 +108,44 @@ jobs:
           body: Building Rust backend
           symbol: hammer.fill
 
-      - name: Build Rust backend for iOS
-        run: bash scripts/build_ios.sh
+      # Device-only: the signed IPA never uses the two simulator builds, so they
+      # are skipped (about two thirds of the iOS Rust compiling).
+      - name: Build Rust backend for iOS (device only)
+        run: |
+          python3 - <<'PY'
+          import pathlib
+          src = pathlib.Path('scripts/build_rust_backend.sh').read_text()
+          src = src.replace('rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios', 'rustup target add aarch64-apple-ios')
+          src = src.replace('for target in aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios; do', 'for target in aarch64-apple-ios; do')
+          out = []
+          skip = 0
+          in_ios = False
+          for line in src.split(chr(10)):
+              if skip:
+                  skip -= 1
+                  continue
+              if 'PLATFORM" == "ios' in line:
+                  in_ios = True
+              if in_ios and line.strip() == 'xcrun lipo -create ' + chr(92):
+                  skip = 3
+                  continue
+              if '-library "$SIMULATOR_LIBRARY"' in line:
+                  continue
+              out.append(line)
+          pathlib.Path('scripts/_ci_rust_ios_device.sh').write_text(chr(10).join(out))
+          PY
+          bash scripts/_ci_rust_ios_device.sh ios
+
+      - name: Save Rust cache
+        if: steps.rust-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            rust_backend/target
+          key: rust-ios-dev-${{ runner.os }}-${{ hashFiles('rust_backend/Cargo.lock', 'rust_backend/rust-toolchain.toml', 'scripts/build_rust_backend.sh') }}
 
       - name: Live Activity - 5/14 Build Rust backend for iOS done
         if: steps.notify.outputs.activity-id != ''
