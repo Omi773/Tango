@@ -558,6 +558,8 @@ class _AudioFacts {
       signalPath = l10n.audioInfoPathDirect;
     } else if (direct && usb.driver == 'aaudio_exclusive') {
       signalPath = l10n.audioInfoPathExclusive;
+    } else if (direct && usb.driver == 'ios_coreaudio') {
+      signalPath = 'Native decoder, unity gain, iOS output';
     } else {
       signalPath = l10n.audioInfoPathSystem;
     }
@@ -607,7 +609,14 @@ class _AudioFacts {
   }
 
   // A preferred mixer format is configuration, not proof of active playback.
-  bool get _bitPerfect => direct;
+  // On iOS the system still owns the hardware: unaltered only while its output
+  // rate equals the file's rate.
+  bool get _bitPerfect =>
+      direct &&
+      (usb.driver != 'ios_coreaudio' ||
+          sampleRate == null ||
+          usb.sampleRate == null ||
+          sampleRate == usb.sampleRate);
 
   int? get _outputRate {
     if (direct) return usb.sampleRate;
@@ -693,7 +702,8 @@ class _AudioFacts {
         ),
       if (route?.headTracking == true)
         _Fact(l10n.audioInfoHeadTracking, l10n.audioInfoSupported),
-      if (route?.fixedVolume == true || direct)
+      if (route?.fixedVolume == true ||
+          (direct && usb.driver != 'ios_coreaudio'))
         _Fact(l10n.nowPlayingVolume, l10n.audioInfoFixedVolume)
       else if (volume != null)
         _Fact(
