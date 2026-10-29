@@ -24,7 +24,7 @@ double normalizeTangoGlassClarity(num? value) =>
     ? value.toDouble().clamp(0.0, 1.0)
     : kDefaultTangoGlassClarity;
 
-enum AppThemeStyle { material, tango }
+enum AppThemeStyle { material, tango, rhythm }
 
 enum TangoAccent { red, orange, green, teal, blue, purple, pink }
 
