@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tango/models/theme_settings.dart';
 import 'package:tango/theme/app_tokens.dart';
+import 'package:tango/theme/rhythm_theme.dart';
 
 /// Flutter counterpart of Tango's iPhone visual system. Reference values come
 /// from AccentColor.colorset, Components.swift, PlayerViews.swift and Motion.md
@@ -453,6 +454,7 @@ class TangoTheme extends ThemeExtension<TangoTheme> {
 
 extension TangoThemeContext on BuildContext {
   bool get isTango => Theme.of(this).extension<TangoTheme>() != null;
+  bool get isRhythm => Theme.of(this).extension<RhythmStyle>() != null;
 }
 
 /// Settings uses iOS's inset grouped surfaces while the music library keeps

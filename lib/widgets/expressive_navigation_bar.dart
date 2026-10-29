@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:tango/theme/material_expressive.dart';
+import 'package:tango/theme/tango_theme.dart';
 
 class ExpressiveNavigationBar extends StatelessWidget {
   const ExpressiveNavigationBar({
@@ -20,13 +21,15 @@ class ExpressiveNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!materialExpressiveEnabled(context)) {
+    if (context.isRhythm || !materialExpressiveEnabled(context)) {
       return NavigationBar(
         selectedIndex: selectedIndex,
         onDestinationSelected: onDestinationSelected,
-        animationDuration: Duration.zero,
+        animationDuration: context.isRhythm
+            ? const Duration(milliseconds: 300)
+            : Duration.zero,
         elevation: 0,
-        height: isTablet ? 72 : 64,
+        height: context.isRhythm ? 72 : (isTablet ? 72 : 64),
         backgroundColor: backgroundColor,
         destinations: destinations,
       );

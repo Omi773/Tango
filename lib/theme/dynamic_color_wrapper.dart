@@ -7,6 +7,7 @@ import 'package:tango/providers/custom_font_provider.dart';
 import 'package:tango/theme/app_theme.dart';
 import 'package:tango/models/theme_settings.dart';
 import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/theme/rhythm_theme.dart';
 
 class DynamicColorWrapper extends ConsumerWidget {
   final Widget Function(ThemeData light, ThemeData dark, ThemeMode mode)
@@ -70,17 +71,32 @@ class DynamicColorWrapper extends ConsumerWidget {
           darkScheme = _applyAmoledColors(darkScheme);
         }
 
-        final lightTheme = AppTheme.light(
-          dynamicScheme: lightScheme,
-          useSystemFont: themeSettings.useSystemFont,
-          fontFamily: fontFamily,
-        );
-        final darkTheme = AppTheme.dark(
-          dynamicScheme: darkScheme,
-          isAmoled: themeSettings.useAmoled,
-          useSystemFont: themeSettings.useSystemFont,
-          fontFamily: fontFamily,
-        );
+        final isRhythm = themeSettings.style == AppThemeStyle.rhythm;
+
+        final lightTheme = isRhythm
+            ? RhythmTheme.light(
+                dynamicScheme: lightScheme,
+                useSystemFont: themeSettings.useSystemFont,
+                fontFamily: fontFamily,
+              )
+            : AppTheme.light(
+                dynamicScheme: lightScheme,
+                useSystemFont: themeSettings.useSystemFont,
+                fontFamily: fontFamily,
+              );
+        final darkTheme = isRhythm
+            ? RhythmTheme.dark(
+                dynamicScheme: darkScheme,
+                isAmoled: themeSettings.useAmoled,
+                useSystemFont: themeSettings.useSystemFont,
+                fontFamily: fontFamily,
+              )
+            : AppTheme.dark(
+                dynamicScheme: darkScheme,
+                isAmoled: themeSettings.useAmoled,
+                useSystemFont: themeSettings.useSystemFont,
+                fontFamily: fontFamily,
+              );
 
         return builder(lightTheme, darkTheme, themeSettings.themeMode);
       },

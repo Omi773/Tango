@@ -44,11 +44,11 @@ class AppearanceSettingsPage extends ConsumerWidget {
                         spacing: 8,
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          Text(
-                            style == AppThemeStyle.tango
-                                ? 'Tango'
-                                : 'Material',
-                          ),
+                          Text(switch (style) {
+                            AppThemeStyle.tango => 'Tango',
+                            AppThemeStyle.rhythm => 'Rhythm',
+                            AppThemeStyle.material => 'Material',
+                          }),
                           if (style == AppThemeStyle.tango)
                             Container(
                               padding: const EdgeInsets.symmetric(
@@ -177,7 +177,7 @@ class AppearanceSettingsPage extends ConsumerWidget {
                     onChanged: (mode) =>
                         ref.read(themeProvider.notifier).setThemeMode(mode),
                   ),
-                  if (themeSettings.style == AppThemeStyle.material &&
+                  if (themeSettings.style != AppThemeStyle.tango &&
                       Theme.of(context).brightness == Brightness.dark)
                     SettingsSwitchItem(
                       icon: Icons.brightness_2,

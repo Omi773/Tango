@@ -48,7 +48,7 @@ class AppSearchField extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final tango = context.isTango;
     final radius = BorderRadius.circular(
-      tango ? 28 : context.tokens.radiusSheet,
+      tango ? 28 : (context.isRhythm ? 100 : context.tokens.radiusSheet),
     );
 
     final field = ValueListenableBuilder<TextEditingValue>(

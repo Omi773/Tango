@@ -710,7 +710,7 @@ class _ThemePicker extends ConsumerWidget {
     final l10n = context.l10n;
     return Column(
       children: [
-        for (final style in AppThemeStyle.values)
+        for (final style in AppThemeStyle.values.where((s) => s != AppThemeStyle.rhythm))
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Theme(

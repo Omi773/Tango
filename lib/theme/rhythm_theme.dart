@@ -3,8 +3,23 @@ import 'package:tango/theme/app_theme.dart';
 import 'package:tango/theme/app_tokens.dart';
 import 'package:tango/utils/desktop_platform.dart';
 
-/// Rhythm's look: big rounded corners, pill navigation, stadium chips,
-/// thick sliders and grouped list items.
+/// Marker that tells widgets the Rhythm style is active.
+/// Use `context.isRhythm` (defined next to `context.isTango`).
+@immutable
+class RhythmStyle extends ThemeExtension<RhythmStyle> {
+  const RhythmStyle();
+
+  @override
+  RhythmStyle copyWith() => this;
+
+  @override
+  RhythmStyle lerp(ThemeExtension<RhythmStyle>? other, double t) => this;
+}
+
+/// Rhythm's look on top of Tango's Material 3 Expressive theme: big rounded
+/// corners, pill navigation and tabs, stadium chips and search, thick
+/// sliders, rounded sheets, menus and snack bars, larger artwork and
+/// larger page titles.
 class RhythmTheme {
   static const double radiusXs = 8;
   static const double radiusSm = 12;
@@ -70,18 +85,32 @@ class RhythmTheme {
     final scheme = base.colorScheme;
     final text = base.textTheme;
 
-    final tokens = (isDesktopPlatform ? AppTokens.desktop : AppTokens.standard)
+    var tokens = (isDesktopPlatform ? AppTokens.desktop : AppTokens.standard)
         .copyWith(
+          radiusThumb: 12,
           radiusCover: 20,
           radiusControl: 20,
           radiusCard: radiusLg,
           radiusSheet: radiusXl,
+          lyricsLineHeight: 1.4,
+          lyricsLinePaddingV: 14,
         );
+    if (!isDesktopPlatform) {
+      // Larger artwork and page titles, like Rhythm's phone layouts.
+      tokens = tokens.copyWith(
+        coverMini: 52,
+        coverCompact: 52,
+        coverList: 60,
+        headerExpandedHeight: 140,
+        headerExpandedTitleSize: 34,
+      );
+    }
 
     return base.copyWith(
       extensions: <ThemeExtension<dynamic>>[
         ...base.extensions.values.where((e) => e is! AppTokens),
         tokens,
+        const RhythmStyle(),
       ],
       appBarTheme: base.appBarTheme.copyWith(
         backgroundColor: scheme.surface,
@@ -118,6 +147,16 @@ class RhythmTheme {
         backgroundColor: scheme.surfaceContainerHighest,
         selectedColor: scheme.secondaryContainer,
       ),
+      tabBarTheme: base.tabBarTheme.copyWith(
+        dividerColor: Colors.transparent,
+        indicatorSize: TabBarIndicatorSize.tab,
+        indicator: BoxDecoration(
+          color: scheme.secondaryContainer,
+          borderRadius: BorderRadius.circular(100),
+        ),
+        labelColor: scheme.onSecondaryContainer,
+        unselectedLabelColor: scheme.onSurfaceVariant,
+      ),
       searchBarTheme: SearchBarThemeData(
         elevation: const WidgetStatePropertyAll(0),
         backgroundColor: WidgetStatePropertyAll(scheme.surfaceContainerHigh),
@@ -131,6 +170,30 @@ class RhythmTheme {
         activeTrackColor: scheme.primary,
         inactiveTrackColor: scheme.surfaceContainerHighest,
         overlayShape: SliderComponentShape.noOverlay,
+      ),
+      switchTheme: base.switchTheme.copyWith(
+        thumbIcon: WidgetStateProperty.resolveWith<Icon?>(
+          (states) => states.contains(WidgetState.selected)
+              ? const Icon(Icons.check)
+              : null,
+        ),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radiusMd),
+        ),
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: scheme.surfaceContainerHigh,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radiusLg),
+        ),
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radiusXl),
+        ),
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: scheme.surfaceContainerLow,
