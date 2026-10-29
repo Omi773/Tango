@@ -1,0 +1,401 @@
+name: Apply Rhythm theme (full)
+
+# Run once: Actions tab -> "Apply Rhythm theme (full)" -> Run workflow.
+# It starts clean: it deletes your current lib/theme/rhythm_theme.dart,
+# rewrites the AppThemeStyle line, then applies everything from A to Z.
+# Safe to run again.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start clean (remove old rhythm_theme.dart)
+        run: |
+          rm -f lib/theme/rhythm_theme.dart
+          mkdir -p lib/theme
+
+      - name: Add rhythm_theme.dart
+        run: |
+          cat > lib/theme/rhythm_theme.dart <<'DART_EOF'
+          import 'package:flutter/material.dart';
+          import 'package:tango/theme/app_theme.dart';
+          import 'package:tango/theme/app_tokens.dart';
+          import 'package:tango/utils/desktop_platform.dart';
+
+          /// Marker that tells widgets the Rhythm style is active.
+          /// Use `context.isRhythm` (defined next to `context.isTango`).
+          @immutable
+          class RhythmStyle extends ThemeExtension<RhythmStyle> {
+            const RhythmStyle();
+
+            @override
+            RhythmStyle copyWith() => this;
+
+            @override
+            RhythmStyle lerp(ThemeExtension<RhythmStyle>? other, double t) => this;
+          }
+
+          /// Rhythm's look on top of Tango's Material 3 Expressive theme: big rounded
+          /// corners, pill navigation and tabs, stadium chips and search, thick
+          /// sliders, rounded sheets, menus and snack bars, larger artwork and
+          /// larger page titles.
+          class RhythmTheme {
+            static const double radiusXs = 8;
+            static const double radiusSm = 12;
+            static const double radiusMd = 16;
+            static const double radiusLg = 24;
+            static const double radiusXl = 28;
+
+            /// Rounded ends, tight middle (Rhythm's grouped settings and lists).
+            static BorderRadius grouped(int index, int count) {
+              const big = Radius.circular(radiusLg);
+              const small = Radius.circular(radiusXs);
+              if (count <= 1) return BorderRadius.circular(radiusLg);
+              if (index == 0) {
+                return const BorderRadius.only(
+                  topLeft: big,
+                  topRight: big,
+                  bottomLeft: small,
+                  bottomRight: small,
+                );
+              }
+              if (index == count - 1) {
+                return const BorderRadius.only(
+                  topLeft: small,
+                  topRight: small,
+                  bottomLeft: big,
+                  bottomRight: big,
+                );
+              }
+              return BorderRadius.circular(radiusXs);
+            }
+
+            static ThemeData light({
+              ColorScheme? dynamicScheme,
+              Color? seedColor,
+              bool useSystemFont = false,
+              String? fontFamily,
+            }) => _apply(
+              AppTheme.light(
+                dynamicScheme: dynamicScheme,
+                seedColor: seedColor,
+                useSystemFont: useSystemFont,
+                fontFamily: fontFamily,
+              ),
+            );
+
+            static ThemeData dark({
+              ColorScheme? dynamicScheme,
+              Color? seedColor,
+              bool isAmoled = false,
+              bool useSystemFont = false,
+              String? fontFamily,
+            }) => _apply(
+              AppTheme.dark(
+                dynamicScheme: dynamicScheme,
+                seedColor: seedColor,
+                isAmoled: isAmoled,
+                useSystemFont: useSystemFont,
+                fontFamily: fontFamily,
+              ),
+            );
+
+            static ThemeData _apply(ThemeData base) {
+              final scheme = base.colorScheme;
+              final text = base.textTheme;
+
+              var tokens = (isDesktopPlatform ? AppTokens.desktop : AppTokens.standard)
+                  .copyWith(
+                    radiusThumb: 12,
+                    radiusCover: 20,
+                    radiusControl: 20,
+                    radiusCard: radiusLg,
+                    radiusSheet: radiusXl,
+                    lyricsLineHeight: 1.4,
+                    lyricsLinePaddingV: 14,
+                  );
+              if (!isDesktopPlatform) {
+                // Larger artwork and page titles, like Rhythm's phone layouts.
+                tokens = tokens.copyWith(
+                  coverMini: 52,
+                  coverCompact: 52,
+                  coverList: 60,
+                  headerExpandedHeight: 140,
+                  headerExpandedTitleSize: 34,
+                );
+              }
+
+              return base.copyWith(
+                extensions: <ThemeExtension<dynamic>>[
+                  ...base.extensions.values.where((e) => e is! AppTokens),
+                  tokens,
+                  const RhythmStyle(),
+                ],
+                appBarTheme: base.appBarTheme.copyWith(
+                  backgroundColor: scheme.surface,
+                  surfaceTintColor: Colors.transparent,
+                  scrolledUnderElevation: 0,
+                  centerTitle: false,
+                ),
+                cardTheme: CardThemeData(
+                  elevation: 0,
+                  color: scheme.surfaceContainerHigh,
+                  margin: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(radiusLg),
+                  ),
+                ),
+                listTileTheme: ListTileThemeData(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(radiusMd),
+                  ),
+                ),
+                navigationBarTheme: NavigationBarThemeData(
+                  height: 72,
+                  backgroundColor: scheme.surfaceContainer,
+                  indicatorColor: scheme.secondaryContainer,
+                  indicatorShape: const StadiumBorder(),
+                  labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+                  labelTextStyle: WidgetStatePropertyAll(
+                    text.labelMedium?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                chipTheme: base.chipTheme.copyWith(
+                  shape: const StadiumBorder(),
+                  side: BorderSide.none,
+                  backgroundColor: scheme.surfaceContainerHighest,
+                  selectedColor: scheme.secondaryContainer,
+                ),
+                tabBarTheme: base.tabBarTheme.copyWith(
+                  dividerColor: Colors.transparent,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: BoxDecoration(
+                    color: scheme.secondaryContainer,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  labelColor: scheme.onSecondaryContainer,
+                  unselectedLabelColor: scheme.onSurfaceVariant,
+                ),
+                searchBarTheme: SearchBarThemeData(
+                  elevation: const WidgetStatePropertyAll(0),
+                  backgroundColor: WidgetStatePropertyAll(scheme.surfaceContainerHigh),
+                  shape: const WidgetStatePropertyAll(StadiumBorder()),
+                  padding: const WidgetStatePropertyAll(
+                    EdgeInsets.symmetric(horizontal: 20),
+                  ),
+                ),
+                sliderTheme: base.sliderTheme.copyWith(
+                  trackHeight: 10,
+                  activeTrackColor: scheme.primary,
+                  inactiveTrackColor: scheme.surfaceContainerHighest,
+                  overlayShape: SliderComponentShape.noOverlay,
+                ),
+                switchTheme: base.switchTheme.copyWith(
+                  thumbIcon: WidgetStateProperty.resolveWith<Icon?>(
+                    (states) => states.contains(WidgetState.selected)
+                        ? const Icon(Icons.check)
+                        : null,
+                  ),
+                ),
+                snackBarTheme: SnackBarThemeData(
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(radiusMd),
+                  ),
+                ),
+                popupMenuTheme: PopupMenuThemeData(
+                  color: scheme.surfaceContainerHigh,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(radiusLg),
+                  ),
+                ),
+                floatingActionButtonTheme: FloatingActionButtonThemeData(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(radiusXl),
+                  ),
+                ),
+                bottomSheetTheme: BottomSheetThemeData(
+                  backgroundColor: scheme.surfaceContainerLow,
+                  showDragHandle: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(radiusXl)),
+                  ),
+                ),
+                dialogTheme: DialogThemeData(
+                  backgroundColor: scheme.surfaceContainerHigh,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(radiusXl),
+                  ),
+                ),
+                filledButtonTheme: FilledButtonThemeData(
+                  style: FilledButton.styleFrom(
+                    shape: const StadiumBorder(),
+                    minimumSize: const Size(64, 48),
+                  ),
+                ),
+              );
+            }
+          }
+          DART_EOF
+
+      - name: Patch existing files
+        run: |
+          cat > /tmp/patch.py <<'PY_EOF'
+          import pathlib, sys
+
+          ROOT = pathlib.Path("lib")
+          failed = []
+
+          def patch(rel, edits):
+              p = ROOT / rel
+              s = p.read_text(encoding="utf-8")
+              for old, new, marker in edits:
+                  if marker in s:
+                      print(f"skip (already patched): {rel}")
+                      continue
+                  if s.count(old) != 1:
+                      failed.append(f"{rel}: expected 1 match, found {s.count(old)} for: {old[:60]!r}")
+                      continue
+                  s = s.replace(old, new)
+                  print(f"patched: {rel}")
+              p.write_text(s, encoding="utf-8")
+
+          # Reset the style enum to the exact final form, whatever it looks like now.
+          import re
+          _ts = ROOT / "models/theme_settings.dart"
+          _s = _ts.read_text(encoding="utf-8")
+          _s, _n = re.subn(r"enum AppThemeStyle\s*\{[^}]*\}",
+                           "enum AppThemeStyle { material, tango, rhythm }", _s, count=1)
+          if _n != 1:
+              failed.append("models/theme_settings.dart: enum AppThemeStyle not found")
+          else:
+              _ts.write_text(_s, encoding="utf-8")
+              print("set: models/theme_settings.dart enum")
+
+          old_block = """        final lightTheme = AppTheme.light(
+                    dynamicScheme: lightScheme,
+                    useSystemFont: themeSettings.useSystemFont,
+                    fontFamily: fontFamily,
+                  );
+                  final darkTheme = AppTheme.dark(
+                    dynamicScheme: darkScheme,
+                    isAmoled: themeSettings.useAmoled,
+                    useSystemFont: themeSettings.useSystemFont,
+                    fontFamily: fontFamily,
+                  );
+          """
+          new_block = """        final isRhythm = themeSettings.style == AppThemeStyle.rhythm;
+
+                  final lightTheme = isRhythm
+                      ? RhythmTheme.light(
+                          dynamicScheme: lightScheme,
+                          useSystemFont: themeSettings.useSystemFont,
+                          fontFamily: fontFamily,
+                        )
+                      : AppTheme.light(
+                          dynamicScheme: lightScheme,
+                          useSystemFont: themeSettings.useSystemFont,
+                          fontFamily: fontFamily,
+                        );
+                  final darkTheme = isRhythm
+                      ? RhythmTheme.dark(
+                          dynamicScheme: darkScheme,
+                          isAmoled: themeSettings.useAmoled,
+                          useSystemFont: themeSettings.useSystemFont,
+                          fontFamily: fontFamily,
+                        )
+                      : AppTheme.dark(
+                          dynamicScheme: darkScheme,
+                          isAmoled: themeSettings.useAmoled,
+                          useSystemFont: themeSettings.useSystemFont,
+                          fontFamily: fontFamily,
+                        );
+          """
+          patch("theme/dynamic_color_wrapper.dart", [
+              ("import 'package:tango/theme/tango_theme.dart';\n",
+               "import 'package:tango/theme/tango_theme.dart';\nimport 'package:tango/theme/rhythm_theme.dart';\n",
+               "rhythm_theme.dart"),
+              (old_block, new_block, "RhythmTheme.light"),
+          ])
+
+          patch("screens/settings/appearance_settings_page.dart", [
+              ("""                          Text(
+                                      style == AppThemeStyle.tango
+                                          ? 'Tango'
+                                          : 'Material',
+                                    ),
+          """,
+               """                          Text(switch (style) {
+                                      AppThemeStyle.tango => 'Tango',
+                                      AppThemeStyle.rhythm => 'Rhythm',
+                                      AppThemeStyle.material => 'Material',
+                                    }),
+          """, "AppThemeStyle.rhythm => 'Rhythm'"),
+              ("if (themeSettings.style == AppThemeStyle.material &&",
+               "if (themeSettings.style != AppThemeStyle.tango &&",
+               "themeSettings.style != AppThemeStyle.tango &&"),
+          ])
+
+          patch("screens/upgrade_intro_screen.dart", [(
+              "for (final style in AppThemeStyle.values)",
+              "for (final style in AppThemeStyle.values.where((s) => s != AppThemeStyle.rhythm))",
+              "s != AppThemeStyle.rhythm",
+          )])
+
+
+          patch("theme/tango_theme.dart", [
+              ("import 'package:tango/theme/app_tokens.dart';\n",
+               "import 'package:tango/theme/app_tokens.dart';\nimport 'package:tango/theme/rhythm_theme.dart';\n",
+               "rhythm_theme.dart"),
+              ("  bool get isTango => Theme.of(this).extension<TangoTheme>() != null;\n",
+               "  bool get isTango => Theme.of(this).extension<TangoTheme>() != null;\n  bool get isRhythm => Theme.of(this).extension<RhythmStyle>() != null;\n",
+               "bool get isRhythm"),
+          ])
+
+          patch("widgets/expressive_navigation_bar.dart", [
+              ("import 'package:tango/theme/material_expressive.dart';\n",
+               "import 'package:tango/theme/material_expressive.dart';\nimport 'package:tango/theme/tango_theme.dart';\n",
+               "package:tango/theme/tango_theme.dart"),
+              ("    if (!materialExpressiveEnabled(context)) {\n      return NavigationBar(",
+               "    if (context.isRhythm || !materialExpressiveEnabled(context)) {\n      return NavigationBar(",
+               "context.isRhythm || !materialExpressiveEnabled"),
+              ("        animationDuration: Duration.zero,\n",
+               "        animationDuration: context.isRhythm\n            ? const Duration(milliseconds: 300)\n            : Duration.zero,\n",
+               "animationDuration: context.isRhythm"),
+              ("        height: isTablet ? 72 : 64,\n",
+               "        height: context.isRhythm ? 72 : (isTablet ? 72 : 64),\n",
+               "height: context.isRhythm"),
+          ])
+
+          patch("widgets/app_search_field.dart", [
+              ("      tango ? 28 : context.tokens.radiusSheet,\n",
+               "      tango ? 28 : (context.isRhythm ? 100 : context.tokens.radiusSheet),\n",
+               "context.isRhythm ? 100"),
+          ])
+
+          if failed:
+              print("\nPATCH FAILED:")
+              for f in failed:
+                  print(" -", f)
+              sys.exit(1)
+          print("\nAll patches applied.")
+          PY_EOF
+          python3 /tmp/patch.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A lib
+          git diff --cached --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "Apply Rhythm theme style (full)"
+          git push
