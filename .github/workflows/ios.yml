@@ -362,6 +362,12 @@ jobs:
           body: Publishing release
           symbol: paperplane.fill
 
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Tango-ios-signed
+          path: build/ios/ipa/Tango-ios-signed.ipa
+
       - name: Publish IPA to GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
