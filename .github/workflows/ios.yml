@@ -44,26 +44,12 @@ jobs:
       - name: Build Rust backend for iOS
         run: bash scripts/build_ios.sh
 
-      - name: Cache CocoaPods
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ios/Pods
-          key: pods-rust-${{ runner.os }}-${{ hashFiles('ios/Podfile', 'ios/Podfile.lock', 'rust_backend/TangoBackend.podspec', 'rust_backend/Cargo.lock') }}
-          restore-keys: pods-rust-${{ runner.os }}-
-
       - name: Setup Flutter
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
         with:
           channel: "stable"
           flutter-version-file: .fvmrc
           cache: true
-
-      - name: Cache pub dependencies
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.pub-cache
-          key: pub-${{ runner.os }}-${{ hashFiles('pubspec.lock') }}
-          restore-keys: pub-${{ runner.os }}-
 
       - name: Get Flutter dependencies
         run: flutter pub get
@@ -99,7 +85,9 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM=""
+            DEVELOPMENT_TEAM="" \
+            DEBUG_INFORMATION_FORMAT=dwarf \
+            COMPILER_INDEX_STORE_ENABLE=NO
 
       - name: Create IPA
         run: |
@@ -173,6 +161,6 @@ jobs:
         run: |
           set -euo pipefail
           [ -n "$RCLONE_CONFIG_GDRIVE_CLIENT_ID" ] && [ -n "$GDRIVE_REFRESH_TOKEN" ] || { echo "::error::Missing Google Drive secrets"; exit 1; }
-          brew install rclone
+          HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_ENV_HINTS=1 brew install rclone
           export RCLONE_CONFIG_GDRIVE_TOKEN="{\"access_token\":\"\",\"token_type\":\"Bearer\",\"refresh_token\":\"$GDRIVE_REFRESH_TOKEN\",\"expiry\":\"2000-01-01T00:00:00Z\"}"
           rclone copyto build/ios/ipa/Tango-ios-signed.ipa "gdrive:Tango-builds/Tango-build-${{ github.run_number }}.ipa" -v
