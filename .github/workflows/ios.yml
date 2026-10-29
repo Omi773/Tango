@@ -18,7 +18,7 @@ jobs:
           action: start
           device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
           device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
-          title: Tango iOS build #${{ github.run_number }}
+          title: "Tango iOS build #${{ github.run_number }}"
           body: Checking out repository
           symbol: arrow.down.circle.fill
           tint: 6750A4
@@ -343,7 +343,7 @@ jobs:
           device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
           device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
           activity-id: ${{ steps.notify.outputs.activity-id }}
-          body: ${{ job.status == 'success' && format('Build #{0} released', github.run_number) || format('Build {0}', job.status) }}
+          body: "${{ job.status == 'success' && format('Build #{0} released', github.run_number) || format('Build {0}', job.status) }}"
           step: ${{ job.status == 'success' && '14' || '' }}
           symbol: ${{ job.status == 'success' && 'checkmark.circle.fill' || 'xmark.circle.fill' }}
           tint: ${{ job.status == 'success' && '34C759' || 'FF3B30' }}
