@@ -104,7 +104,7 @@ class AudioplayersPlaybackDeck implements PlaybackDeck {
            (Platform.isAndroid ||
                Platform.isIOS ||
                (isDesktopPlatform && Platform.isMacOS)),
-       _nativeAvailable = nativeAvailable ?? Platform.isAndroid {
+       _nativeAvailable = nativeAvailable ?? (Platform.isAndroid || Platform.isIOS) {
     playbackEqualizer.addListener(_equalizerChanged);
     playbackOutputVolume.addListener(_outputVolumeChanged);
     _subscriptions.addAll([
@@ -403,6 +403,10 @@ class AudioplayersPlaybackDeck implements PlaybackDeck {
     switch (event['event']) {
       case 'active':
         usbAudioStatus.value = _preparedStatus;
+      case 'interrupted':
+        // A call or Siri paused iOS output. The route is intact, so resume works.
+        _timer?.cancel();
+        _setState(PlaybackDeckState.paused);
       case 'paused':
         _routeLost = true;
         _timer?.cancel();
