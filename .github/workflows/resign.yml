@@ -3,31 +3,37 @@ name: Re-sign IPA (no build)
 on:
   workflow_dispatch:
     inputs:
-      release_tag:
-        description: "Release tag that has the unsigned .ipa attached"
-        required: true
-        default: "unsigned"
+      run_id:
+        description: "Run ID of the build to take the unsigned IPA from (leave empty = latest successful build)"
+        required: false
+        default: ""
 
 permissions:
-  contents: write
+  contents: read
+  actions: read
 
 jobs:
   resign:
     runs-on: macos-15
 
     steps:
-      - name: Download unsigned IPA from release
+      - name: Download unsigned IPA from build run
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          mkdir -p in
-          gh release download "${{ inputs.release_tag }}" \
-            --repo "$GITHUB_REPOSITORY" \
-            --pattern "*unsigned*.ipa" \
-            --dir in
-          ls -la in
-          mv in/*unsigned*.ipa unsigned.ipa
+          RUN_ID="${{ inputs.run_id }}"
+          if [ -z "$RUN_ID" ]; then
+            RUN_ID="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ios.yml \
+              --status success --limit 1 --json databaseId --jq '.[0].databaseId')"
+          fi
+          [ -n "$RUN_ID" ] || { echo "::error::No successful build run found"; exit 1; }
+          echo "Using run $RUN_ID"
+          mkdir -p build/ios/ipa
+          gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" \
+            --name Tango-ios-unsigned --dir build/ios/ipa
+          ls -la build/ios/ipa
+          test -f build/ios/ipa/Tango-ios-unsigned.ipa
 
       - name: Re-sign IPA with p12 + mobileprovision
         env:
@@ -64,7 +70,7 @@ jobs:
           # Unpack unsigned IPA
           WORK="$RUNNER_TEMP/resign"
           rm -rf "$WORK" && mkdir -p "$WORK"
-          unzip -q unsigned.ipa -d "$WORK"
+          unzip -q build/ios/ipa/Tango-ios-unsigned.ipa -d "$WORK"
           APP="$(find "$WORK/Payload" -maxdepth 1 -name '*.app' | head -n1)"
 
           # The profile covers one app id only, so drop extensions (e.g. PlayerWidget)
