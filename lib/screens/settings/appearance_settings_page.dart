@@ -12,6 +12,7 @@ import 'package:tango/widgets/settings_group.dart';
 import 'package:tango/widgets/app_icon.dart';
 import 'package:tango/widgets/app_sliver_header.dart';
 import 'package:tango/widgets/custom_font_setting.dart';
+import 'package:tango/widgets/rhythm/rhythm_player_controls.dart';
 
 part 'appearance_settings_page_widgets.dart';
 
@@ -167,6 +168,18 @@ class AppearanceSettingsPage extends ConsumerWidget {
                 ],
               ),
             ),
+
+            if (themeSettings.style == AppThemeStyle.rhythm) ...[
+              const SliverToBoxAdapter(
+                child: SettingsSectionHeader(title: 'Player progress'),
+              ),
+              const SliverToBoxAdapter(
+                child: SettingsGroup(
+                  connected: true,
+                  children: [RhythmProgressStyleSelector()],
+                ),
+              ),
+            ],
 
             const SliverFillRemaining(
               hasScrollBody: false,
