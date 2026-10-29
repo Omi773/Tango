@@ -25,6 +25,7 @@ import 'package:tango/utils/string_utils.dart';
 import 'package:tango/widgets/audio_quality_badges.dart';
 import 'package:tango/widgets/overflow_marquee.dart';
 import 'package:tango/widgets/player_artwork.dart';
+import 'package:tango/widgets/rhythm/rhythm_mini_player.dart';
 import 'package:tango/widgets/settings_group.dart';
 import 'package:tango/widgets/tango_chrome.dart';
 
@@ -164,7 +165,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
       }
     }
 
-    final surface = DecoratedBox(
+    final materialSurface = DecoratedBox(
       key: _surfaceKey,
       position: DecorationPosition.foreground,
       decoration: BoxDecoration(
@@ -331,6 +332,42 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
         ),
       ),
     );
+    // Rhythm replaces the Material surface with its own mini player. The
+    // swipe handling, hero artwork and route geometry below stay Tango's.
+    final Widget surface = context.isRhythm
+        ? RhythmMiniPlayerSurface(
+            surfaceKey: _surfaceKey,
+            trackKey: mediaItem.id,
+            title: mediaItem.title,
+            artist: mediaItem.artist ?? '',
+            explicit: parseExplicitFlag(mediaItem.extras?['explicit']) == true,
+            duration: mediaItem.duration ?? Duration.zero,
+            isPlaying: isPlaying,
+            isLoading: isLoading,
+            bottomPadding: widget.bottomPadding,
+            onOpen: _openNowPlaying,
+            onPlayPause: () => controller.togglePlayPause(isPlaying),
+            onNext: controller.next,
+            onPrevious: controller.previous,
+            artworkBuilder: (size, radius) => Hero(
+              tag: kNowPlayingArtworkHeroTag,
+              child: ClipRRect(
+                key: _artworkKey,
+                borderRadius: radius,
+                child: SizedBox(
+                  width: size,
+                  height: size,
+                  child: PlayerArtwork(
+                    artUri: mediaItem.artUri?.toString(),
+                    colorScheme: colorScheme,
+                    cacheWidth: (size * 3).round(),
+                    iconSize: 22,
+                  ),
+                ),
+              ),
+            ),
+          )
+        : materialSurface;
     // Swiping up opens the full player; sideways swipes change tracks.
     // Desktop has no touch gestures: a click opens the player instead.
     final swipeable = isDesktopPlatform
