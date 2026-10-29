@@ -61,7 +61,7 @@ jobs:
           cp "$RUNNER_TEMP/profile.mobileprovision" "$APP/embedded.mobileprovision"
 
           # Sign nested frameworks/dylibs first, then the app
-          find "$APP/Frameworks" -maxdepth 1 \( -name '*.framework' -o -name '*.dylib' \) -print0 2>/dev/null |
+          { find "$APP/Frameworks" -maxdepth 1 \( -name '*.framework' -o -name '*.dylib' \) -print0 2>/dev/null || true; } |
             while IFS= read -r -d '' f; do
               codesign --force --sign "$IDENTITY" --timestamp=none "$f"
             done
