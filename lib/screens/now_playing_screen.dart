@@ -51,6 +51,7 @@ import 'package:tango/widgets/tango_player_actions_sheet.dart';
 import 'package:tango/widgets/tango_context_menu.dart';
 import 'package:tango/widgets/tango_player_artwork.dart';
 import 'package:tango/providers/player_motion_artwork_provider.dart';
+import 'package:tango/widgets/rhythm/rhythm_player_controls.dart';
 
 export 'package:tango/routes/now_playing_route.dart';
 
@@ -533,6 +534,11 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                             _lyricsSection(colorScheme, isActive: true),
                         onOpenQueue: () =>
                             _showQueueSheet(context, colorScheme),
+                        rhythmChipRowBuilder: (chipContext) => _rhythmChipRow(
+                          chipContext,
+                          mediaItem,
+                          colorScheme,
+                        ),
                       ),
               ),
               _autoHidingLyricsControls(
@@ -1042,6 +1048,53 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       context,
       artistName: mediaItem.artist ?? '',
       artistId: track?.artistId,
+    );
+  }
+
+  Widget _rhythmChipRow(
+    BuildContext context,
+    MediaItem mediaItem,
+    ColorScheme colorScheme,
+  ) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final controller = ref.read(musicPlayerControllerProvider);
+        final track = ref.watch(playerCollectionTrackProvider(mediaItem)).value;
+        final loved = ref.watch(
+          libraryCollectionsProvider.select(
+            (state) => track != null && state.isLoved(track),
+          ),
+        );
+        return RhythmPlayerChipRow(
+          chips: [
+            RhythmPlayerChip(
+              icon: Icons.playlist_add_rounded,
+              label: 'Playlist',
+              onPressed: () => _updatePlayerCollection(mediaItem, favorite: false),
+            ),
+            RhythmPlayerChip(
+              icon: loved
+                  ? Icons.favorite_rounded
+                  : Icons.favorite_border_rounded,
+              label: 'Loved',
+              selected: loved,
+              onPressed: () => _updatePlayerCollection(mediaItem, favorite: true),
+            ),
+            RhythmPlayerChip(
+              icon: Icons.bedtime_rounded,
+              label: context.l10n.nowPlayingSleepTimer,
+              selected: controller.sleepTimerEndsAt != null,
+              onPressed: () =>
+                  _showSleepTimerSheet(context, controller, colorScheme),
+            ),
+            RhythmPlayerChip(
+              icon: Icons.queue_music_rounded,
+              label: 'Queue',
+              onPressed: () => _showQueueSheet(context, colorScheme),
+            ),
+          ],
+        );
+      },
     );
   }
 
