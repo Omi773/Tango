@@ -20,14 +20,14 @@ jobs:
 
           # 1) Rhythm keeps the standard header size (drops the 140 / 34 overrides).
           f=lib/theme/rhythm_theme.dart
-          sed -i '/headerExpandedHeight: 140,/d;/headerExpandedTitleSize: 34,/d' "$f"
+          perl -ni -e 'print unless /headerExpandedHeight: 140,|headerExpandedTitleSize: 34,/' "$f"
           if grep -qE 'headerExpandedHeight: 140|headerExpandedTitleSize: 34' "$f"; then
             echo "::error::Header patch did not apply to $f"; exit 1
           fi
 
           # 2) Rhythm uses the same bottom navigation bar as Material.
           f=lib/widgets/expressive_navigation_bar.dart
-          sed -i 's/if (context.isRhythm || !materialExpressiveEnabled(context)) {/if (!materialExpressiveEnabled(context)) {/' "$f"
+          perl -pi -e 's/\Qif (context.isRhythm || !materialExpressiveEnabled(context)) {\E/if (!materialExpressiveEnabled(context)) {/' "$f"
           if grep -q 'context.isRhythm || !materialExpressiveEnabled' "$f"; then
             echo "::error::Nav bar patch did not apply to $f"; exit 1
           fi
