@@ -29,6 +29,18 @@ jobs:
           sudo xcode-select -s /Applications/Xcode_26.1.1.app
           xcodebuild -version
 
+      - name: Cache Rust (cargo + target)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            rust_backend/target
+          key: rust-ios-${{ runner.os }}-${{ hashFiles('rust_backend/Cargo.lock', 'rust_backend/rust-toolchain.toml', 'scripts/build_rust_backend.sh') }}
+          restore-keys: |
+            rust-ios-${{ runner.os }}-
+
       - name: Build Rust backend for iOS
         run: bash scripts/build_ios.sh
 
