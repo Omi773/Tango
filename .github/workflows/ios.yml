@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-ios:
@@ -151,16 +151,16 @@ jobs:
 
           (cd "$WORK" && zip -qr "$GITHUB_WORKSPACE/build/ios/ipa/Tango-ios-signed.ipa" Payload)
 
-      - name: Upload IPA to Google Drive
+      - name: Publish IPA to GitHub Release
         env:
-          RCLONE_CONFIG_GDRIVE_TYPE: drive
-          RCLONE_CONFIG_GDRIVE_SCOPE: drive.file
-          RCLONE_CONFIG_GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
-          RCLONE_CONFIG_GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
-          GDRIVE_REFRESH_TOKEN: ${{ secrets.GDRIVE_REFRESH_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          [ -n "$RCLONE_CONFIG_GDRIVE_CLIENT_ID" ] && [ -n "$GDRIVE_REFRESH_TOKEN" ] || { echo "::error::Missing Google Drive secrets"; exit 1; }
-          HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_ENV_HINTS=1 brew install rclone
-          export RCLONE_CONFIG_GDRIVE_TOKEN="{\"access_token\":\"\",\"token_type\":\"Bearer\",\"refresh_token\":\"$GDRIVE_REFRESH_TOKEN\",\"expiry\":\"2000-01-01T00:00:00Z\"}"
-          rclone copyto build/ios/ipa/Tango-ios-signed.ipa "gdrive:Tango-builds/Tango-build-${{ github.run_number }}.ipa" -v
+          TAG="build-${{ github.run_number }}"
+          cp build/ios/ipa/Tango-ios-signed.ipa "build/ios/ipa/Tango-build-${{ github.run_number }}.ipa"
+          gh release create "$TAG" \
+            "build/ios/ipa/Tango-build-${{ github.run_number }}.ipa" \
+            --target "$GITHUB_SHA" \
+            --title "Tango build ${{ github.run_number }}" \
+            --notes "Signed iOS build from commit ${GITHUB_SHA::8}." \
+            --prerelease
