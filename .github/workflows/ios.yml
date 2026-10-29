@@ -11,8 +11,34 @@ jobs:
     runs-on: macos-15
 
     steps:
+      - name: Live Activity - start
+        id: notify
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: start
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          title: Tango iOS build #${{ github.run_number }}
+          body: Checking out repository
+          symbol: arrow.down.circle.fill
+          tint: 6750A4
+          steps: '14'
+          step: '0'
+
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Live Activity - 1/14 Checkout repository done
+        if: steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: update
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          step: '1'
+          body: Fetching Discord SDK
+          symbol: shippingbox.fill
 
       - name: Fetch Discord SDK (iOS)
         env:
@@ -24,10 +50,34 @@ jobs:
           test -d third_party/tango_discord/ios/Frameworks/discord_partner_sdk.xcframework
           test -f third_party/tango_discord/ios/Frameworks/Discord-License-Notices.txt
 
+      - name: Live Activity - 2/14 Fetch Discord SDK (iOS) done
+        if: steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: update
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          step: '2'
+          body: Selecting Xcode
+          symbol: wrench.and.screwdriver.fill
+
       - name: Select Xcode 26.1.1
         run: |
           sudo xcode-select -s /Applications/Xcode_26.1.1.app
           xcodebuild -version
+
+      - name: Live Activity - 3/14 Select Xcode 26.1.1 done
+        if: steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: update
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          step: '3'
+          body: Restoring Rust cache
+          symbol: externaldrive.fill
 
       - name: Cache Rust (cargo + target)
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -41,8 +91,32 @@ jobs:
           restore-keys: |
             rust-ios-${{ runner.os }}-
 
+      - name: Live Activity - 4/14 Cache Rust (cargo + target) done
+        if: steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: update
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          step: '4'
+          body: Building Rust backend
+          symbol: hammer.fill
+
       - name: Build Rust backend for iOS
         run: bash scripts/build_ios.sh
+
+      - name: Live Activity - 5/14 Build Rust backend for iOS done
+        if: steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: update
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          step: '5'
+          body: Setting up Flutter
+          symbol: puzzlepiece.fill
 
       - name: Setup Flutter
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
@@ -51,8 +125,32 @@ jobs:
           flutter-version-file: .fvmrc
           cache: true
 
+      - name: Live Activity - 6/14 Setup Flutter done
+        if: steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: update
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          step: '6'
+          body: Getting Flutter dependencies
+          symbol: arrow.down.circle.fill
+
       - name: Get Flutter dependencies
         run: flutter pub get
+
+      - name: Live Activity - 7/14 Get Flutter dependencies done
+        if: steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: update
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          step: '7'
+          body: Fixing ffmpeg scripts
+          symbol: wrench.and.screwdriver.fill
 
       - name: Normalize ffmpeg plugin shell scripts (strip CRLF)
         run: |
@@ -62,12 +160,48 @@ jobs:
               chmod +x "$f"
             done
 
+      - name: Live Activity - 8/14 Normalize ffmpeg plugin shell scripts (strip CRLF) done
+        if: steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: update
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          step: '8'
+          body: Generating app icons
+          symbol: photo.fill
+
       - name: Generate app icons
         run: dart run flutter_launcher_icons
+
+      - name: Live Activity - 9/14 Generate app icons done
+        if: steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: update
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          step: '9'
+          body: Installing pods
+          symbol: shippingbox.fill
 
       - name: Install pods
         working-directory: ios
         run: pod install
+
+      - name: Live Activity - 10/14 Install pods done
+        if: steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: update
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          step: '10'
+          body: Compiling iOS app
+          symbol: hammer.fill
 
       - name: Build iOS (unsigned)
         run: |
@@ -89,6 +223,18 @@ jobs:
             DEBUG_INFORMATION_FORMAT=dwarf \
             COMPILER_INDEX_STORE_ENABLE=NO
 
+      - name: Live Activity - 11/14 Build iOS (unsigned) done
+        if: steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: update
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          step: '11'
+          body: Creating IPA
+          symbol: archivebox.fill
+
       - name: Create IPA
         run: |
           mkdir -p build/ios/ipa
@@ -96,6 +242,18 @@ jobs:
           mkdir Payload
           cp -r Runner.app Payload/
           zip -r "$GITHUB_WORKSPACE/build/ios/ipa/Tango-ios-unsigned.ipa" Payload
+
+      - name: Live Activity - 12/14 Create IPA done
+        if: steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: update
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          step: '12'
+          body: Signing IPA
+          symbol: lock.fill
 
       - name: Re-sign IPA with provisioning profile
         env:
@@ -151,6 +309,18 @@ jobs:
 
           (cd "$WORK" && zip -qr "$GITHUB_WORKSPACE/build/ios/ipa/Tango-ios-signed.ipa" Payload)
 
+      - name: Live Activity - 13/14 Re-sign IPA with provisioning profile done
+        if: steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: update
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          step: '13'
+          body: Publishing release
+          symbol: paperplane.fill
+
       - name: Publish IPA to GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -164,3 +334,17 @@ jobs:
             --title "Tango build ${{ github.run_number }}" \
             --notes "Signed iOS build from commit ${GITHUB_SHA::8}." \
             --prerelease
+
+      - name: Live Activity - end
+        if: always() && steps.notify.outputs.activity-id != ''
+        uses: simplytoast1/notify-action@v1
+        with:
+          action: end
+          device-id: ${{ secrets.NOTIFY_DEVICE_ID }}
+          device-token: ${{ secrets.NOTIFY_DEVICE_TOKEN }}
+          activity-id: ${{ steps.notify.outputs.activity-id }}
+          body: ${{ job.status == 'success' && format('Build #{0} released', github.run_number) || format('Build {0}', job.status) }}
+          step: ${{ job.status == 'success' && '14' || '' }}
+          symbol: ${{ job.status == 'success' && 'checkmark.circle.fill' || 'xmark.circle.fill' }}
+          tint: ${{ job.status == 'success' && '34C759' || 'FF3B30' }}
+          keep-for: '120'
