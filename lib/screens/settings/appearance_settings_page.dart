@@ -13,6 +13,7 @@ import 'package:tango/widgets/app_icon.dart';
 import 'package:tango/widgets/app_sliver_header.dart';
 import 'package:tango/widgets/custom_font_setting.dart';
 import 'package:tango/widgets/rhythm/rhythm_player_controls.dart';
+import 'package:tango/widgets/rhythm/rhythm_mini_player.dart';
 
 part 'appearance_settings_page_widgets.dart';
 
@@ -177,6 +178,15 @@ class AppearanceSettingsPage extends ConsumerWidget {
                 child: SettingsGroup(
                   connected: true,
                   children: [RhythmProgressStyleSelector()],
+                ),
+              ),
+              const SliverToBoxAdapter(
+                child: SettingsSectionHeader(title: 'Mini player'),
+              ),
+              const SliverToBoxAdapter(
+                child: SettingsGroup(
+                  connected: true,
+                  children: [RhythmMiniPlayerSelector()],
                 ),
               ),
             ],
