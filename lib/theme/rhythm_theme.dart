@@ -107,9 +107,9 @@ class RhythmTheme {
     }
 
     return base.copyWith(
-      extensions: <ThemeExtension<dynamic>>[
-        ...base.extensions.values.where((e) => e is! AppTokens),
-        tokens,
+      extensions: [
+        for (final extension in base.extensions.values)
+          if (extension is AppTokens) tokens else extension,
         const RhythmStyle(),
       ],
       appBarTheme: base.appBarTheme.copyWith(
