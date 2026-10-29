@@ -214,6 +214,91 @@ class RhythmTheme {
           minimumSize: const Size(64, 48),
         ),
       ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          shape: const StadiumBorder(),
+          minimumSize: const Size(64, 48),
+          elevation: 0,
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          shape: const StadiumBorder(),
+          minimumSize: const Size(64, 48),
+          side: BorderSide(color: scheme.outlineVariant),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          shape: const StadiumBorder(),
+          minimumSize: const Size(48, 44),
+        ),
+      ),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          shape: const WidgetStatePropertyAll(StadiumBorder()),
+          side: const WidgetStatePropertyAll(BorderSide.none),
+          padding: const WidgetStatePropertyAll(
+            EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          ),
+          visualDensity: VisualDensity.standard,
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: scheme.surfaceContainerHigh,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(radiusMd),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(radiusMd),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(radiusMd),
+          borderSide: BorderSide(color: scheme.primary, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(radiusMd),
+          borderSide: BorderSide(color: scheme.error),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(radiusMd),
+          borderSide: BorderSide(color: scheme.error, width: 2),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
+      ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: scheme.surface,
+        indicatorColor: scheme.secondaryContainer,
+        indicatorShape: const StadiumBorder(),
+        labelType: NavigationRailLabelType.selected,
+        selectedLabelTextStyle: text.labelMedium?.copyWith(
+          color: scheme.onSurface,
+          fontWeight: FontWeight.w600,
+        ),
+        unselectedLabelTextStyle: text.labelMedium?.copyWith(
+          color: scheme.onSurfaceVariant,
+        ),
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: scheme.primary,
+        linearTrackColor: scheme.surfaceContainerHighest,
+        circularTrackColor: scheme.surfaceContainerHighest,
+        linearMinHeight: 4,
+      ),
+      tooltipTheme: TooltipThemeData(
+        decoration: BoxDecoration(
+          color: scheme.inverseSurface,
+          borderRadius: BorderRadius.circular(radiusSm),
+        ),
+        textStyle: text.bodySmall?.copyWith(color: scheme.onInverseSurface),
+        waitDuration: const Duration(milliseconds: 500),
+      ),
     );
   }
 }
