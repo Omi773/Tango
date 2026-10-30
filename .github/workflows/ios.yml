@@ -334,9 +334,6 @@ jobs:
           unzip -q build/ios/ipa/Tango-ios-unsigned.ipa -d "$WORK"
           APP="$WORK/Payload/Runner.app"
 
-          # The profile covers one app id only, so drop extensions (e.g. PlayerWidget)
-          rm -rf "$APP/PlugIns"
-
           /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $BUNDLE_ID" "$APP/Info.plist"
           cp "$RUNNER_TEMP/profile.mobileprovision" "$APP/embedded.mobileprovision"
 
