@@ -20,7 +20,6 @@ import 'package:tango/services/platform_bridge.dart';
 import 'package:tango/services/playback_deck.dart';
 import 'package:tango/services/playback_notification.dart';
 import 'package:tango/services/playback_output_volume.dart';
-import 'package:tango/services/player_widget_service.dart';
 import 'package:tango/services/source_deletion_events.dart';
 import 'package:tango/services/system_volume_service.dart';
 import 'package:tango/utils/desktop_platform.dart';
@@ -276,9 +275,6 @@ class MusicPlayerRuntime {
       }
       _initializing = false;
       _handlers.add(handler);
-      if (dependencies.isAndroid || dependencies.isIOS) {
-        PlayerWidgetService.instance.bind(handler);
-      }
       // Desktop presence goes through the Rust IPC client instead of the SDK.
       if (dependencies.isAndroid || dependencies.isIOS || isDesktopPlatform) {
         DiscordPresenceService.instance.bind(handler);
