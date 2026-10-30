@@ -32,7 +32,6 @@ import 'package:tango/services/desktop_diagnostics.dart';
 import 'package:tango/services/desktop_library_watcher.dart';
 import 'package:tango/services/music_player_service.dart';
 import 'package:tango/services/audio_diagnostics.dart';
-import 'package:tango/services/player_widget_service.dart';
 import 'package:tango/screens/now_playing_screen.dart';
 import 'package:tango/utils/desktop_platform.dart';
 import 'package:tango/utils/local_library_scan_prefs.dart';
@@ -165,28 +164,6 @@ void main() {
         ),
       );
       unawaited(AudioDiagnostics.start());
-      if (Platform.isAndroid || Platform.isIOS) {
-        unawaited(
-          PlayerWidgetService.instance.initialize((command) async {
-            await restorePersistedPlaybackSession();
-            final handler = await initMusicPlayer();
-            if (command == 'open') {
-              await WidgetsBinding.instance.endOfFrame;
-              final navigator =
-                  AppNavigationService.rootNavigatorKey.currentState;
-              if (navigator != null && handler.mediaItem.value != null) {
-                unawaited(
-                  navigator.push<void>(
-                    NowPlayingRoute(child: const NowPlayingScreen()),
-                  ),
-                );
-              }
-            } else {
-              await PlayerWidgetService.control(handler, command);
-            }
-          }),
-        );
-      }
     },
     (error, stack) {
       _log.e('Uncaught zone error: $error');
