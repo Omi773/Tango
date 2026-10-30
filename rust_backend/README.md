@@ -1,171 +1,109 @@
 # Tango Rust Backend
 
-The Rust workspace is the app's only backend on Android and iOS. Flutter
-reaches it through the native channel (see `android/README.md`); Kotlin and
-Swift call it through UniFFI bindings generated from `tango-mobile`.
+This directory contains Tango's Rust workspace. It provides shared backend
+logic, provider clients, extension execution, the UniFFI mobile library, and
+a separate C-ABI desktop library.
 
-The app identifies itself as Tango in HTTP requests, exported lyrics and
-new FLAC vendor metadata. Crates, native libraries and generated bindings
-use Tango names. Legacy backup and extension formats remain readable;
-cryptographic domain separators retain their original values so branding
-changes do not invalidate encrypted storage or external session protocols.
+The workspace is defined in `Cargo.toml` and uses the pinned toolchain in
+`rust-toolchain.toml`. It uses Rust edition 2024 and keeps its dependency
+lockfile at `Cargo.lock`.
 
-The toolchain is pinned in `rust_backend/rust-toolchain.toml` (Rust 1.99.0
-with rustfmt and clippy). The workspace uses edition 2024, resolver 3, and
-denies `unsafe_code` as a workspace lint, with a few audited local
-`#[allow(unsafe_code)]` exceptions in the `extensions` and `mobile` crates.
+## Workspace crates
 
-Comments that mention "Go" describe the retired Go backend. Its observable
-behavior (wire formats, parsing quirks, file layouts) remains a compatibility
-contract.
-
-## Crate Map
-
-Dependencies point downward: `core` and `network` depend on no other
-workspace crate.
-
-| Crate | Package | Depends on |
-| --- | --- | --- |
-| `crates/core` | `tango-core` | none |
-| `crates/network` | `tango-network` | none |
-| `crates/providers` | `tango-providers` | core, network |
-| `crates/extensions` | `tango-extensions` | core, network, providers |
-| `crates/mobile` | `tango-mobile` | core, network, extensions |
-| `crates/desktop` | `tango-desktop` | mobile |
-| `crates/bindgen` | `tango-bindgen` | `uniffi` CLI only |
-
-**core.** Shared backend logic, independent of mobile bindings and UI
-runtimes. Modules cover filenames, tags and metadata, covers and palette
-extraction, CUE sheets, lyrics, ISRC, matching, download progress state,
-Hi-Res analysis and JSON or XML helpers. It uses `image`, `claxon` (FLAC
-decoding for the Hi-Res check), `roxmltree` and pinned Unicode tables.
-
-**network.** Shared, cancellable HTTP transport for the embedded backend: the
-client, cookies, DNS lookup, TLS roots, request policy, query and URL
-handling. It is built on `hyper-util`, `hyper-rustls` and `tokio`; Apple
-targets verify certificates with `rustls-platform-verifier`, other targets
-with `rustls-native-certs`.
-
-**providers.** Built-in provider clients and shared lookup services for the
-native app owners: Deezer, MusicBrainz, lyrics, the resolver, and a request
-coalescer.
-
-**extensions.** Extension JavaScript execution and host services, isolated
-from mobile UI code. It embeds QuickJS through `rquickjs` and provides the
-host APIs (network, files, crypto, FFmpeg, auth, sessions, storage), the
-manifest and package format, the repository, signed sessions and the
-download backend. Its main types are `ExtensionRuntime` and
-`ExtensionServices`.
-
-**mobile.** The UniFFI mobile API (`uniffi::setup_scaffolding!`). This crate
-is the only backend and routes the app on both platforms. It is built as
-`lib`, `cdylib` (Android `libtango_mobile.so`) and `staticlib` (iOS).
-It adds native data jobs, the native library, cache, collections, playlists
-and backup, lyrics, ID3 and network tags, `rusqlite`, and USB audio
-(`libusb1-sys`, Android only).
-
-**desktop.** The C ABI for macOS, Linux and Windows, loaded by Flutter
-through `dart:ffi` (`cdylib` `libtango_desktop`). It exports `tango_init`,
-`tango_call`, `tango_cancel`, `tango_subscribe`, `tango_unsubscribe` and
-`tango_free`, dispatches MethodChannel method names as JSON on a worker
-pool (`src/dispatch.rs` is the single method table), pushes download and
-library scan progress, and runs the bundled `ffmpeg` executable for the
-backend's FFmpeg command queue. It is the only crate that allows unsafe
-code, in `src/ffi.rs`.
-
-**bindgen.** The UniFFI bindgen command line (`uniffi_bindgen_main`), used
-only to generate the Kotlin and Swift bindings. It enables the `cli` and
-`cargo-metadata` features of `uniffi`; the build script builds the library
-in a separate cargo call so those features do not reach the shipped library.
-
-### Vendored Patches
-
-`Cargo.toml` patches two crates.io packages with copies in
-`rust_backend/vendor/`: `rustix` 1.1.5 (Android `statx` fallback) and
-`libusb1-sys` 0.7.0 (libusb 1.0.30 sources). The reasons and the upgrade
-checks are in `rust_backend/vendor/README.md`. Third-party notices are in
-`rust_backend/NOTICE`.
-
-## Building
-
-| Command | Result |
+| Crate | Purpose |
 | --- | --- |
-| `bash scripts/build_rust_backend.sh host` | Release host library and Kotlin and Swift bindings |
-| `bash scripts/build_rust_backend.sh android` | Host step, then `libtango_mobile.so` for each ABI |
-| `bash scripts/build_rust_backend.sh ios` | Host step, then the XCFramework and CocoaPods staging |
-| `bash scripts/build_rust_backend.sh desktop` | `libtango_desktop` in `target/desktop/<os>/` (macOS universal, Linux host); Windows commands are in the script |
-| `bash scripts/check_rust_backend.sh` | `cargo fmt --check`, `cargo clippy -D warnings`, `cargo test` |
+| `tango-core` (`crates/core`) | Shared metadata, tags, filenames, covers, CUE sheets, lyrics, matching, Hi-Res analysis, and parsing helpers. |
+| `tango-network` (`crates/network`) | Shared asynchronous HTTP transport, TLS, cookies, DNS, request policy, and URL handling. |
+| `tango-providers` (`crates/providers`) | Provider integrations and shared lookup services, including Deezer, MusicBrainz, lyrics, and resolution. |
+| `tango-extensions` (`crates/extensions`) | JavaScript extension runtime, manifests, package handling, host APIs, sessions, storage, and download services. |
+| `tango-mobile` (`crates/mobile`) | UniFFI API and mobile backend functionality, including native library data, cache, collections, playlists, backup, lyrics, and network tags. |
+| `tango-desktop` (`crates/desktop`) | C-ABI library for desktop integration through `dart:ffi`. |
+| `tango-bindgen` (`crates/bindgen`) | UniFFI command-line tool used to generate Kotlin and Swift bindings. |
 
-Every `cargo build`, `cargo run`, `cargo clippy` and `cargo test` call in
-both scripts passes `--locked`, so `Cargo.lock` must be up to date. The
-scripts do not pass `--offline`; dependencies come from crates.io except the
-vendored patches.
+The dependency direction is intentional: core and network are foundational;
+providers and extensions build on them; mobile and desktop expose backend
+interfaces for their respective runtimes.
 
-The host step always runs first. It builds `tango-mobile` in release
-mode, then runs `tango-bindgen generate` against the host library for
-Kotlin and Swift. Output goes to `rust_backend/target/`:
+## Build scripts
 
-- `target/release/`: host library (`.dylib` on macOS, `.so` on Linux)
-- `target/bindings/kotlin/`, `target/bindings/swift/`: generated bindings
-- `target/android/jniLibs/<abi>/`: Android libraries
-- `target/ios/`: the XCFramework, Swift binding and podspec for CocoaPods
+Run commands from the repository root.
 
-### Android
+| Command | Purpose |
+| --- | --- |
+| `bash scripts/build_rust_backend.sh host` | Build the host mobile library and generate Kotlin and Swift UniFFI bindings. |
+| `bash scripts/build_rust_backend.sh android` | Build the host artifacts and Android `tango-mobile` libraries. |
+| `bash scripts/build_rust_backend.sh ios` | Build the iOS device and simulator libraries and stage the `TangoBackendFFI.xcframework` and CocoaPods files. |
+| `bash scripts/build_rust_backend.sh desktop` | Build the desktop C-ABI library for the current macOS or Linux host. |
+| `bash scripts/build_ios.sh` | Convenience wrapper for the iOS backend build. |
 
-Android Gradle runs `scripts/build_rust_backend.sh android` in its
-`buildRustBackend` task before `preBuild`, so a normal Flutter build is
-enough. For a manual build:
+### Android build requirements
 
-- Set `ANDROID_NDK_HOME` to NDK 30.0.16248370 (the version CI installs in
-  `.github/workflows/ci.yml` and `android/app/build.gradle.kts` uses).
-- `TANGO_RUST_ANDROID_ABIS` selects `arm64-v8a`, `armeabi-v7a` or both
-  (comma-separated; the default is both).
-- Libraries link against API 24 with 16 KB page alignment.
+- Linux or macOS host.
+- Android NDK 30.0.16248370, configured through `ANDROID_NDK_HOME`.
+- By default, the script builds `arm64-v8a` and `armeabi-v7a`.
+- Set `TANGO_RUST_ANDROID_ABIS` to one ABI or a comma-separated combination
+  of those two supported ABIs to limit the build.
 
-`bash scripts/check_android_statx.sh arm64-v8a` checks the vendored Rustix
-fallback on a connected device (see `rust_backend/vendor/README.md`).
+The script targets Android API 24 and configures 16 KB ELF page alignment.
 
-### iOS
+### iOS build requirements
 
-On macOS, `bash scripts/build_rust_backend.sh ios` builds
-`aarch64-apple-ios`, `aarch64-apple-ios-sim` and `x86_64-apple-ios` (iOS 16.0
-deployment target), merges the two simulator slices, and stages
-`target/ios/` with `rust_backend/TangoBackend.podspec`. Run
-`(cd ios && pod install)` afterwards; `ios/Podfile` refuses to install
-without the staged files.
+- macOS with Xcode and the Apple command-line tools.
+- The script builds iOS device and simulator architectures and stages output
+  under `rust_backend/target/ios/`.
+- Run `cd ios && pod install` after the backend build when preparing the
+  Flutter iOS project.
 
-## Where the Bindings Are Used
+### Desktop build requirements
 
-The binding names come from `rust_backend/crates/mobile/uniffi.toml`.
+The desktop build script currently supports macOS (universal arm64/x86_64)
+and Linux (native host architecture). It stages the library under
+`rust_backend/target/desktop/`. This crate and build output do not, by
+themselves, mean that Flutter runner projects for every desktop operating
+system are present in this repository.
 
-| Platform | Generated | Consumed by |
-| --- | --- | --- |
-| Android | Kotlin package `app.tango.backend`, loading `tango_mobile` through JNA | `android/app/build.gradle.kts` adds `target/bindings/kotlin` and `target/android/jniLibs` as source dirs; used by `android/app/src/rust/kotlin/app/tango/SelectedCoreBackend.kt` and its neighbors |
-| iOS | Swift module `TangoBackend` with FFI module `TangoBackendFFI` | `ios/Podfile` pod `TangoBackend` at `../rust_backend/target/ios`; imported by `ios/Runner/CoreBackend.swift` |
+## Generated output
 
-The generated files are build output under `target/` and are not tracked.
-After changing an exported function, rebuild for the platform you test; the
-Kotlin and Swift call sites must match the new signatures.
+Build products are written under `rust_backend/target/` and are generated
+locally or in CI; they are not source files to edit manually.
 
-## Tests
+- `target/bindings/kotlin/` — generated Kotlin bindings.
+- `target/bindings/swift/` — generated Swift bindings.
+- `target/android/jniLibs/<abi>/` — Android shared libraries.
+- `target/ios/` — iOS XCFramework and CocoaPods staging files.
+- `target/desktop/<platform>/` — desktop C-ABI library.
+
+After changing a UniFFI-exported API, rebuild the relevant target and update
+its native call sites to match the generated interface.
+
+## Vendored dependency patches
+
+The workspace patches two crates.io dependencies with local copies:
+
+- `rustix` — Android compatibility fallback for `statx` on older Android
+  releases.
+- `libusb1-sys` — updated bundled libusb native sources.
+
+See [vendor/README.md](vendor/README.md) for the patch rationale, provenance,
+and upgrade checks. Preserve the upstream license and notice files when
+updating either vendored dependency.
+
+## Testing and quality checks
+
+Run these from the repository root:
 
 ```bash
-bash scripts/check_rust_backend.sh
-(cd rust_backend && cargo test --locked -p tango-core)
-(cd rust_backend && cargo test --locked -p tango-mobile network_tags --lib)
+cd rust_backend
+cargo fmt --all -- --check
+cargo clippy --workspace --all-targets --locked -- -D warnings
+cargo test --workspace --locked
 ```
 
-- Unit tests sit in `#[cfg(test)] mod tests` blocks. Larger modules keep them
-  in a sibling `tests.rs` declared with `mod tests;`, for example
-  `rust_backend/crates/mobile/src/native_library/tests.rs` and
-  `rust_backend/crates/extensions/src/manager/tests.rs`.
-- Cargo integration tests live in `rust_backend/crates/core/tests/` and
-  `rust_backend/crates/extensions/tests/`.
-- `rust_backend/crates/core/src/metadata/musicbrainz/case_data.rs` is a frozen
-  generated table (Unicode 15.0.0 ranges and case mappings for MusicBrainz
-  title casing, kept for parity with the Go backend). It is marked
-  `DO NOT EDIT`; the generator is no longer in the repository, and it must not
-  be regenerated from newer tables.
-- CI runs `scripts/check_rust_backend.sh` on Linux, the iOS build on macOS,
-  and the Android build with Kotlin unit tests (`gradle -p android
-  :app:assembleDebug :app:testDebugUnitTest`).
+For a focused crate test:
+
+```bash
+cd rust_backend
+cargo test --locked -p tango-core
+```
+
+Use `--locked` so builds and tests respect the committed `Cargo.lock`.
