@@ -74,7 +74,6 @@ import UniformTypeIdentifiers
         concertCalendar = ConcertCalendarBridge(messenger: messenger) { [weak self] in
             self?.activeWindow?.rootViewController
         }
-        PlayerWidgetBridge.shared.attach(messenger)
         let channel = FlutterMethodChannel(
             name: CHANNEL,
             binaryMessenger: messenger
@@ -149,10 +148,6 @@ import UniformTypeIdentifiers
     /// - Signed session: tango://session-grant?grant=...&state=<one_time_nonce>
     @discardableResult
     func handleExtensionOAuthRedirect(url: URL) -> Bool {
-        if url.scheme == "tango", url.host == "player" {
-            Task { _ = await PlayerWidgetBridge.shared.perform("open") }
-            return true
-        }
         guard let route = ExtensionCallbackParser.parse(url) else { return false }
         streamQueue.async {
             var extensionId = ""
