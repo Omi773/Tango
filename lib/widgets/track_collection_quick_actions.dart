@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:tango/theme/tango_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/rhythm/rhythm_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tango/l10n/l10n.dart';
 import 'package:tango/models/track.dart';
@@ -368,6 +369,76 @@ class _TrackOptionsSheet extends ConsumerWidget {
       );
     }
 
+    final rhythmItems = <RhythmMenuItem>[
+      if (qualityVariantAction == QualityVariantMenuAction.playLocal)
+        RhythmMenuItem(
+          icon: Icons.play_arrow_rounded,
+          title: context.l10n.trackMetadataPlay,
+          onTap: () => _playLocal(context, ref),
+        )
+      else if (qualityVariantAction ==
+          QualityVariantMenuAction.downloadAnotherQuality)
+        RhythmMenuItem(
+          icon: Icons.download_outlined,
+          title: context.l10n.trackOptionDownloadQualityVariant,
+          onTap: () => _downloadQualityVariant(context, ref),
+        ),
+      RhythmMenuItem(
+        icon: isLoved ? Icons.favorite : Icons.favorite_border,
+        title: isLoved
+            ? context.l10n.trackOptionRemoveFromLoved
+            : context.l10n.trackOptionAddToLoved,
+        tone: RhythmMenuTone.tertiary,
+        onTap: () => _toggleCollection(context, ref, wishlist: false),
+      ),
+      RhythmMenuItem(
+        icon: isInWishlist
+            ? Icons.playlist_add_check_circle
+            : Icons.add_circle_outline,
+        title: isInWishlist
+            ? context.l10n.trackOptionRemoveFromWishlist
+            : context.l10n.trackOptionAddToWishlist,
+        tone: RhythmMenuTone.tertiary,
+        onTap: () => _toggleCollection(context, ref, wishlist: true),
+      ),
+      RhythmMenuItem(
+        icon: Icons.playlist_add,
+        title: context.l10n.collectionAddToPlaylist,
+        onTap: () {
+          final rootContext = Navigator.of(
+            context,
+            rootNavigator: true,
+          ).context;
+          Navigator.pop(context);
+          showAddTrackToPlaylistSheet(rootContext, ref, track);
+        },
+      ),
+      RhythmMenuItem(
+        icon: Icons.album_outlined,
+        title: context.l10n.homeGoToAlbum,
+        tone: RhythmMenuTone.secondary,
+        onTap: () => _goToAlbum(context),
+      ),
+      RhythmMenuItem(
+        icon: Icons.content_copy_rounded,
+        title: context.l10n.trackOptionCopyTrackName,
+        tone: RhythmMenuTone.secondary,
+        onTap: () => _copyText(context, track.name),
+      ),
+      RhythmMenuItem(
+        icon: Icons.person_outline_rounded,
+        title: context.l10n.trackOptionCopyArtist,
+        tone: RhythmMenuTone.secondary,
+        onTap: () => _copyText(context, track.artistName),
+      ),
+      RhythmMenuItem(
+        icon: Icons.copy_all_rounded,
+        title: context.l10n.trackOptionCopyTrackAndArtist,
+        tone: RhythmMenuTone.secondary,
+        onTap: () => _copyText(context, '${track.name} - ${track.artistName}'),
+      ),
+    ];
+
     return SafeArea(
       top: false,
       child: ConstrainedBox(
@@ -458,6 +529,9 @@ class _TrackOptionsSheet extends ConsumerWidget {
                   color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                 ),
 
+              if (context.isRhythm)
+                RhythmGroupedMenu(items: rhythmItems)
+              else ...[
               if (qualityVariantAction == QualityVariantMenuAction.playLocal)
                 _OptionTile(
                   icon: Icons.play_arrow_rounded,
@@ -559,6 +633,8 @@ class _TrackOptionsSheet extends ConsumerWidget {
                   showAddTrackToPlaylistSheet(rootContext, ref, track);
                 },
               ),
+              ],
+
 
               const SizedBox(height: 16),
             ],

@@ -4,6 +4,7 @@ import 'package:tango/theme/app_motion.dart';
 import 'package:tango/theme/material_expressive.dart';
 import 'package:tango/theme/tango_theme.dart';
 import 'package:tango/widgets/app_icon_button.dart';
+import 'package:tango/widgets/rhythm/rhythm_menu.dart';
 
 /// One row of an [AppMenuButton].
 class AppMenuItem<T extends Object> {
@@ -24,8 +25,9 @@ class AppMenuItem<T extends Object> {
   final bool destructive;
 }
 
-/// Overflow and picker menus. Expressive builds open the M3E menu from an
-/// icon button; Tango and reduced motion keep the popup menu.
+/// Overflow and picker menus. Rhythm opens its grouped menu with icon
+/// circles; expressive builds open the M3E menu from an icon button, and
+/// Tango and reduced motion keep the popup menu.
 class AppMenuButton<T extends Object> extends StatelessWidget {
   const AppMenuButton({
     super.key,
@@ -51,6 +53,23 @@ class AppMenuButton<T extends Object> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (context.isRhythm) {
+      return RhythmMenuButton<T>(
+        icon: icon,
+        tooltip: tooltip,
+        onSelected: onSelected,
+        entries: [
+          for (final item in items)
+            RhythmMenuEntry<T>(
+              value: item.value,
+              title: item.label,
+              iconWidget: item.leading,
+              selected: item.selected == true,
+              destructive: item.destructive,
+            ),
+        ],
+      );
+    }
     if (materialExpressiveEnabled(context)) {
       return MaterialExpressiveScope(child: _ExpressiveMenuAnchor<T>(this));
     }
