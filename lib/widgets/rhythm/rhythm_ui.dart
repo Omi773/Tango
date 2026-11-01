@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
+import 'package:tango/widgets/app_icon.dart';
 
 /// Rhythm UI kit: widgets ported from the Kotlin app's shared components
 /// (RhythmGroupedMenu, StandardBottomSheetHeader, MorphingPlayPauseButton,
@@ -38,23 +39,43 @@ BorderRadius rhythmGroupedRadius(
   return BorderRadius.all(small);
 }
 
+/// Icon circle colours of a [RhythmMenuItem], as in Rhythm's song menu:
+/// actions use primary, navigation and info secondary, like tertiary and
+/// anything destructive error.
+enum RhythmMenuTone { primary, secondary, tertiary, error }
+
 /// One row of a [RhythmGroupedMenu].
 class RhythmMenuItem {
   const RhythmMenuItem({
     required this.title,
-    required this.icon,
     required this.onTap,
+    this.icon,
+    this.iconWidget,
+    this.subtitle,
+    this.tone = RhythmMenuTone.primary,
     this.iconContainerColor,
     this.iconTint,
     this.isDestructive = false,
+    this.selected = false,
   });
 
   final String title;
-  final IconData icon;
-  final VoidCallback onTap;
+
+  /// Null disables the row.
+  final VoidCallback? onTap;
+
+  /// Glyph drawn in the circle. [iconWidget] wins when both are set; with
+  /// neither, the row shows no circle.
+  final IconData? icon;
+  final Widget? iconWidget;
+  final String? subtitle;
+  final RhythmMenuTone tone;
   final Color? iconContainerColor;
   final Color? iconTint;
   final bool isDestructive;
+
+  /// Single-select menus: the chosen row shows a check.
+  final bool selected;
 }
 
 /// Rhythm's popup menu body: rows with a 28px tinted icon circle, 16px outer
@@ -63,6 +84,29 @@ class RhythmGroupedMenu extends StatelessWidget {
   const RhythmGroupedMenu({super.key, required this.items});
 
   final List<RhythmMenuItem> items;
+
+  static (Color, Color) _colors(ColorScheme scheme, RhythmMenuItem item) {
+    final tone = item.isDestructive ? RhythmMenuTone.error : item.tone;
+    final (container, tint) = switch (tone) {
+      RhythmMenuTone.primary => (
+        scheme.primaryContainer,
+        scheme.onPrimaryContainer,
+      ),
+      RhythmMenuTone.secondary => (
+        scheme.secondaryContainer,
+        scheme.onSecondaryContainer,
+      ),
+      RhythmMenuTone.tertiary => (
+        scheme.tertiaryContainer,
+        scheme.onTertiaryContainer,
+      ),
+      RhythmMenuTone.error => (scheme.errorContainer, scheme.onErrorContainer),
+    };
+    return (
+      item.iconContainerColor ?? container.withValues(alpha: 0.6),
+      item.iconTint ?? tint,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,61 +117,107 @@ class RhythmGroupedMenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (var i = 0; i < items.length; i++)
             Padding(
               padding: EdgeInsets.only(bottom: i == items.length - 1 ? 0 : 3),
-              child: Material(
-                color: scheme.surfaceContainer,
-                borderRadius: rhythmGroupedRadius(i, items.length),
-                clipBehavior: Clip.antiAlias,
-                child: InkWell(
-                  onTap: () {
+              child: _row(context, scheme, text, items[i], i),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _row(
+    BuildContext context,
+    ColorScheme scheme,
+    TextTheme text,
+    RhythmMenuItem item,
+    int index,
+  ) {
+    final (circle, tint) = _colors(scheme, item);
+    final enabled = item.onTap != null;
+    final glyph = item.iconWidget != null
+        ? IconTheme.merge(
+            data: IconThemeData(size: 16, color: tint),
+            child: item.iconWidget!,
+          )
+        : item.icon != null
+        ? AppIcon(item.icon, size: 16, color: tint)
+        : null;
+    return Opacity(
+      opacity: enabled ? 1 : 0.38,
+      child: Semantics(
+        button: true,
+        enabled: enabled,
+        selected: item.selected,
+        child: Material(
+          color: scheme.surfaceContainer,
+          borderRadius: rhythmGroupedRadius(index, items.length),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: enabled
+                ? () {
                     HapticFeedback.mediumImpact();
-                    items[i].onTap();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 10,
+                    item.onTap!();
+                  }
+                : null,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              child: Row(
+                children: [
+                  if (glyph != null) ...[
+                    Container(
+                      width: 28,
+                      height: 28,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: circle,
+                      ),
+                      child: glyph,
                     ),
-                    child: Row(
+                    const SizedBox(width: 10),
+                  ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
-                          width: 28,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                                items[i].iconContainerColor ??
-                                scheme.primaryContainer.withValues(alpha: 0.6),
-                          ),
-                          child: Icon(
-                            items[i].icon,
-                            size: 16,
-                            color:
-                                items[i].iconTint ?? scheme.onPrimaryContainer,
+                        Text(
+                          item.title,
+                          style: text.bodyMedium?.copyWith(
+                            fontWeight: item.selected
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                            color: item.isDestructive
+                                ? scheme.error
+                                : scheme.onSurface,
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            items[i].title,
-                            style: text.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: items[i].isDestructive
-                                  ? scheme.error
-                                  : scheme.onSurface,
+                        if (item.subtitle != null && item.subtitle!.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text(
+                              item.subtitle!,
+                              style: text.bodySmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
+                              ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                   ),
-                ),
+                  if (item.selected) ...[
+                    const SizedBox(width: 8),
+                    AppIcon(Icons.check, size: 18, color: scheme.primary),
+                  ],
+                ],
               ),
             ),
-        ],
+          ),
+        ),
       ),
     );
   }
