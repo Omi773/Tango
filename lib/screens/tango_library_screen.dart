@@ -15,6 +15,8 @@ import 'package:tango/services/library_database.dart';
 import 'package:tango/utils/adaptive_layout.dart';
 import 'package:tango/utils/nav_bar_inset.dart';
 import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/rhythm/rhythm_menu.dart';
+import 'package:tango/widgets/rhythm/rhythm_ui.dart';
 import 'package:tango/widgets/app_refresh_indicator.dart';
 import 'package:tango/widgets/app_search_field.dart';
 import 'package:tango/widgets/app_sliver_header.dart';
@@ -192,7 +194,19 @@ class _TangoLibraryScreenState extends ConsumerState<TangoLibraryScreen> {
         await (_chooseFromMenu(buttonContext, options, _sort) ??
             showAppBottomSheet<String>(
               context: context,
-              builder: (context) => Column(
+              builder: (context) => context.isRhythm
+                  ? RhythmMenuSheetBody(
+                      items: [
+                        for (final option in options)
+                          RhythmMenuItem(
+                            icon: option.$3,
+                            title: option.$2,
+                            selected: _sort == option.$1,
+                            onTap: () => Navigator.pop(context, option.$1),
+                          ),
+                      ],
+                    )
+                  : Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (final option in options)
@@ -234,7 +248,19 @@ class _TangoLibraryScreenState extends ConsumerState<TangoLibraryScreen> {
         await (_chooseFromMenu(buttonContext, options, _completeness ?? '') ??
             showAppBottomSheet<String>(
               context: context,
-              builder: (context) => Column(
+              builder: (context) => context.isRhythm
+                  ? RhythmMenuSheetBody(
+                      items: [
+                        for (final option in options)
+                          RhythmMenuItem(
+                            icon: option.$3,
+                            title: option.$2,
+                            selected: (_completeness ?? '') == option.$1,
+                            onTap: () => Navigator.pop(context, option.$1),
+                          ),
+                      ],
+                    )
+                  : Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (final option in options)

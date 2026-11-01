@@ -25,6 +25,8 @@ import 'package:tango/utils/lyrics_parser.dart';
 import 'package:tango/utils/playback_seek_preview.dart';
 import 'package:tango/utils/logger.dart';
 import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/rhythm/rhythm_menu.dart';
+import 'package:tango/widgets/rhythm/rhythm_ui.dart';
 import 'package:tango/widgets/app_snack_bar.dart';
 import 'package:tango/widgets/app_icon.dart';
 import 'package:tango/widgets/app_icon_button.dart';
@@ -974,6 +976,21 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                 ],
               ),
             )
+          : context.isRhythm
+          ? await showRhythmMenu<String>(
+              context: buttonContext,
+              anchor: anchor,
+              preferAbove: true,
+              entries: [
+                for (final (value, label, icon) in actions)
+                  RhythmMenuEntry<String>(
+                    value: value,
+                    title: label,
+                    icon: icon,
+                    tone: RhythmMenuTone.secondary,
+                  ),
+              ],
+            )
           : await showMenu<String>(
               context: buttonContext,
               position: RelativeRect.fromRect(
@@ -1157,7 +1174,52 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             backgroundColor: colorScheme.surfaceContainerHigh,
             title: mediaItem.title,
             subtitle: mediaItem.artist,
-            builder: (sheetContext) => Padding(
+            builder: (sheetContext) => sheetContext.isRhythm
+                ? RhythmMenuSheetBody(
+                    items: [
+                      if ((mediaItem.album ?? '').trim().isNotEmpty)
+                        RhythmMenuItem(
+                          icon: Icons.album_outlined,
+                          title: sheetContext.l10n.homeGoToAlbum,
+                          tone: RhythmMenuTone.secondary,
+                          onTap: () => Navigator.of(sheetContext).pop('album'),
+                        ),
+                      RhythmMenuItem(
+                        icon: Icons.info_outline,
+                        title: sheetContext.l10n.nowPlayingDetails,
+                        tone: RhythmMenuTone.secondary,
+                        onTap: () => Navigator.of(sheetContext).pop('details'),
+                      ),
+                      RhythmMenuItem(
+                        icon: Icons.format_quote_outlined,
+                        title: sheetContext.l10n.lyricsShareTitle,
+                        onTap: () =>
+                            Navigator.of(sheetContext).pop('shareLyrics'),
+                      ),
+                      RhythmMenuItem(
+                        icon: Icons.bedtime_outlined,
+                        title: sheetContext.l10n.nowPlayingSleepTimer,
+                        subtitle: sleepTimerSubtitle,
+                        tone: RhythmMenuTone.tertiary,
+                        onTap: () =>
+                            Navigator.of(sheetContext).pop('sleepTimer'),
+                      ),
+                      RhythmMenuItem(
+                        icon: Icons.equalizer,
+                        title: sheetContext.l10n.equalizerTitle,
+                        onTap: () =>
+                            Navigator.of(sheetContext).pop('equalizer'),
+                      ),
+                      RhythmMenuItem(
+                        icon: Icons.open_in_new,
+                        title: sheetContext.l10n.nowPlayingOpenInExternalPlayer,
+                        tone: RhythmMenuTone.secondary,
+                        onTap: () =>
+                            Navigator.of(sheetContext).pop('external'),
+                      ),
+                    ],
+                  )
+                : Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: SettingsGroup(
                 children: [

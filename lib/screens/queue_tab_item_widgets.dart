@@ -432,7 +432,38 @@ extension _QueueTabItemWidgets on _QueueTabState {
     return showAppBottomSheet<void>(
       context: context,
       title: item.track.name,
-      builder: (ctx) => Padding(
+      builder: (ctx) => ctx.isRhythm
+          ? RhythmMenuSheetBody(
+              items: [
+                RhythmMenuItem(
+                  icon: Icons.skip_next,
+                  title: context.l10n.queueDownloadNext,
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    notifier.downloadNext(item.id);
+                  },
+                ),
+                RhythmMenuItem(
+                  icon: Icons.arrow_upward,
+                  title: context.l10n.queueMoveUp,
+                  tone: RhythmMenuTone.secondary,
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    notifier.moveQueuedItem(item.id, -1);
+                  },
+                ),
+                RhythmMenuItem(
+                  icon: Icons.arrow_downward,
+                  title: context.l10n.queueMoveDown,
+                  tone: RhythmMenuTone.secondary,
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    notifier.moveQueuedItem(item.id, 1);
+                  },
+                ),
+              ],
+            )
+          : Padding(
         padding: EdgeInsets.only(bottom: ctx.tokens.gapLg),
         child: SettingsGroup(
           children: [

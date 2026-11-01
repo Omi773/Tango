@@ -497,6 +497,29 @@ extension _HomeTabExploreUI on _HomeTabState {
             ),
             // Material sheets separate the header by space alone.
             if (context.isTango) const Divider(height: 1),
+            if (context.isRhythm)
+              RhythmGroupedMenu(
+                items: [
+                  RhythmMenuItem(
+                    icon: Icons.download,
+                    title: context.l10n.downloadTitle,
+                    onTap: () {
+                      Navigator.pop(context);
+                      _handleExploreTrackPrimaryAction(item);
+                    },
+                  ),
+                  RhythmMenuItem(
+                    icon: Icons.album,
+                    title: context.l10n.homeGoToAlbum,
+                    tone: RhythmMenuTone.secondary,
+                    onTap: () {
+                      Navigator.pop(context);
+                      _navigateToTrackAlbum(item);
+                    },
+                  ),
+                ],
+              )
+            else ...[
             ListTile(
               leading: Icon(Icons.download, color: colorScheme.primary),
               title: Text(context.l10n.downloadTitle),
@@ -513,6 +536,7 @@ extension _HomeTabExploreUI on _HomeTabState {
                 _navigateToTrackAlbum(item);
               },
             ),
+            ],
             const SizedBox(height: 8),
           ],
         ),

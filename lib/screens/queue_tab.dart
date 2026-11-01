@@ -18,6 +18,8 @@ import 'package:tango/theme/app_tokens.dart';
 import 'package:tango/theme/material_expressive.dart';
 import 'package:tango/theme/tango_theme.dart';
 import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/rhythm/rhythm_menu.dart';
+import 'package:tango/widgets/rhythm/rhythm_ui.dart';
 import 'package:tango/widgets/app_icon.dart';
 import 'package:tango/widgets/pinned_section_sliver_list.dart';
 import 'package:tango/widgets/app_icon_button.dart';

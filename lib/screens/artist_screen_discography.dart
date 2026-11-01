@@ -50,6 +50,61 @@ extension _ArtistScreenDiscography on _ArtistScreenState {
             ),
             // Material sheets separate the header by space; dividers are Tango's.
             if (context.isTango) const Divider(height: 1),
+            if (context.isRhythm)
+              RhythmGroupedMenu(
+                items: [
+                  if (albums.isNotEmpty)
+                    RhythmMenuItem(
+                      icon: Icons.library_music,
+                      title: context.l10n.discographyDownloadAll,
+                      subtitle: context.l10n.discographyDownloadAllSubtitle(
+                        totalTracks,
+                        albums.length,
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _downloadAlbums(pageContext, albums);
+                      },
+                    ),
+                  if (albumsOnly.isNotEmpty)
+                    RhythmMenuItem(
+                      icon: Icons.album,
+                      title: context.l10n.discographyAlbumsOnly,
+                      subtitle: context.l10n.discographyAlbumsOnlySubtitle(
+                        albumTracks,
+                        albumsOnly.length,
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _downloadAlbums(pageContext, albumsOnly);
+                      },
+                    ),
+                  if (singles.isNotEmpty)
+                    RhythmMenuItem(
+                      icon: Icons.music_note,
+                      title: context.l10n.discographySinglesOnly,
+                      subtitle: context.l10n.discographySinglesOnlySubtitle(
+                        singleTracks,
+                        singles.length,
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _downloadAlbums(pageContext, singles);
+                      },
+                    ),
+                  RhythmMenuItem(
+                    icon: Icons.checklist,
+                    title: context.l10n.discographySelectAlbums,
+                    subtitle: context.l10n.discographySelectAlbumsSubtitle,
+                    tone: RhythmMenuTone.secondary,
+                    onTap: () {
+                      Navigator.pop(context);
+                      enterSelectionMode(albums.first.id);
+                    },
+                  ),
+                ],
+              )
+            else ...[
             if (albums.isNotEmpty)
               _DiscographyOptionTile(
                 icon: Icons.library_music,
@@ -99,6 +154,7 @@ extension _ArtistScreenDiscography on _ArtistScreenState {
                 enterSelectionMode(albums.first.id);
               },
             ),
+            ],
             const SizedBox(height: 8),
           ],
         ),

@@ -7,6 +7,7 @@ import 'package:tango/theme/app_tokens.dart';
 import 'package:tango/widgets/app_alert_dialog.dart';
 import 'package:flutter/cupertino.dart' show CupertinoButton, CupertinoIcons;
 import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/rhythm/rhythm_ui.dart';
 import 'package:tango/widgets/app_icon_button.dart';
 import 'package:tango/widgets/app_loading_indicator.dart';
 import 'package:tango/widgets/app_snack_bar.dart';

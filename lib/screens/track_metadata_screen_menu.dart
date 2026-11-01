@@ -227,13 +227,30 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
                   ],
                 ),
               ),
-              Divider(
-                height: 1,
-                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-              ),
+              if (!sheetContext.isRhythm)
+                Divider(
+                  height: 1,
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                ),
               const SizedBox(height: 8),
               Builder(
                 builder: (context) {
+                  if (context.isRhythm) {
+                    return RhythmGroupedMenu(
+                      items: [
+                        for (final option in options)
+                          RhythmMenuItem(
+                            icon: option.icon,
+                            title: option.label,
+                            isDestructive: option.destructive,
+                            onTap: () => _closeOptionsMenuAndRun(
+                              sheetContext,
+                              option.onTap,
+                            ),
+                          ),
+                      ],
+                    );
+                  }
                   final items = <Widget>[
                     for (int i = 0; i < options.length; i++) ...[
                       if (options[i].dividerAbove && i != 0)

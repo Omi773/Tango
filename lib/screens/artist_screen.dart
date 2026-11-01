@@ -15,6 +15,7 @@ import 'package:tango/screens/track_history_snapshot.dart';
 import 'package:tango/widgets/album_detail_header.dart';
 import 'package:tango/theme/cover_palette.dart';
 import 'package:tango/widgets/app_bottom_sheet.dart';
+import 'package:tango/widgets/rhythm/rhythm_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';

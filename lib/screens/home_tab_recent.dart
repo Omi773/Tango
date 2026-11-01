@@ -269,11 +269,29 @@ extension _HomeTabRecentUI on _HomeTabState {
 
     void showMenu(BuildContext anchorContext) {
       final box = anchorContext.findRenderObject();
+      final anchor = box is RenderBox && box.hasSize
+          ? box.localToGlobal(Offset.zero) & box.size
+          : null;
+      if (anchorContext.isRhythm) {
+        showRhythmMenu<bool>(
+          context: anchorContext,
+          anchor: anchor,
+          entries: [
+            RhythmMenuEntry<bool>(
+              value: true,
+              title: anchorContext.l10n.dialogRemove,
+              icon: Icons.delete_outline,
+              destructive: true,
+            ),
+          ],
+        ).then((remove) {
+          if (remove == true && mounted) _removeRecentAccessItem(item);
+        });
+        return;
+      }
       showTangoContextMenu<void>(
         context: anchorContext,
-        anchor: box is RenderBox && box.hasSize
-            ? box.localToGlobal(Offset.zero) & box.size
-            : null,
+        anchor: anchor,
         builder: (menuContext) => TangoContextMenu(
           groups: [
             [
