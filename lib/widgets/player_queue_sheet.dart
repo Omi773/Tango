@@ -11,6 +11,8 @@ import 'package:tango/widgets/expressive_button.dart';
 import 'package:tango/widgets/player_playback_controls.dart';
 import 'package:tango/widgets/player_artwork.dart';
 import 'package:tango/widgets/player_queue_dismissible.dart';
+import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/rhythm/rhythm_ui.dart';
 
 Future<void> showPlayerQueueSheet(
   BuildContext context,
@@ -124,7 +126,9 @@ class PlayerQueueSheet extends ConsumerWidget {
           )
         else
           Expanded(
-            child: ReorderableListView.builder(
+            child: _maybeFade(
+              context,
+              ReorderableListView.builder(
               scrollController: scrollController,
               padding: const EdgeInsets.fromLTRB(8, 0, 8, 24),
               itemCount: queue.length,
@@ -219,26 +223,48 @@ class PlayerQueueSheet extends ConsumerWidget {
                         color: colorScheme.onSurfaceVariant,
                       ),
                     ),
-                    trailing: ReorderableDragStartListener(
-                      index: i,
-                      // 24dp glyph plus padding gives a 48dp drag target.
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: AppIcon(
-                          Icons.drag_handle,
-                          color: colorScheme.onSurfaceVariant,
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (context.isRhythm && isCurrent)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 4),
+                            child: RhythmEqIcon(
+                              size: 20,
+                              color: colorScheme.primary,
+                            ),
+                          ),
+                        ReorderableDragStartListener(
+                          index: i,
+                          // 24dp glyph plus padding gives a 48dp drag target.
+                          child: context.isRhythm
+                              ? const Padding(
+                                  padding: EdgeInsets.all(4),
+                                  child: RhythmDragHandle(),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: AppIcon(
+                                    Icons.drag_handle,
+                                    color: colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
                         ),
-                      ),
+                      ],
                     ),
                     onTap: () => controller.jumpTo(i),
                   ),
                 );
               },
             ),
+            ),
           ),
       ],
     );
   }
+
+  Widget _maybeFade(BuildContext context, Widget child) =>
+      context.isRhythm ? RhythmEdgeFade(top: 16, bottom: 32, child: child) : child;
 
   Future<void> _shuffleLibrary(
     BuildContext context,

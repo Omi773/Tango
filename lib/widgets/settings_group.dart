@@ -7,6 +7,7 @@ import 'package:tango/theme/app_motion.dart';
 import 'package:tango/theme/material_expressive.dart';
 import 'package:tango/widgets/app_icon.dart';
 import 'package:tango/widgets/app_switch.dart';
+import 'package:tango/widgets/rhythm/rhythm_ui.dart';
 import 'package:tango/theme/app_tokens.dart';
 import 'package:tango/theme/tango_theme.dart';
 import 'package:tango/theme/tango_icons.dart';
@@ -204,7 +205,7 @@ BorderRadius connectedRowRadius(
   required bool last,
 }) {
   final outer = Radius.circular(context.tokens.radiusCard);
-  const inner = Radius.circular(4);
+  final inner = Radius.circular(context.isRhythm ? 8 : 4);
   return BorderRadius.vertical(
     top: first ? outer : inner,
     bottom: last ? outer : inner,
@@ -487,12 +488,20 @@ class SettingsItem extends StatelessWidget {
                 child: Row(
                   children: [
                     if (showIcon) ...[
-                      AppIcon.adaptive(
-                        icon!,
-                        color: iconColor ?? colorScheme.onSurfaceVariant,
-                        size: 24,
+                      if (context.isRhythm)
+                        RhythmIconCircle(
+                          icon: icon!,
+                          tone: RhythmIconCircle.toneFor(title.hashCode),
+                        )
+                      else
+                        AppIcon.adaptive(
+                          icon!,
+                          color: iconColor ?? colorScheme.onSurfaceVariant,
+                          size: 24,
+                        ),
+                      SizedBox(
+                        width: context.isRhythm ? 16 : context.tokens.rowIconGap,
                       ),
-                      SizedBox(width: context.tokens.rowIconGap),
                     ],
                     Expanded(
                       child: Column(
@@ -620,14 +629,23 @@ class SettingsSwitchItem extends StatelessWidget {
                 child: Row(
                   children: [
                     if (showIcon) ...[
-                      AppIcon(
-                        icon,
-                        color: isDisabled
-                            ? colorScheme.outline
-                            : colorScheme.onSurfaceVariant,
-                        size: 24,
+                      if (context.isRhythm)
+                        RhythmIconCircle(
+                          icon: icon!,
+                          tone: RhythmIconCircle.toneFor(title.hashCode),
+                          enabled: !isDisabled,
+                        )
+                      else
+                        AppIcon(
+                          icon,
+                          color: isDisabled
+                              ? colorScheme.outline
+                              : colorScheme.onSurfaceVariant,
+                          size: 24,
+                        ),
+                      SizedBox(
+                        width: context.isRhythm ? 16 : context.tokens.rowIconGap,
                       ),
-                      SizedBox(width: context.tokens.rowIconGap),
                     ],
                     Expanded(
                       child: Column(

@@ -24,6 +24,7 @@ import 'package:tango/widgets/lyric_scroll_motion.dart';
 import 'package:tango/widgets/lyric_gap_indicator.dart';
 import 'package:tango/widgets/tango_player_slider.dart';
 import 'package:tango/widgets/lyrics_text_scale.dart';
+import 'package:tango/widgets/rhythm/rhythm_ui.dart';
 
 part 'player_lyrics_line_style.dart';
 part 'player_lyrics_word_sweep.dart';
@@ -1215,7 +1216,10 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
             },
           );
           // Laid out but not painted while it finds the playing line.
-          return Opacity(opacity: _awaitingFirstScroll ? 0 : 1, child: list);
+          final faded = context.isRhythm
+              ? RhythmEdgeFade(top: 40, bottom: 56, child: list)
+              : list;
+          return Opacity(opacity: _awaitingFirstScroll ? 0 : 1, child: faded);
         },
       ),
     );
