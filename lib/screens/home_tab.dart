@@ -1380,25 +1380,17 @@ class _HomeTabState extends ConsumerState<HomeTab>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  Icons.extension_outlined,
+                  Icons.music_note_rounded,
                   size: 56,
                   color: colorScheme.onSurfaceVariant,
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  context.l10n.homeEmptyTitle,
+                  'No music found',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  context.l10n.homeEmptySubtitle,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],

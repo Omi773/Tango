@@ -1044,8 +1044,8 @@ extension _QueueTabFilterWidgets on _QueueTabState {
         icon = Icons.queue_music;
         break;
       default:
-        message = context.l10n.queueEmptyHistory;
-        subtitle = context.l10n.queueEmptyHistorySubtitle;
+        message = 'No Music?';
+        subtitle = 'Added files will appear here';
         icon = Icons.history;
     }
 
