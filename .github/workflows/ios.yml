@@ -92,9 +92,9 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             rust_backend/target
-          key: rust-ios-dev-${{ runner.os }}-${{ hashFiles('rust_backend/Cargo.lock', 'rust_backend/rust-toolchain.toml', 'scripts/build_rust_backend.sh') }}
+          key: rust-ios-fast-${{ runner.os }}-${{ hashFiles('rust_backend/Cargo.lock', 'rust_backend/rust-toolchain.toml', 'scripts/build_rust_backend.sh') }}
           restore-keys: |
-            rust-ios-dev-${{ runner.os }}-
+            rust-ios-fast-${{ runner.os }}-
 
       - name: Live Activity - 4/14 Cache Rust (cargo + target) done
         if: steps.notify.outputs.activity-id != ''
@@ -111,6 +111,12 @@ jobs:
       # Device-only: the signed IPA never uses the two simulator builds, so they
       # are skipped (about two thirds of the iOS Rust compiling).
       - name: Build Rust backend for iOS (device only)
+        env:
+          # CI-only speed-up: no LTO and 16 codegen units compile much faster
+          # than the release profile's thin LTO with one unit.
+          CARGO_PROFILE_RELEASE_LTO: 'off'
+          CARGO_PROFILE_RELEASE_CODEGEN_UNITS: '16'
+          CARGO_INCREMENTAL: '0'
         run: |
           python3 - <<'PY'
           import pathlib
@@ -137,7 +143,7 @@ jobs:
           bash scripts/_ci_rust_ios_device.sh ios
 
       - name: Save Rust cache
-        if: steps.rust-cache.outputs.cache-hit != 'true'
+        if: always() && steps.rust-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
@@ -145,7 +151,7 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             rust_backend/target
-          key: rust-ios-dev-${{ runner.os }}-${{ hashFiles('rust_backend/Cargo.lock', 'rust_backend/rust-toolchain.toml', 'scripts/build_rust_backend.sh') }}
+          key: rust-ios-fast-${{ runner.os }}-${{ hashFiles('rust_backend/Cargo.lock', 'rust_backend/rust-toolchain.toml', 'scripts/build_rust_backend.sh') }}
 
       - name: Live Activity - 5/14 Build Rust backend for iOS done
         if: steps.notify.outputs.activity-id != ''
