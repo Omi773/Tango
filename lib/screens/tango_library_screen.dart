@@ -14,6 +14,7 @@ import 'package:tango/services/downloaded_embedded_cover_resolver.dart';
 import 'package:tango/services/library_database.dart';
 import 'package:tango/utils/adaptive_layout.dart';
 import 'package:tango/utils/nav_bar_inset.dart';
+import 'package:tango/theme/tango_theme.dart';
 import 'package:tango/widgets/app_bottom_sheet.dart';
 import 'package:tango/widgets/rhythm/rhythm_menu.dart';
 import 'package:tango/widgets/rhythm/rhythm_ui.dart';
