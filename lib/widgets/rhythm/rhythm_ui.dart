@@ -789,3 +789,129 @@ class _TickerCharState extends State<_TickerChar> {
     );
   }
 }
+
+
+/// Rhythm's tinted icon circle used in settings rows, menus and list rows.
+/// [index] picks a tone so neighbouring rows alternate colors the way
+/// Rhythm's grouped settings do.
+class RhythmIconCircle extends StatelessWidget {
+  const RhythmIconCircle({
+    super.key,
+    required this.icon,
+    this.tone = RhythmMenuTone.primary,
+    this.size = 40,
+    this.iconSize = 22,
+    this.enabled = true,
+  });
+
+  final IconData icon;
+  final RhythmMenuTone tone;
+  final double size;
+  final double iconSize;
+  final bool enabled;
+
+  static RhythmMenuTone toneFor(int index) =>
+      RhythmMenuTone.values[index.abs() % 3];
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final (Color bg, Color fg) = switch (tone) {
+      RhythmMenuTone.primary => (
+        scheme.primaryContainer,
+        scheme.onPrimaryContainer,
+      ),
+      RhythmMenuTone.secondary => (
+        scheme.secondaryContainer,
+        scheme.onSecondaryContainer,
+      ),
+      RhythmMenuTone.tertiary => (
+        scheme.tertiaryContainer,
+        scheme.onTertiaryContainer,
+      ),
+      RhythmMenuTone.error => (
+        scheme.errorContainer,
+        scheme.onErrorContainer,
+      ),
+    };
+    return Opacity(
+      opacity: enabled ? 1 : 0.5,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
+        alignment: Alignment.center,
+        child: AppIcon(icon, size: iconSize, color: fg),
+      ),
+    );
+  }
+}
+
+/// Rhythm's round drag handle for reorderable rows.
+class RhythmDragHandle extends StatelessWidget {
+  const RhythmDragHandle({super.key, this.size = 40});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerHighest,
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      child: AppIcon(
+        Icons.drag_handle,
+        size: 22,
+        color: scheme.onSurfaceVariant,
+      ),
+    );
+  }
+}
+
+/// Fades the top and/or bottom edge of a scrolling child to transparent
+/// (Rhythm's scroll-fade edges on sheets, queue and lyrics).
+class RhythmEdgeFade extends StatelessWidget {
+  const RhythmEdgeFade({
+    super.key,
+    required this.child,
+    this.top = 24,
+    this.bottom = 24,
+  });
+
+  final Widget child;
+  final double top;
+  final double bottom;
+
+  @override
+  Widget build(BuildContext context) {
+    if (top <= 0 && bottom <= 0) return child;
+    return ShaderMask(
+      blendMode: BlendMode.dstIn,
+      shaderCallback: (rect) {
+        final h = rect.height <= 0 ? 1.0 : rect.height;
+        final t = (top / h).clamp(0.0, 0.5);
+        final b = (bottom / h).clamp(0.0, 0.5);
+        return LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: const [
+            Color(0x00FFFFFF),
+            Color(0xFFFFFFFF),
+            Color(0xFFFFFFFF),
+            Color(0x00FFFFFF),
+          ],
+          stops: [0, t, 1 - b, 1],
+        ).createShader(rect);
+      },
+      child: child,
+    );
+  }
+}
+
+/// Light tick used by Rhythm controls.
+void rhythmTick() => HapticFeedback.selectionClick();
