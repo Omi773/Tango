@@ -232,11 +232,8 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
         }
         return;
       }
-      final picked = await FilePicker.pickFiles(
-        type: FileType.audio,
-        allowMultiple: true,
-      );
-      if (picked == null || picked.files.isEmpty || !mounted) return;
+      final picked = await FilePicker.pickFiles(type: FileType.audio);
+      if (picked.isEmpty || !mounted) return;
       final target = ref.read(settingsProvider).downloadDirectory;
       if (target.isEmpty || target.startsWith('content://')) {
         if (!mounted) return;
@@ -246,7 +243,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
         return;
       }
       await Directory(target).create(recursive: true);
-      for (final file in picked.files) {
+      for (final file in picked) {
         final path = file.path;
         if (path == null) continue;
         await File(path).copy('$target/${file.name}');
