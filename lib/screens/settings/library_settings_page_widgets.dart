@@ -281,10 +281,10 @@ class _LibraryHeroCard extends StatelessWidget {
         horizontal: 16 + wideListInset(context),
         vertical: 8,
       ),
-      constraints: const BoxConstraints(minHeight: 220),
+      constraints: const BoxConstraints(minHeight: 110),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           if (!isDark)
             BoxShadow(
@@ -298,20 +298,20 @@ class _LibraryHeroCard extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            right: -20,
-            top: -20,
+            right: -10,
+            top: -10,
             child: AppIcon(
               Icons.library_music,
-              size: 200,
+              size: 100,
               color: colorScheme.primary.withValues(alpha: 0.05),
             ),
           ),
           Positioned(
-            left: -40,
-            bottom: -40,
+            left: -20,
+            bottom: -20,
             child: Container(
-              width: 150,
-              height: 150,
+              width: 75,
+              height: 75,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: colorScheme.secondaryContainer.withValues(alpha: 0.3),
@@ -320,7 +320,7 @@ class _LibraryHeroCard extends StatelessWidget {
           ),
 
           Padding(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -328,10 +328,10 @@ class _LibraryHeroCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         color: colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: AppIcon(
                         isScanning
@@ -340,7 +340,7 @@ class _LibraryHeroCard extends StatelessWidget {
                                   : Icons.sync
                             : Icons.music_note,
                         color: colorScheme.onPrimaryContainer,
-                        size: 32,
+                        size: 16,
                       ),
                     ),
                     const Spacer(),
@@ -388,28 +388,28 @@ class _LibraryHeroCard extends StatelessWidget {
                       ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: AlignmentDirectional.centerStart,
                   child: Text(
                     displayCount.toString(),
                     style: TextStyle(
-                      fontSize: 48,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: colorScheme.onSurface,
                       height: 1.0,
-                      letterSpacing: -2,
+                      letterSpacing: -1,
                     ),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   isScanning
                       ? context.l10n.libraryFilesUnit(scannedFiles)
                       : context.l10n.libraryTracksUnit(displayCount),
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 13,
                     color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w500,
                   ),
@@ -478,7 +478,7 @@ class _LibraryHeroCard extends StatelessWidget {
                     ),
                   ],
                 ] else ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
                       AppIcon(

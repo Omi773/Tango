@@ -215,6 +215,54 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
     }
   }
 
+  /// Adds individual audio files. iOS copies them into the app (Imported
+  /// folder, scanned with the Documents source); other platforms copy them
+  /// into the app's music folder.
+  Future<void> _addSongs() async {
+    try {
+      final library = ref.read(localLibraryProvider.notifier);
+      if (Platform.isIOS) {
+        final imported = await PlatformBridge.importIosAudio();
+        if (imported == null || !mounted) return;
+        if (imported.imported + imported.skipped == 0) {
+          throw const FormatException('No songs could be imported');
+        }
+        for (final source in ref.read(localLibraryProvider).sources) {
+          await library.startSourceScan(source.id);
+        }
+        return;
+      }
+      final picked = await FilePicker.pickFiles(
+        type: FileType.audio,
+        allowMultiple: true,
+      );
+      if (picked == null || picked.files.isEmpty || !mounted) return;
+      final target = ref.read(settingsProvider).downloadDirectory;
+      if (target.isEmpty || target.startsWith('content://')) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Add a library folder first')),
+        );
+        return;
+      }
+      await Directory(target).create(recursive: true);
+      for (final file in picked.files) {
+        final path = file.path;
+        if (path == null) continue;
+        await File(path).copy('$target/${file.name}');
+      }
+      for (final source in ref.read(localLibraryProvider).sources) {
+        await library.startSourceScan(source.id);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.snackbarError(context.friendlyError(e)))),
+        );
+      }
+    }
+  }
+
   Future<void> _startScan({bool forceFullScan = false}) async {
     final sources = ref.read(localLibraryProvider).sources;
     if (sources.isEmpty) {
@@ -418,142 +466,15 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
     );
   }
 
-  String _getDefaultViewLabel(BuildContext context, String view) {
-    switch (view) {
-      case 'all':
-        return context.l10n.searchSongs;
-      case 'albums':
-        return context.l10n.historyFilterAlbums;
-      case 'singles':
-        return context.l10n.historyFilterSingles;
-      case 'artists':
-        return context.l10n.searchArtists;
-      case 'playlists':
-        return context.l10n.searchPlaylists;
-      default:
-        return context.l10n.libraryDefaultViewLastUsed;
-    }
-  }
-
-  void _showDefaultViewPicker(BuildContext context, String current) {
-    final options = [
-      ('last', Icons.history, context.l10n.libraryDefaultViewLastUsed),
-      ('all', Icons.music_note, context.l10n.searchSongs),
-      ('albums', Icons.album, context.l10n.historyFilterAlbums),
-      ('singles', Icons.audiotrack, context.l10n.historyFilterSingles),
-      ('artists', Icons.person, context.l10n.searchArtists),
-      ('playlists', Icons.queue_music, context.l10n.searchPlaylists),
-    ];
-    showAppScrollableBottomSheet<void>(
-      context: context,
-      title: context.l10n.libraryDefaultView,
-      builder: (context, controller) => SingleChildScrollView(
-        controller: controller,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (final (value, icon, label) in options)
-              _AutoScanOption(
-                icon: icon,
-                title: label,
-                selected: current == value,
-                onTap: () {
-                  ref
-                      .read(settingsProvider.notifier)
-                      .setDefaultLibraryView(value);
-                  Navigator.pop(context);
-                },
-              ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _getQualityLabelModeLabel(BuildContext context, String mode) {
-    if (mode == AppSettings.libraryQualityLabelFileFormat) {
-      return context.l10n.libraryQualityLabelFileFormat;
-    }
-    if (mode == AppSettings.libraryQualityLabelBitDepthOnly) {
-      return context.l10n.audioAnalysisBitDepth;
-    }
-    if (mode == AppSettings.libraryQualityLabelBitDepth) {
-      return '${context.l10n.audioAnalysisBitDepth} & '
-          '${context.l10n.audioAnalysisSampleRate}';
-    }
-    if (mode == AppSettings.libraryQualityLabelBitDepthBitrate) {
-      return '${context.l10n.audioAnalysisBitDepth} & '
-          '${context.l10n.trackConvertBitrate}';
-    }
-    return context.l10n.trackConvertBitrate;
-  }
-
-  void _showQualityLabelModePicker(BuildContext context, String current) {
-    final options = [
-      (
-        AppSettings.libraryQualityLabelBitrate,
-        Icons.speed_rounded,
-        context.l10n.trackConvertBitrate,
-      ),
-      (
-        AppSettings.libraryQualityLabelBitDepthOnly,
-        Icons.tune_rounded,
-        context.l10n.audioAnalysisBitDepth,
-      ),
-      (
-        AppSettings.libraryQualityLabelBitDepth,
-        Icons.graphic_eq_rounded,
-        '${context.l10n.audioAnalysisBitDepth} & '
-            '${context.l10n.audioAnalysisSampleRate}',
-      ),
-      (
-        AppSettings.libraryQualityLabelBitDepthBitrate,
-        Icons.multiline_chart_rounded,
-        '${context.l10n.audioAnalysisBitDepth} & '
-            '${context.l10n.trackConvertBitrate}',
-      ),
-      (
-        AppSettings.libraryQualityLabelFileFormat,
-        Icons.audio_file_rounded,
-        context.l10n.libraryQualityLabelFileFormat,
-      ),
-    ];
-    showAppScrollableBottomSheet<void>(
-      context: context,
-      title: context.l10n.trackAudioQuality,
-      builder: (context, controller) => SingleChildScrollView(
-        controller: controller,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (final (value, icon, label) in options)
-              _AutoScanOption(
-                icon: icon,
-                title: label,
-                selected: current == value,
-                onTap: () {
-                  ref
-                      .read(settingsProvider.notifier)
-                      .setLibraryQualityLabelMode(value);
-                  Navigator.pop(context);
-                },
-              ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
-    final librarySources = ref.watch(
-      localLibraryProvider.select((state) => state.sources),
-    );
+    // The app Documents source is managed automatically (it also scans
+    // imported songs), so it is not listed.
+    final librarySources = ref
+        .watch(localLibraryProvider.select((state) => state.sources))
+        .where((source) => source.displayName != 'App Documents Folder')
+        .toList();
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -581,38 +502,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                   lastScannedAt: libraryState.lastScannedAt,
                 );
               },
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child: SettingsGroup(
-              children: [
-                SettingsItem(
-                  icon: Icons.grid_view_rounded,
-                  title: context.l10n.libraryDefaultView,
-                  subtitle: _getDefaultViewLabel(
-                    context,
-                    settings.defaultLibraryView,
-                  ),
-                  onTap: () => _showDefaultViewPicker(
-                    context,
-                    settings.defaultLibraryView,
-                  ),
-                ),
-                SettingsItem(
-                  icon: Icons.graphic_eq_rounded,
-                  title: context.l10n.trackAudioQuality,
-                  subtitle: _getQualityLabelModeLabel(
-                    context,
-                    settings.libraryQualityLabelMode,
-                  ),
-                  onTap: () => _showQualityLabelModePicker(
-                    context,
-                    settings.libraryQualityLabelMode,
-                  ),
-                  showDivider: false,
-                ),
-              ],
             ),
           ),
 
@@ -713,6 +602,15 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                     onTap: settings.localLibraryEnabled
                         ? _pickLibraryFolder
                         : null,
+                  ),
+                ),
+                Opacity(
+                  opacity: settings.localLibraryEnabled ? 1.0 : 0.5,
+                  child: SettingsItem(
+                    icon: Icons.library_music_outlined,
+                    title: 'Add songs',
+                    subtitle: 'Pick audio files to add to your library',
+                    onTap: settings.localLibraryEnabled ? _addSongs : null,
                   ),
                 ),
                 SettingsSwitchItem(

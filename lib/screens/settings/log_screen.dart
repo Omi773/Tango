@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tango/providers/settings_provider.dart';
 import 'package:tango/widgets/app_alert_dialog.dart';
 import 'package:tango/widgets/app_bottom_sheet.dart';
 import 'package:tango/widgets/app_content_card.dart';
@@ -379,6 +381,34 @@ class _LogScreenState extends State<LogScreen> {
             ),
 
             const SliverToBoxAdapter(child: AppCrashBanner(diagnostic: true)),
+            SliverToBoxAdapter(
+              child: SettingsSectionHeader(title: context.l10n.sectionDebug),
+            ),
+            SliverToBoxAdapter(
+              child: Consumer(
+                builder: (context, ref, _) {
+                  final enabled = ref.watch(
+                    settingsProvider.select((s) => s.enableLogging),
+                  );
+                  return SettingsGroup(
+                    children: [
+                      SettingsSwitchItem(
+                        icon: Icons.bug_report,
+                        title: context.l10n.optionsDetailedLogging,
+                        subtitle: enabled
+                            ? context.l10n.optionsDetailedLoggingOn
+                            : context.l10n.optionsDetailedLoggingOff,
+                        value: enabled,
+                        onChanged: (v) => ref
+                            .read(settingsProvider.notifier)
+                            .setEnableLogging(v),
+                        showDivider: false,
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
             SliverToBoxAdapter(
               child: SettingsSectionHeader(
                 title: context.l10n.logFilterSection,

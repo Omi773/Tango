@@ -5,8 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tango/l10n/l10n.dart';
 import 'package:tango/providers/settings_provider.dart';
 import 'package:tango/services/music_playback_deck.dart';
-import 'package:tango/services/music_player_service.dart'
-    show resetAutoplayLearning;
 import 'package:tango/screens/listening_statistics_screen.dart';
 import 'package:tango/screens/equalizer_screen.dart';
 import 'package:tango/utils/desktop_platform.dart';
@@ -18,7 +16,6 @@ import 'package:tango/widgets/beta_badge.dart';
 import 'package:tango/widgets/player_volume_control.dart';
 import 'package:tango/widgets/settings_group.dart';
 import 'package:tango/widgets/discord_presence_settings.dart';
-import 'package:tango/widgets/automix_settings.dart';
 import 'package:tango/widgets/music_haptics_settings.dart';
 import 'package:tango/widgets/playback_normalization_settings.dart';
 
@@ -52,31 +49,6 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
         false;
   }
 
-  /// Learning cannot be restored once cleared, so a stray tap must not wipe it.
-  Future<void> _confirmResetLearning() async {
-    final confirmed =
-        await showAppDialog<bool>(
-          context: context,
-          builder: (context) => AppAlertDialog(
-            title: Text(context.l10n.autoplayResetLearningConfirmTitle),
-            content: Text(context.l10n.autoplayResetLearningConfirmMessage),
-            actions: [
-              AppDialogAction(
-                onPressed: () => Navigator.pop(context, false),
-                child: Text(context.l10n.dialogCancel),
-              ),
-              AppDialogAction(
-                isDestructive: true,
-                onPressed: () => Navigator.pop(context, true),
-                child: Text(context.l10n.autoplayResetLearningConfirm),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-    if (confirmed) await resetAutoplayLearning();
-  }
-
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
@@ -85,40 +57,6 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
       body: CustomScrollView(
         slivers: [
           AppSliverHeader.page(title: context.l10n.libraryPlayback),
-          SliverToBoxAdapter(
-            child: SettingsSectionHeader(title: context.l10n.sectionPlayer),
-          ),
-          SliverToBoxAdapter(
-            child: SettingsGroup(
-              children: [
-                SettingsItem(
-                  icon: Icons.open_in_new,
-                  title: context.l10n.libraryExternalPlayer,
-                  subtitle: context.l10n.libraryExternalPlayerSubtitle,
-                  selected: settings.playerMode == 'external',
-                  trailing: settings.playerMode == 'external'
-                      ? AppIcon(Icons.check, color: colorScheme.primary)
-                      : null,
-                  onTap: () => ref
-                      .read(settingsProvider.notifier)
-                      .setPlayerMode('external'),
-                ),
-                SettingsItem(
-                  icon: Icons.play_circle_outline,
-                  title: context.l10n.libraryBuiltInPreviewPlayer,
-                  subtitle: context.l10n.libraryBuiltInPreviewPlayerSubtitle,
-                  selected: settings.playerMode == 'internal',
-                  trailing: settings.playerMode == 'internal'
-                      ? AppIcon(Icons.check, color: colorScheme.primary)
-                      : null,
-                  onTap: () => ref
-                      .read(settingsProvider.notifier)
-                      .setPlayerMode('internal'),
-                  showDivider: false,
-                ),
-              ],
-            ),
-          ),
           SliverToBoxAdapter(
             child: SettingsSectionHeader(
               title: context.l10n.sectionVolumeAndTransitions,
@@ -166,62 +104,6 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                       enabled: settings.playerMode == 'internal',
                     ),
                 ],
-                SettingsSwitchItem(
-                  icon: Icons.compare_arrows,
-                  title: 'AutoMix',
-                  subtitle: context.l10n.autoMixDescription,
-                  value: settings.autoMix,
-                  enabled: !settings.usbBitPerfect,
-                  onChanged: (value) =>
-                      ref.read(settingsProvider.notifier).setAutoMix(value),
-                  showDivider: false,
-                ),
-              ],
-            ),
-          ),
-          if (settings.autoMix) ...[
-            SliverToBoxAdapter(
-              child: SettingsSectionHeader(
-                title: context.l10n.autoMixSettingsTitle,
-              ),
-            ),
-            const SliverToBoxAdapter(child: AutoMixSettings()),
-          ],
-          SliverToBoxAdapter(
-            child: SettingsSectionHeader(
-              title: context.l10n.autoplayFromLibrary,
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: SettingsGroup(
-              children: [
-                SettingsSwitchItem(
-                  icon: Icons.playlist_play_rounded,
-                  title: context.l10n.autoplayFromLibrary,
-                  subtitle: context.l10n.autoplayDescription,
-                  value: settings.autoplay,
-                  enabled: settings.playerMode == 'internal',
-                  onChanged: (value) =>
-                      ref.read(settingsProvider.notifier).setAutoplay(value),
-                ),
-                SettingsSwitchItem(
-                  icon: Icons.auto_awesome_outlined,
-                  title: context.l10n.autoplayPersonalization,
-                  subtitle: context.l10n.autoplayPersonalizationDescription,
-                  value: settings.autoplayPersonalization,
-                  enabled: settings.playerMode == 'internal',
-                  onChanged: (value) => ref
-                      .read(settingsProvider.notifier)
-                      .setAutoplayPersonalization(value),
-                  showDivider: settings.autoplayPersonalization,
-                ),
-                if (settings.autoplayPersonalization)
-                  SettingsItem(
-                    icon: Icons.restart_alt,
-                    title: context.l10n.autoplayResetLearning,
-                    onTap: _confirmResetLearning,
-                    showDivider: false,
-                  ),
               ],
             ),
           ),
@@ -235,18 +117,6 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
             SliverToBoxAdapter(
               child: SettingsGroup(
                 children: [
-                  SettingsSwitchItem(
-                    icon: Icons.volume_off_outlined,
-                    title: context.l10n.playbackPauseOnMute,
-                    subtitle: context.l10n.playbackPauseOnMuteDescription,
-                    value: settings.pauseOnMute,
-                    enabled:
-                        settings.playerMode == 'internal' &&
-                        !settings.usbBitPerfect,
-                    onChanged: (value) => ref
-                        .read(settingsProvider.notifier)
-                        .setPauseOnMute(value),
-                  ),
                   SettingsSwitchItem(
                     icon: Icons.headphones_outlined,
                     title: context.l10n.playbackOnHeadphonesConnected,

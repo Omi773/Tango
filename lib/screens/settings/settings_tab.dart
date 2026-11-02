@@ -9,7 +9,6 @@ import 'package:tango/l10n/l10n.dart';
 import 'package:tango/providers/user_profile_provider.dart';
 import 'package:tango/screens/settings/profile_settings_page.dart';
 import 'package:tango/screens/settings/about_page.dart';
-import 'package:tango/screens/settings/app_settings_page.dart';
 import 'package:tango/screens/settings/appearance_settings_page.dart';
 import 'package:tango/screens/settings/backup_restore_page.dart';
 import 'package:tango/screens/settings/cache_management_page.dart';
@@ -21,7 +20,6 @@ import 'package:tango/screens/settings/keyboard_shortcuts_page.dart';
 import 'package:tango/screens/settings/library_settings_page.dart';
 import 'package:tango/screens/network_storage_screen.dart';
 import 'package:tango/screens/settings/log_screen.dart';
-import 'package:tango/screens/settings/lyrics_settings_page.dart';
 import 'package:tango/screens/settings/metadata_settings_page.dart';
 import 'package:tango/screens/settings/playback_settings_page.dart';
 import 'package:tango/utils/settings_search_catalog.dart';
@@ -215,20 +213,11 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
           _Destination(
             icon: Icons.sell_outlined,
             iconColor: Colors.amber,
-            title: l10n.settingsMetadata,
-            subtitle: l10n.settingsMetadataSubtitle,
-            keywords: const ['tag', 'cover', 'artwork', 'isrc', 'provider'],
-            searchEntries: searchCatalog.metadata,
+            title: 'Metadata & Lyrics',
+            subtitle: 'Tags, cover art and lyrics',
+            keywords: const ['tag', 'cover', 'artwork', 'lyrics', 'lrc', 'synced'],
+            searchEntries: [...searchCatalog.metadata, ...searchCatalog.lyrics],
             pageBuilder: () => const MetadataSettingsPage(),
-          ),
-          _Destination(
-            icon: Icons.lyrics_outlined,
-            iconColor: Colors.cyan,
-            title: l10n.settingsLyrics,
-            subtitle: l10n.settingsLyricsSubtitle,
-            keywords: const ['lrc', 'synced', 'provider'],
-            searchEntries: searchCatalog.lyrics,
-            pageBuilder: () => const LyricsSettingsPage(),
           ),
           _Destination(
             icon: Icons.play_circle_outline,
@@ -243,15 +232,6 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
       ),
       _Group(
         destinations: [
-          _Destination(
-            icon: Icons.tune_outlined,
-            iconColor: Colors.blueGrey,
-            title: l10n.settingsApp,
-            subtitle: l10n.settingsAppSubtitle,
-            keywords: const ['update', 'channel', 'debug', 'logging'],
-            searchEntries: searchCatalog.app,
-            pageBuilder: () => const AppSettingsPage(),
-          ),
           if (isDesktopPlatform)
             _Destination(
               icon: Icons.keyboard_outlined,
