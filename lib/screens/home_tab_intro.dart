@@ -129,6 +129,10 @@ class _HomeSections extends ConsumerWidget {
     );
     final recentlyAdded = ref.watch(_homeRecentlyAddedProvider).value;
     final onRepeat = ref.watch(_homeOnRepeatProvider).value ?? const [];
+    final artists =
+        ref.watch(libraryBrowseProvider(_homeArtistRequest)).value?.entries ??
+        const <LibraryBrowseEntry>[];
+    final stats = ref.watch(_homeStatsProvider).value;
 
     final sections = <Widget>[
       if (hasMediaItem)
@@ -153,12 +157,25 @@ class _HomeSections extends ConsumerWidget {
             inset: inset,
           ),
         ),
+      if (context.isRhythm && artists.isNotEmpty)
+        _HomeSection(
+          title: l10n.searchArtists,
+          inset: inset,
+          shelf: true,
+          child: _HomeArtistsShelf(entries: artists, inset: inset),
+        ),
       if (onRepeat.isNotEmpty)
         _HomeSection(
           title: l10n.homeOnRepeat,
           inset: inset,
           shelf: true,
           child: _HomeOnRepeatShelf(tracks: onRepeat, inset: inset),
+        ),
+      if (context.isRhythm && stats != null && stats.plays > 0)
+        _HomeSection(
+          title: l10n.listeningStats,
+          inset: inset,
+          child: const _HomeStatsCard(),
         ),
     ];
 
@@ -671,6 +688,239 @@ class _HomeOnRepeatShelf extends ConsumerWidget {
           ], initialIndex: index),
         );
       },
+    );
+  }
+}
+
+/// All-time listening totals for the Home statistics cards.
+final _homeStatsProvider = FutureProvider.autoDispose<ListeningSummary>((
+  ref,
+) async {
+  // A new track may have just earned a play.
+  ref.watch(currentMediaItemProvider.select((s) => s.value?.id));
+  await listeningRecorder.flush();
+  final now = DateTime.now();
+  return ListeningStatisticsStore.instance.load(
+    DateTime(2000),
+    DateTime(now.year, now.month, now.day + 1),
+  );
+});
+
+/// The first artists of the Library, the same list its Artists tab shows.
+const _homeArtistRequest = (
+  artists: true,
+  artist: null,
+  search: '',
+  sort: 'a-z',
+  limit: 12,
+  completeness: null,
+);
+
+/// Round artist portraits that scroll past the page margin.
+class _HomeArtistsShelf extends StatelessWidget {
+  const _HomeArtistsShelf({required this.entries, required this.inset});
+
+  final List<LibraryBrowseEntry> entries;
+  final double inset;
+
+  static const _avatar = 88.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final textScale = MediaQuery.textScalerOf(context).scale(1);
+    final cacheWidth = (_avatar * MediaQuery.devicePixelRatioOf(context))
+        .round();
+    return SizedBox(
+      height: _avatar + 40 * textScale,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: inset),
+        itemCount: entries.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 16),
+        itemBuilder: (context, index) {
+          final entry = entries[index];
+          return Semantics(
+            button: true,
+            label: entry.artist,
+            excludeSemantics: true,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => Scaffold(
+                    body: TangoLibraryScreen(
+                      page: TangoLibraryPage.albums,
+                      artist: entry.artist,
+                      onOpenSection: (_) {},
+                    ),
+                  ),
+                ),
+              ),
+              child: SizedBox(
+                width: _avatar,
+                child: Column(
+                  children: [
+                    ClipOval(
+                      child: SizedBox.square(
+                        dimension: _avatar,
+                        child: PlayerArtwork(
+                          artUri: entry.cover,
+                          colorScheme: colorScheme,
+                          cacheWidth: cacheWidth,
+                          iconSize: 32,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      entry.artist,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: textTheme.labelLarge?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// Total listening time up top, with songs and artists beside each other
+/// beneath it. Each card opens the statistics screen.
+class _HomeStatsCard extends ConsumerWidget {
+  const _HomeStatsCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stats = ref.watch(_homeStatsProvider).value;
+    if (stats == null || stats.plays <= 0) return const SizedBox.shrink();
+    final l10n = context.l10n;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final hours = stats.milliseconds ~/ Duration.millisecondsPerHour;
+    void open() => Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const ListeningStatisticsScreen()),
+    );
+
+    Widget small({
+      required Color color,
+      required Color onColor,
+      required IconData icon,
+      required String value,
+      required String label,
+    }) => Expanded(
+      child: Material(
+        color: color,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: open,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppIcon(icon, size: 24, color: onColor),
+                const SizedBox(height: 8),
+                Text(
+                  value,
+                  style: textTheme.headlineMedium?.copyWith(
+                    color: onColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: textTheme.bodyLarge?.copyWith(
+                    color: onColor.withValues(alpha: 0.8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Material(
+          color: colorScheme.primaryContainer,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(32),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: open,
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppIcon(
+                    Icons.timer,
+                    size: 28,
+                    color: colorScheme.onPrimaryContainer,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    hours < 1 ? '< 1h' : '${hours}h',
+                    style: textTheme.displayMedium?.copyWith(
+                      color: colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    l10n.listeningStatsTotals(
+                      stats.plays,
+                      stats.tracks.length,
+                      stats.days.length,
+                    ),
+                    style: textTheme.titleMedium?.copyWith(
+                      color: colorScheme.onPrimaryContainer.withValues(
+                        alpha: 0.8,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            small(
+              color: colorScheme.secondaryContainer,
+              onColor: colorScheme.onSecondaryContainer,
+              icon: Icons.music_note,
+              value: '${stats.tracks.length}',
+              label: l10n.searchSongs,
+            ),
+            const SizedBox(width: 16),
+            small(
+              color: colorScheme.tertiaryContainer,
+              onColor: colorScheme.onTertiaryContainer,
+              icon: Icons.person,
+              value: '${stats.artists.length}',
+              label: l10n.searchArtists,
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

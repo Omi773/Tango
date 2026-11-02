@@ -26,6 +26,7 @@ import 'package:tango/widgets/tango_context_menu.dart';
 import 'package:tango/widgets/app_icon.dart';
 import 'package:tango/widgets/library_search_results.dart';
 import 'package:tango/screens/tango_library_screen.dart';
+import 'package:tango/providers/library_browse_provider.dart';
 import 'package:tango/widgets/app_bottom_sheet.dart';
 import 'package:tango/widgets/rhythm/rhythm_menu.dart';
 import 'package:tango/widgets/rhythm/rhythm_ui.dart';
