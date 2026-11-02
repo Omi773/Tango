@@ -161,7 +161,7 @@ flutter_launcher_icons:
   image_path: "icon.png"
   ios_content_mode: scaleAspectFill
   remove_alpha_ios: true
-  background_color_ios: "#1E4E4F"
+  background_color_ios: "#000000"
 
 flutter:
   uses-material-design: true
