@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:tango/constants/app_info.dart';
 import 'package:tango/screens/main_shell.dart';
 import 'package:tango/screens/setup_screen.dart';
-import 'package:tango/screens/tutorial_screen.dart';
 import 'package:tango/providers/settings_provider.dart';
 import 'package:tango/providers/equalizer_provider.dart';
 import 'package:tango/services/app_navigation_service.dart';
@@ -28,7 +27,6 @@ String initialLocationForAppState({
   required bool hasCompletedTutorial,
 }) {
   if (isFirstLaunch) return '/setup';
-  if (!hasCompletedTutorial) return '/tutorial';
   return '/';
 }
 
@@ -54,10 +52,6 @@ final _routerProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(path: '/', builder: (context, state) => const MainShell()),
       GoRoute(path: '/setup', builder: (context, state) => const SetupScreen()),
-      GoRoute(
-        path: '/tutorial',
-        builder: (context, state) => const TutorialScreen(),
-      ),
     ],
     // Safety net: if a deep link URL (e.g. Spotify/Deezer) somehow reaches
     // GoRouter, redirect to home instead of showing "Page Not Found".
