@@ -10,9 +10,24 @@ import 'package:tango/widgets/app_icon_button.dart';
 import 'package:tango/widgets/tango_chrome.dart';
 import 'package:tango/theme/tango_icons.dart';
 
+/// Tells [AppSheetHandle] that the surrounding modal sheet already shows
+/// Material's own drag handle, so a second pill is not drawn beneath it.
+class _MaterialSheetHandleScope extends InheritedWidget {
+  const _MaterialSheetHandleScope({required super.child});
+
+  static bool of(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<_MaterialSheetHandleScope>() !=
+      null;
+
+  @override
+  bool updateShouldNotify(_MaterialSheetHandleScope oldWidget) => false;
+}
+
 /// The drag handle shown at the top of every modal sheet.
 ///
-/// Sheets using Material's `showDragHandle` should not add this handle.
+/// When the sheet already shows Material's `showDragHandle` (the Rhythm theme
+/// turns it on for every sheet), this draws nothing, so a sheet never ends up
+/// with two handles.
 class AppSheetHandle extends StatelessWidget {
   const AppSheetHandle({super.key, this.margin});
 
@@ -28,6 +43,8 @@ class AppSheetHandle extends StatelessWidget {
     final tokens = context.tokens;
     // Desktop shows sheets as dialogs, which nothing drags.
     if (isDesktopPlatform) return SizedBox(height: tokens.gapMd);
+    // Material already drew the handle above this sheet's content.
+    if (_MaterialSheetHandleScope.of(context)) return const SizedBox.shrink();
     return ExcludeSemantics(
       child: Center(
         child: Container(
@@ -397,6 +414,14 @@ Future<T?> showAppModalBottomSheet<T>({
     );
   }
   final tango = context.isTango;
+  // Material shows its handle when asked to, or by default through the theme.
+  final materialHandle =
+      showDragHandle ??
+      Theme.of(context).bottomSheetTheme.showDragHandle ??
+      false;
+  Widget content(BuildContext context) => materialHandle
+      ? _MaterialSheetHandleScope(child: Builder(builder: builder))
+      : builder(context);
   return showModalBottomSheet<T>(
     context: context,
     sheetAnimationStyle: AppMotion.surfaceEntrance(context),
@@ -413,8 +438,8 @@ Future<T?> showAppModalBottomSheet<T>({
         : null,
     elevation: tango ? 0 : null,
     builder: (context) => tango && tangoGlass
-        ? TangoGlassPanel.overlay(child: Builder(builder: builder))
-        : builder(context),
+        ? TangoGlassPanel.overlay(child: Builder(builder: content))
+        : content(context),
   );
 }
 
