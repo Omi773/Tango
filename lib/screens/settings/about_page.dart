@@ -10,6 +10,7 @@ import 'package:tango/utils/adaptive_layout.dart';
 import 'package:tango/widgets/settings_group.dart';
 import 'package:tango/widgets/app_icon.dart';
 import 'package:tango/widgets/app_sliver_header.dart';
+import 'package:tango/widgets/rhythm/rhythm_extra_sheets.dart';
 import 'package:tango/screens/upgrade_intro_screen.dart';
 
 class AboutPage extends StatelessWidget {
@@ -38,8 +39,6 @@ class AboutPage extends StatelessWidget {
               ),
             ),
 
-
-            
             SliverToBoxAdapter(
               child: SettingsSectionHeader(
                 title: context.l10n.aboutSpecialThanks,
@@ -115,7 +114,6 @@ class AboutPage extends StatelessWidget {
               ),
             ),
 
-
             SliverToBoxAdapter(
               child: SettingsSectionHeader(title: context.l10n.aboutApp),
             ),
@@ -134,6 +132,38 @@ class AboutPage extends StatelessWidget {
               ),
             ),
 
+            const SliverToBoxAdapter(
+              child: SettingsSectionHeader(title: 'Legal'),
+            ),
+            SliverToBoxAdapter(
+              child: SettingsGroup(
+                connected: true,
+                children: [
+                  _AboutSettingsItem(
+                    icon: Icons.privacy_tip_outlined,
+                    title: 'Privacy Policy',
+                    subtitle: 'What stays on your device',
+                    onTap: () => _launchUrl(AppInfo.privacyUrl),
+                    showDivider: true,
+                  ),
+                  _AboutSettingsItem(
+                    icon: Icons.description_outlined,
+                    title: 'Terms of Service',
+                    subtitle: 'The rules for using Tango',
+                    onTap: () => _launchUrl(AppInfo.termsUrl),
+                    showDivider: true,
+                  ),
+                  _AboutSettingsItem(
+                    icon: Icons.gavel_rounded,
+                    title: 'Open-source licenses',
+                    subtitle: 'Tango, Rhythm and the packages it is built on',
+                    onTap: () => _showLicenses(context),
+                    showDivider: false,
+                  ),
+                ],
+              ),
+            ),
+
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(24),
@@ -143,9 +173,8 @@ class AboutPage extends StatelessWidget {
                         ? AppInfo.copyright
                         : '${AppInfo.copyright} · ${AppInfo.shortGitCommit}',
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall
+                        ?.copyWith(color: colorScheme.onSurfaceVariant),
                   ),
                 ),
               ),
@@ -157,6 +186,46 @@ class AboutPage extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _showLicenses(BuildContext context) {
+  return showRhythmLicensesSheet(
+    context,
+    subtitle: 'Credits and licenses',
+    entries: const [
+      RhythmLicenseEntry(
+        name: 'Tango',
+        license: 'MIT',
+        description: '© 2026 Omi773',
+        url: '${AppInfo.githubUrl}/blob/main/LICENSE',
+      ),
+      RhythmLicenseEntry(
+        name: 'Rhythm',
+        license: 'GPL-3.0-or-later',
+        description: 'Interface design and components by Anjishnu Nandi',
+        url: 'https://github.com/cromaguy/Rhythm',
+      ),
+      RhythmLicenseEntry(
+        name: 'Flutter',
+        license: 'BSD-3-Clause',
+        url: 'https://github.com/flutter/flutter/blob/master/LICENSE',
+      ),
+      RhythmLicenseEntry(
+        name: 'FFmpeg',
+        license: 'LGPL-3.0',
+        url: 'https://ffmpeg.org/legal.html',
+      ),
+    ],
+    onViewAll: () {
+      Navigator.of(context).pop();
+      showLicensePage(
+        context: context,
+        applicationName: AppInfo.appName,
+        applicationVersion: AppInfo.displayVersion,
+        applicationLegalese: AppInfo.copyright,
+      );
+    },
+  );
 }
 
 Future<void> _launchUrl(String url) async {
@@ -184,9 +253,9 @@ class _AppHeaderCard extends StatelessWidget {
       builder: (context, constraints) {
         final cardWidth = constraints.maxWidth;
         final shortestSide = MediaQuery.sizeOf(context).shortestSide;
-        final textScale = MediaQuery.textScalerOf(
-          context,
-        ).scale(1.0).clamp(1.0, 1.4);
+        final textScale = MediaQuery.textScalerOf(context)
+            .scale(1.0)
+            .clamp(1.0, 1.4);
         final logoSize = (shortestSide * 0.22).clamp(72.0, 88.0);
         final contentPadding = (cardWidth * 0.06).clamp(16.0, 24.0);
         final titleGap = (16 * (1 + ((textScale - 1) * 0.2))).clamp(12.0, 20.0);
@@ -227,9 +296,8 @@ class _AppHeaderCard extends StatelessWidget {
               Text(
                 AppInfo.appName,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 4),
               Container(
@@ -253,9 +321,8 @@ class _AppHeaderCard extends StatelessWidget {
               Text(
                 context.l10n.aboutAppDescription,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium
+                    ?.copyWith(color: colorScheme.onSurfaceVariant),
               ),
             ],
           ),
@@ -334,9 +401,8 @@ class _ContributorItem extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         description,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
+                        style: Theme.of(context).textTheme.bodyMedium
+                            ?.copyWith(color: colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -379,8 +445,7 @@ class _Translator {
 class _TranslatorsSection extends StatelessWidget {
   const _TranslatorsSection();
 
-  static const List<_Translator> _translators = [
-  ];
+  static const List<_Translator> _translators = [];
 
   @override
   Widget build(BuildContext context) {
