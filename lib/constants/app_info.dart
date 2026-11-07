@@ -32,9 +32,6 @@ class AppInfo {
 
   /// Desktop packages are published here; the source stays in [githubRepo].
   static const String desktopGithubRepo = 'Omi773/Tango';
-  // The server keeps the endpoint name from before the rename.
+  // Placeholder: announcements stay off until a real endpoint is set.
   static const String remoteConfigApiUrl = 'https://invalid.invalid/config';
-
-  static const String kofiUrl = 'https://ko-fi.com/zarzet';
-  static const String githubSponsorsUrl = 'https://github.com/sponsors/zarzet/';
 }
