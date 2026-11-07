@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:tango/widgets/settings_group.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -103,48 +104,47 @@ class RhythmMiniPlayerSelector extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final prefs = ref.watch(rhythmMiniPlayerPrefsProvider);
     final notifier = ref.read(rhythmMiniPlayerPrefsProvider.notifier);
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            child: SegmentedButton<RhythmMiniPlayerStyle>(
-              showSelectedIcon: false,
-              segments: const [
-                ButtonSegment(
-                  value: RhythmMiniPlayerStyle.card,
-                  label: Text('Card'),
-                  icon: Icon(Icons.view_agenda_rounded),
-                ),
-                ButtonSegment(
-                  value: RhythmMiniPlayerStyle.pill,
-                  label: Text('Pill'),
-                  icon: Icon(Icons.horizontal_rule_rounded),
-                ),
-                ButtonSegment(
-                  value: RhythmMiniPlayerStyle.compact,
-                  label: Text('Compact'),
-                  icon: Icon(Icons.album_rounded),
-                ),
-              ],
-              selected: {prefs.style},
-              onSelectionChanged: (value) {
-                HapticFeedback.selectionClick();
-                notifier.setStyle(value.first);
-              },
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: SettingsSegmentedChoice<RhythmMiniPlayerStyle>(
+            selected: prefs.style,
+            semanticLabel: 'Mini player',
+            onChanged: (value) {
+              HapticFeedback.selectionClick();
+              notifier.setStyle(value);
+            },
+            options: const [
+              SettingsSegmentOption(
+                value: RhythmMiniPlayerStyle.card,
+                label: 'Card',
+                icon: Icons.view_agenda_rounded,
+              ),
+              SettingsSegmentOption(
+                value: RhythmMiniPlayerStyle.pill,
+                label: 'Pill',
+                icon: Icons.horizontal_rule_rounded,
+              ),
+              SettingsSegmentOption(
+                value: RhythmMiniPlayerStyle.compact,
+                label: 'Compact',
+                icon: Icons.album_rounded,
+              ),
+            ],
           ),
-          if (prefs.style == RhythmMiniPlayerStyle.card)
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Wavy progress'),
-              subtitle: const Text('The bar waves while music plays'),
-              value: prefs.wavyProgress,
-              onChanged: notifier.setWavyProgress,
-            ),
-        ],
-      ),
+        ),
+        if (prefs.style == RhythmMiniPlayerStyle.card)
+          SettingsSwitchItem(
+            icon: Icons.waves_rounded,
+            title: 'Wavy progress',
+            subtitle: 'The bar waves while music plays',
+            value: prefs.wavyProgress,
+            onChanged: notifier.setWavyProgress,
+            showDivider: false,
+          ),
+      ],
     );
   }
 }

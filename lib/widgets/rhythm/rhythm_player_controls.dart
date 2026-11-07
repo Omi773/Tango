@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
+import 'package:tango/widgets/settings_group.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,34 +58,31 @@ class RhythmProgressStyleSelector extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final style = ref.watch(rhythmProgressStyleProvider);
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SizedBox(
-        width: double.infinity,
-        child: SegmentedButton<RhythmProgressStyle>(
-          showSelectedIcon: false,
-          segments: const [
-            ButtonSegment(
-              value: RhythmProgressStyle.wavy,
-              label: Text('Wavy'),
-              icon: Icon(Icons.waves_rounded),
-            ),
-            ButtonSegment(
-              value: RhythmProgressStyle.arc,
-              label: Text('Arc'),
-              icon: Icon(Icons.radar_rounded),
-            ),
-            ButtonSegment(
-              value: RhythmProgressStyle.cookie,
-              label: Text('Cookie'),
-              icon: Icon(Icons.cookie_rounded),
-            ),
-          ],
-          selected: {style},
-          onSelectionChanged: (value) {
-            HapticFeedback.selectionClick();
-            ref.read(rhythmProgressStyleProvider.notifier).set(value.first);
-          },
-        ),
+      padding: const EdgeInsets.all(12),
+      child: SettingsSegmentedChoice<RhythmProgressStyle>(
+        selected: style,
+        semanticLabel: 'Player progress',
+        onChanged: (value) {
+          HapticFeedback.selectionClick();
+          ref.read(rhythmProgressStyleProvider.notifier).set(value);
+        },
+        options: const [
+          SettingsSegmentOption(
+            value: RhythmProgressStyle.wavy,
+            label: 'Wavy',
+            icon: Icons.waves_rounded,
+          ),
+          SettingsSegmentOption(
+            value: RhythmProgressStyle.arc,
+            label: 'Arc',
+            icon: Icons.radar_rounded,
+          ),
+          SettingsSegmentOption(
+            value: RhythmProgressStyle.cookie,
+            label: 'Cookie',
+            icon: Icons.cookie_rounded,
+          ),
+        ],
       ),
     );
   }
