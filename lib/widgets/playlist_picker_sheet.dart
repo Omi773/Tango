@@ -14,6 +14,7 @@ import 'package:tango/widgets/app_text_field.dart';
 import 'package:tango/widgets/app_bottom_sheet.dart';
 import 'package:tango/widgets/app_loading_indicator.dart';
 import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/rhythm/rhythm_more_dialogs.dart';
 import 'package:tango/widgets/cached_cover_image.dart';
 import 'package:tango/widgets/tango_chrome.dart';
 
@@ -122,9 +123,8 @@ class _PlaylistPickerSheetContentState
       _log.e('Failed to add tracks to selected playlists', error, stack);
       if (!mounted) return;
       setState(() => _isSubmitting = false);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(context.friendlyError(error))));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(context.friendlyError(error))));
       return;
     }
 
@@ -362,6 +362,18 @@ Future<String?> promptPlaylistName(
   TextInputAction? textInputAction,
   bool isDefault = false,
 }) {
+  if (context.isRhythm) {
+    return showRhythmNameDialog(
+      context,
+      title: title,
+      confirmLabel: confirmLabel,
+      initial: initialName,
+      hint: context.l10n.collectionPlaylistNameHint,
+      requiredError: context.l10n.collectionPlaylistNameRequired,
+      cancelLabel: context.l10n.dialogCancel,
+      textInputAction: textInputAction,
+    );
+  }
   return showAppDialog<String>(
     context: context,
     builder: (_) => _PlaylistNameDialog(
