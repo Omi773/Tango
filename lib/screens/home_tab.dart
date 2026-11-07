@@ -871,7 +871,10 @@ class _HomeTabState extends ConsumerState<HomeTab>
     final showFeedSurface = showExplore || showExploreLoading;
     // Only a surface with a search field asks for a search provider. The
     // Tango Home browses without one, so it never stops at this prompt.
+    // Rhythm is local-first: with no search provider its Home still shows
+    // the player, shortcuts and Library shelves instead of this prompt.
     final showEmptyHomeState =
+        !context.isRhythm &&
         _showsSearch &&
         !_searchingLibrary &&
         !isSearchProviderLoading &&

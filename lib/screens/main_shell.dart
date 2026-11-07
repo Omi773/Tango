@@ -1164,8 +1164,10 @@ class _MainShellState extends ConsumerState<MainShell>
                       selectedIndex: _currentIndex.clamp(0, maxIndex),
                       onDestinationSelected: _onNavTap,
                       isTablet: isTablet,
-                      backgroundColor: settingsGroupColor(context)
-                          .withValues(alpha: 0.72),
+                      backgroundColor: context.isRhythm
+                          ? settingsGroupColor(context)
+                          : settingsGroupColor(context)
+                                .withValues(alpha: 0.72),
                       destinations: destinations,
                     ),
                 ],
@@ -1173,7 +1175,8 @@ class _MainShellState extends ConsumerState<MainShell>
               // The backdrop blur re-filters everything scrolling underneath on
               // every frame; low-end devices get an opaque base instead unless
               // the user forces blur on in appearance settings.
-              if (!ref.watch(backdropBlurEnabledProvider)) {
+              // Rhythm draws a solid mini player and bar: no backdrop blur.
+              if (context.isRhythm || !ref.watch(backdropBlurEnabledProvider)) {
                 return ColoredBox(
                   color: settingsGroupColor(context),
                   child: bottomBar,

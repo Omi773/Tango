@@ -397,3 +397,104 @@ class _LibraryPageTabsState extends State<_LibraryPageTabs>
     );
   }
 }
+
+
+/// Rhythm's Library page switcher: a row of rounded pills. The selected pill
+/// fills with the secondary container and carries its count in a small badge.
+class _RhythmLibraryTabs extends StatelessWidget {
+  const _RhythmLibraryTabs({
+    required this.tabs,
+    required this.selectedIndex,
+    required this.onSelected,
+  });
+
+  /// Label and item count per page; a null count is hidden.
+  final List<(String, int?)> tabs;
+  final int selectedIndex;
+  final ValueChanged<int> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          for (final (index, tab) in tabs.indexed) ...[
+            if (index > 0) const SizedBox(width: 8),
+            Semantics(
+              button: true,
+              selected: index == selectedIndex,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  onSelected(index);
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 220),
+                  curve: Curves.easeOutCubic,
+                  height: 44,
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  decoration: BoxDecoration(
+                    color: index == selectedIndex
+                        ? scheme.secondaryContainer
+                        : scheme.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(
+                      index == selectedIndex ? 22 : 14,
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        tab.$1,
+                        style: textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: index == selectedIndex
+                              ? scheme.onSecondaryContainer
+                              : scheme.onSurfaceVariant,
+                        ),
+                      ),
+                      if (tab.$2 != null) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 7,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: index == selectedIndex
+                                ? scheme.onSecondaryContainer.withValues(
+                                    alpha: 0.12,
+                                  )
+                                : scheme.onSurfaceVariant.withValues(
+                                    alpha: 0.12,
+                                  ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            '${tab.$2}',
+                            style: textTheme.labelSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: index == selectedIndex
+                                  ? scheme.onSecondaryContainer
+                                  : scheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}

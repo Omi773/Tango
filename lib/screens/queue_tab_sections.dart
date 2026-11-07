@@ -225,6 +225,64 @@ extension _QueueTabSections on _QueueTabState {
   /// with the labels and tooltips of the separate buttons, which Tango and
   /// reduced motion keep.
   List<Widget> _buildLibraryTools(BuildContext context, {String? viewMode}) {
+    if (context.isRhythm) {
+      final scheme = Theme.of(context).colorScheme;
+      final filterCount = _activeFilterCount;
+      final grid = viewMode == 'grid';
+      Widget tool({
+        required Widget icon,
+        required String tooltip,
+        required VoidCallback onPressed,
+        VoidCallback? onLongPress,
+      }) => Padding(
+        padding: const EdgeInsetsDirectional.only(start: 8),
+        child: GestureDetector(
+          onLongPress: onLongPress,
+          child: IconButton.filledTonal(
+            tooltip: tooltip,
+            onPressed: onPressed,
+            icon: icon,
+            style: IconButton.styleFrom(
+              minimumSize: const Size(48, 48),
+              backgroundColor: scheme.surfaceContainerHigh,
+              foregroundColor: scheme.onSurfaceVariant,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+          ),
+        ),
+      );
+      return [
+        Builder(
+          builder: (button) => tool(
+            icon: const AppIcon(Icons.sort),
+            tooltip: _sortLabel(context, _sortMode),
+            onPressed: () => _showSortSheet(context, anchor: button),
+          ),
+        ),
+        tool(
+          icon: Badge(
+            isLabelVisible: filterCount > 0,
+            label: Text('$filterCount'),
+            child: const AppIcon(Icons.filter_list),
+          ),
+          tooltip: context.l10n.libraryFilterTitle,
+          onPressed: () => _showFilterSheet(context),
+          onLongPress: filterCount > 0 ? _resetFilters : null,
+        ),
+        if (viewMode != null)
+          tool(
+            icon: AppIcon(grid ? Icons.view_list : Icons.grid_view),
+            tooltip: grid
+                ? context.l10n.appearanceHistoryViewList
+                : context.l10n.appearanceHistoryViewGrid,
+            onPressed: () => ref
+                .read(settingsProvider.notifier)
+                .setHistoryViewMode(grid ? 'list' : 'grid'),
+          ),
+      ];
+    }
     if (!materialExpressiveEnabled(context)) {
       return [
         _buildSortButton(context),

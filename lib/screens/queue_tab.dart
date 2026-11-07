@@ -867,6 +867,24 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                           final playlistCount = _getVisibleCollectionEntries(
                             collectionState,
                           ).length;
+                          if (context.isRhythm) {
+                            return _RhythmLibraryTabs(
+                              selectedIndex: activePage,
+                              onSelected: _animateToFilterPage,
+                              tabs: [
+                                (
+                                  context.l10n.searchSongs,
+                                  queueCounts.allTrackCount,
+                                ),
+                                (
+                                  context.l10n.historyFilterAlbums,
+                                  queueCounts.albumCount,
+                                ),
+                                (context.l10n.searchArtists, null),
+                                (context.l10n.searchPlaylists, playlistCount),
+                              ],
+                            );
+                          }
                           if (!context.isTango) {
                             return _LibraryPageTabs(
                               selectedIndex: activePage,
