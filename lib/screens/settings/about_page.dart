@@ -49,6 +49,14 @@ class AboutPage extends StatelessWidget {
                 connected: true,
                 children: [
                   _AboutSettingsItem(
+                    icon: Icons.music_note_rounded,
+                    title: 'Rhythm',
+                    subtitle: 'Open-source Android music player by Anjishnu Nandi (GPL-3.0), the design Tango is modelled on.',
+                    onTap: () =>
+                        _launchUrl('https://github.com/cromaguy/Rhythm'),
+                    showDivider: true,
+                  ),
+                  _AboutSettingsItem(
                     icon: Icons.swap_horiz_rounded,
                     title: 'UniTune',
                     subtitle: context.l10n.aboutUnituneDesc,
