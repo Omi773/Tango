@@ -111,24 +111,20 @@ extension _MainShellStartupPrompts on _MainShellState {
     if (_hasCheckedUpdate) return false;
     _hasCheckedUpdate = true;
 
+    // Update checks are opt-in: nothing is requested from GitHub unless the
+    // person turned "check for updates" on.
     final settings = ref.read(settingsProvider);
+    if (!settings.checkForUpdates) return false;
 
-    // The check runs even when the user disabled update prompts: versions
-    // that fall forceUpdateThreshold stable releases behind must update, and
-    // that enforcement cannot be opted out of.
     final updateInfo = await UpdateChecker().checkForUpdate(
       channel: settings.updateChannel,
     );
     if (updateInfo == null || !mounted) return false;
 
-    final forced =
-        updateInfo.releasesBehind >= UpdateChecker.forceUpdateThreshold;
-    if (!forced && !settings.checkForUpdates) return false;
-
     showUpdateDialog(
       context,
       updateInfo: updateInfo,
-      forced: forced,
+      forced: false,
       onDisableUpdates: () {
         ref.read(settingsProvider.notifier).setCheckForUpdates(false);
       },
@@ -139,6 +135,11 @@ extension _MainShellStartupPrompts on _MainShellState {
   Future<void> _checkAppAnnouncement() async {
     if (_hasCheckedAppAnnouncement) return;
     _hasCheckedAppAnnouncement = true;
+
+    // The announcement endpoint is a placeholder until a real one is set.
+    if (Uri.parse(AppInfo.remoteConfigApiUrl).host.endsWith('.invalid')) {
+      return;
+    }
 
     final locale = Localizations.localeOf(context).toLanguageTag();
     final remoteConfigService = AppRemoteConfigService();

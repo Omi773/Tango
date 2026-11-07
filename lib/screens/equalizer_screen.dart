@@ -27,6 +27,7 @@ import 'package:tango/widgets/app_text_field.dart';
 import 'package:tango/widgets/beta_badge.dart';
 import 'package:tango/widgets/expressive_button.dart';
 import 'package:tango/widgets/expressive_icon_button.dart';
+import 'package:tango/widgets/rhythm/rhythm_more_dialogs.dart';
 import 'package:tango/widgets/tango_chrome.dart';
 import 'package:tango/widgets/tango_level_slider.dart';
 import 'package:tango/widgets/settings_group.dart';
@@ -47,15 +48,25 @@ enum _PresetAction { manage, import, export }
 class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
   bool _busy = false;
 
-  void _message(String message) => ScaffoldMessenger.of(
-    context,
-  ).showSnackBar(SnackBar(content: Text(message)));
+  void _message(String message) =>
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
 
   Future<void> _savePreset() async {
-    final name = await showAppDialog<String>(
-      context: context,
-      builder: (context) => const _PresetNameDialog(),
-    );
+    final name = context.isRhythm
+        ? await showRhythmNameDialog(
+            context,
+            title: context.l10n.equalizerSavePreset,
+            confirmLabel: context.l10n.dialogSave,
+            hint: context.l10n.equalizerPresetName,
+            cancelLabel: context.l10n.dialogCancel,
+            maxLength: 80,
+            icon: Icons.tune_rounded,
+          )
+        : await showAppDialog<String>(
+            context: context,
+            builder: (context) => const _PresetNameDialog(),
+          );
     if (!mounted || name == null) return;
     try {
       ref.read(equalizerProvider.notifier).savePreset(name);

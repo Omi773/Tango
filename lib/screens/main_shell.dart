@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui' show ImageFilter;
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:tango/widgets/app_alert_dialog.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tango/constants/app_info.dart';
 import 'package:tango/l10n/l10n.dart';
 import 'package:tango/screens/upgrade_intro_screen.dart';
 import 'package:tango/services/saf_migration_prompt_store.dart';
@@ -67,11 +69,7 @@ final _log = AppLogger('MainShell');
 
 /// The tab at [index] in a style's destination order.
 @visibleForTesting
-ShellTab shellTabAt(
-  int index, {
-  required bool tango,
-  required bool showStore,
-}) {
+ShellTab shellTabAt(int index, {required bool tango, required bool showStore}) {
   if (index == 0) return ShellTab.home;
   if (index == 1) return ShellTab.library;
   if (showStore && index == 2) return ShellTab.repository;
@@ -646,9 +644,7 @@ class _MainShellState extends ConsumerState<MainShell>
           ShellTab.settings => DesktopDestination(
             tab: tab,
             icon: tango ? CupertinoIcons.gear_alt : Icons.settings_outlined,
-            selectedIcon: tango
-                ? CupertinoIcons.gear_alt_fill
-                : Icons.settings,
+            selectedIcon: tango ? CupertinoIcons.gear_alt_fill : Icons.settings,
             label: l10n.navSettings,
           ),
         },
@@ -1073,9 +1069,9 @@ class _MainShellState extends ConsumerState<MainShell>
                       child: ExpressiveNavigationRail(
                         selectedIndex: selectedDestination,
                         onDestinationSelected: _onNavTap,
-                        backgroundColor: Theme.of(
-                          context,
-                        ).colorScheme.surfaceContainer,
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainer,
                         destinations: destinations,
                       ),
                     ),
@@ -1168,9 +1164,8 @@ class _MainShellState extends ConsumerState<MainShell>
                       selectedIndex: _currentIndex.clamp(0, maxIndex),
                       onDestinationSelected: _onNavTap,
                       isTablet: isTablet,
-                      backgroundColor: settingsGroupColor(
-                        context,
-                      ).withValues(alpha: 0.72),
+                      backgroundColor: settingsGroupColor(context)
+                          .withValues(alpha: 0.72),
                       destinations: destinations,
                     ),
                 ],
