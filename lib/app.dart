@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:material_ui/material_ui.dart' as material_ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -257,6 +258,25 @@ class TangoApp extends ConsumerWidget {
             if (isDesktopPlatform) {
               appContent = DesktopShortcuts(child: appContent);
             }
+            // Root status bar style that follows the live theme. iOS reads
+            // statusBarBrightness (the brightness of the app content), not
+            // the Android-only icon brightness. Screens that need their own
+            // style (Now Playing over cover art, Rewind) add a nested
+            // region; once they leave, this one applies again, so the bar
+            // can no longer stay white in light mode.
+            final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
+            appContent = AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarBrightness: isDarkTheme
+                    ? Brightness.dark
+                    : Brightness.light,
+                statusBarIconBrightness: isDarkTheme
+                    ? Brightness.light
+                    : Brightness.dark,
+              ),
+              child: appContent,
+            );
             return MediaQuery(
               data: mediaQuery.copyWith(displayFeatures: const []),
               child: TangoGlassPreparation(
