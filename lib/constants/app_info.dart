@@ -26,11 +26,14 @@ class AppInfo {
   static const String githubRepo = 'Omi773/Tango';
   static const String githubUrl = 'https://github.com/$githubRepo';
 
+  /// Legal documents live in the repository's docs folder.
+  static const String privacyUrl = '$githubUrl/blob/main/docs/PRIVACY.md';
+  static const String termsUrl = '$githubUrl/blob/main/docs/TERMS.md';
+
   /// Desktop packages are published here; the source stays in [githubRepo].
   static const String desktopGithubRepo = 'Omi773/Tango';
   // The server keeps the endpoint name from before the rename.
-  static const String remoteConfigApiUrl =
-      'https://invalid.invalid/config';
+  static const String remoteConfigApiUrl = 'https://invalid.invalid/config';
 
   static const String kofiUrl = 'https://ko-fi.com/zarzet';
   static const String githubSponsorsUrl = 'https://github.com/sponsors/zarzet/';
