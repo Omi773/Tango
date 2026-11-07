@@ -101,7 +101,7 @@ class RhythmTheme {
         coverMini: 52,
         coverCompact: 52,
         coverList: 60,
-        headerExpandedHeight: 140,
+        headerExpandedHeight: 84,
         headerExpandedTitleSize: 34,
       );
     }

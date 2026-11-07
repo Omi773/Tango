@@ -176,6 +176,7 @@ class AppTheme {
     ),
     systemOverlayStyle: SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
+      statusBarBrightness: scheme.brightness,
       statusBarIconBrightness: scheme.brightness == Brightness.dark
           ? Brightness.light
           : Brightness.dark,
