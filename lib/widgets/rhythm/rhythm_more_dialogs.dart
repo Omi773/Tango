@@ -395,3 +395,73 @@ Future<bool> showRhythmBetaProgramDialog(
   );
   return result ?? false;
 }
+
+/// Rhythm-styled single name dialog (rename / new playlist). Returns the
+/// trimmed, non-empty name, or null when cancelled.
+Future<String?> showRhythmNameDialog(
+  BuildContext context, {
+  required String title,
+  required String confirmLabel,
+  required String hint,
+  required String cancelLabel,
+  String? requiredError,
+  String? initial,
+  int? maxLength,
+  IconData icon = Icons.edit_rounded,
+  TextInputAction? textInputAction,
+}) {
+  final controller = TextEditingController(text: initial);
+  final touched = ValueNotifier<bool>(false);
+  return showRhythmDialog<String>(
+    context,
+    icon: icon,
+    title: title,
+    content: ListenableBuilder(
+      listenable: Listenable.merge([controller, touched]),
+      builder: (ctx, _) => TextField(
+        controller: controller,
+        autofocus: true,
+        textCapitalization: TextCapitalization.sentences,
+        maxLength: maxLength,
+        textInputAction: textInputAction ?? TextInputAction.done,
+        decoration: InputDecoration(
+          hintText: hint,
+          errorText:
+              requiredError != null &&
+                  touched.value &&
+                  controller.text.trim().isEmpty
+              ? requiredError
+              : null,
+        ),
+        onChanged: (_) => touched.value = true,
+        onSubmitted: (_) {
+          final trimmed = controller.text.trim();
+          if (trimmed.isEmpty) {
+            touched.value = true;
+          } else {
+            Navigator.of(ctx).pop(trimmed);
+          }
+        },
+      ),
+    ),
+    actions: [
+      _cancelButton(cancelLabel),
+      Builder(
+        builder: (ctx) => ListenableBuilder(
+          listenable: controller,
+          builder: (context, _) {
+            final trimmed = controller.text.trim();
+            return RhythmButton(
+              label: confirmLabel,
+              size: RhythmButtonSize.large,
+              expand: true,
+              onPressed: trimmed.isEmpty
+                  ? null
+                  : () => Navigator.of(ctx).pop(trimmed),
+            );
+          },
+        ),
+      ),
+    ],
+  );
+}
