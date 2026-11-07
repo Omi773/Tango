@@ -797,7 +797,7 @@
   "@aboutSquiglyDesc": {
     "description": "Credit for the Squigly resolver"
   },
-  "aboutAppDescription": "Search music metadata, manage extensions, and organize your library.",
+  "aboutAppDescription": "A local-files music player for iPhone with a Rhythm-style interface.",
   "@aboutAppDescription": {
     "description": "App description in header card"
   },
