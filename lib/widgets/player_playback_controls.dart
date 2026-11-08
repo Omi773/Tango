@@ -136,7 +136,10 @@ class PlayerPlaybackControls extends ConsumerWidget {
                                 style: timeStyle,
                               )
                             else if (context.isRhythm)
-                              RhythmTimePill(text: formatClock(elapsedSeconds))
+                              _timeSlot(
+                                Alignment.centerLeft,
+                                RhythmTimePill(text: formatClock(elapsedSeconds)),
+                              )
                             else
                               Text(
                                 formatClock(elapsedSeconds),
@@ -154,7 +157,12 @@ class PlayerPlaybackControls extends ConsumerWidget {
                                 style: timeStyle,
                               )
                             else if (context.isRhythm)
-                              RhythmTimePill(text: formatClock(duration.inSeconds))
+                              _timeSlot(
+                                Alignment.centerRight,
+                                RhythmTimePill(
+                                  text: formatClock(duration.inSeconds),
+                                ),
+                              )
                             else
                               Text(
                                 formatClock(duration.inSeconds),
@@ -324,6 +332,11 @@ class PlayerPlaybackControls extends ConsumerWidget {
     );
   }
 }
+
+/// Equal-width slots on both sides keep the audio info chip centred however
+/// wide the elapsed and total times get.
+Widget _timeSlot(Alignment alignment, Widget child) =>
+    SizedBox(width: 64, child: Align(alignment: alignment, child: child));
 
 enum PlayerPlaybackMode { autoplay, repeat, shuffle }
 

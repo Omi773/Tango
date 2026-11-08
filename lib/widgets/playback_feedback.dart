@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tango/l10n/l10n.dart';
@@ -17,9 +15,6 @@ class PlaybackFeedback extends ConsumerStatefulWidget {
 }
 
 class _PlaybackFeedbackState extends ConsumerState<PlaybackFeedback> {
-  StreamSubscription<void>? _subscription;
-  int _subscriptionRevision = 0;
-
   @override
   void initState() {
     super.initState();
@@ -41,29 +36,6 @@ class _PlaybackFeedbackState extends ConsumerState<PlaybackFeedback> {
         );
       },
     );
-    ref.listenManual(musicPlayerRuntimeProvider, (_, runtime) {
-      final revision = ++_subscriptionRevision;
-      unawaited(_subscription?.cancel());
-      _subscription = runtime.mutedPlaybackEvents.listen((_) {
-        if (!mounted ||
-            revision != _subscriptionRevision ||
-            WidgetsBinding.instance.lifecycleState !=
-                AppLifecycleState.resumed) {
-          return;
-        }
-        showAppSnackBar(
-          context,
-          content: Text(context.l10n.snackbarPlaybackMuted),
-        );
-      });
-    }, fireImmediately: true);
-  }
-
-  @override
-  void dispose() {
-    _subscriptionRevision++;
-    unawaited(_subscription?.cancel());
-    super.dispose();
   }
 
   @override

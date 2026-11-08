@@ -11,7 +11,6 @@ import 'package:tango/widgets/app_slider.dart';
 import 'package:tango/widgets/tango_player_slider.dart';
 import 'package:tango/utils/logger.dart';
 import 'package:tango/services/music_playback_deck.dart';
-import 'package:tango/widgets/rhythm/rhythm_player_controls.dart';
 
 export 'package:tango/providers/system_volume_provider.dart';
 
@@ -100,16 +99,7 @@ class _PlayerVolumeControlState extends ConsumerState<PlayerVolumeControl> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 28),
         child: context.isRhythm
-            ? RhythmVolumeSlider(
-                value: value,
-                enabled: volume != null,
-                onChangeStart: () => _dragging = true,
-                onChanged: _setVolume,
-                onChangeEnd: (v) {
-                  _dragging = false;
-                  _setVolume(v);
-                },
-              )
+            ? _lineSlider(context, value, enabled: volume != null)
             : !context.isTango
             ? _materialSlider(context, value, enabled: volume != null)
             : Row(
@@ -154,6 +144,52 @@ class _PlayerVolumeControlState extends ConsumerState<PlayerVolumeControl> {
                 ],
               ),
       ),
+    );
+  }
+
+  /// Thin line volume slider with small speaker glyphs at both ends.
+  Widget _lineSlider(
+    BuildContext context,
+    double value, {
+    required bool enabled,
+  }) {
+    final colors = Theme.of(context).colorScheme;
+    return Row(
+      children: [
+        AppIcon(
+          value <= 0 ? Icons.volume_mute_rounded : Icons.volume_down_rounded,
+          size: 18,
+          color: colors.onSurfaceVariant,
+        ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: IgnorePointer(
+            ignoring: !enabled,
+            child: Opacity(
+              opacity: enabled ? 1 : 0.4,
+              child: TangoPlayerSlider(
+                value: value,
+                trackHeight: 3,
+                height: 40,
+                activeColor: colors.onSurfaceVariant,
+                inactiveColor: colors.onSurfaceVariant.withValues(alpha: 0.2),
+                onChangeStart: (_) => _dragging = true,
+                onChanged: _setVolume,
+                onChangeEnd: (v) {
+                  _dragging = false;
+                  _setVolume(v);
+                },
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 6),
+        AppIcon(
+          Icons.volume_up_rounded,
+          size: 18,
+          color: colors.onSurfaceVariant,
+        ),
+      ],
     );
   }
 

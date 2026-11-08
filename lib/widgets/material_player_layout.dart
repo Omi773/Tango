@@ -141,11 +141,13 @@ class MaterialPlayerLayout extends StatelessWidget {
               : LayoutBuilder(
                   key: const ValueKey('material-player-cover'),
                   builder: (context, area) => artworkAt(
+                    // Up to half the screen's height, as wide as the page
+                    // allows; the controls below only take what they need.
                     math.max(
                       0.0,
                       math.min(
-                        360.0,
-                        math.min(area.maxWidth - 64, area.maxHeight - 24),
+                        math.min(area.maxWidth - 32, area.maxHeight - 16),
+                        MediaQuery.sizeOf(context).height * 0.5,
                       ),
                     ),
                   ),
@@ -245,7 +247,7 @@ class MaterialPlayerLayout extends StatelessWidget {
               children: [
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PlayerMetadataTitle(
                         mediaItem: mediaItem,
@@ -258,7 +260,7 @@ class MaterialPlayerLayout extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   color: colorScheme.onSurface,
                                 ),
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.left,
                         maxLines: compact ? 1 : 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -275,7 +277,7 @@ class MaterialPlayerLayout extends StatelessWidget {
                             artistId: track?.artistId,
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(color: colorScheme.onSurfaceVariant),
-                            textAlign: TextAlign.center,
+                            textAlign: TextAlign.left,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           );
@@ -303,7 +305,7 @@ class MaterialPlayerLayout extends StatelessWidget {
         SizedBox(height: compact ? 8 : 12),
         const PlayerVolumeControl(),
       ],
-      if (showVolume && context.isRhythm && rhythmChipRowBuilder != null) ...[
+      if (context.isRhythm && rhythmChipRowBuilder != null) ...[
         SizedBox(height: compact ? 12 : 16),
         rhythmChipRowBuilder!(context),
       ],
