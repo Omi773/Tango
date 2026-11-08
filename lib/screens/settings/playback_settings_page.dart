@@ -219,7 +219,9 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                           switch (status.reason) {
                             'active' =>
                               '${status.device} · ${status.transport == 'pcm'
-                                  ? '${status.bitDepth ?? '?'}-bit PCM'
+                                  ? status.bitDepth == null
+                                      ? 'PCM'
+                                      : '${status.bitDepth}-bit PCM'
                                   : status.transport == 'dop'
                                   ? 'DSD (DoP)'
                                   : 'DSD (Native)'} · ${(status.sampleRate! / 1000).toStringAsFixed(1)} kHz',
