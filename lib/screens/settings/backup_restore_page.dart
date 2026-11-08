@@ -35,7 +35,7 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
   bool _includeSettings = true;
   bool _includeHistory = true;
   bool _includeCollections = true;
-  bool _includeExtensions = true;
+  bool _includeExtensions = false;
 
   bool get _isBusy => _isExporting || _isImporting;
   bool get _hasSelection =>
@@ -322,26 +322,6 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
                   onChanged: _isBusy
                       ? null
                       : (value) => setState(() => _includeCollections = value),
-                ),
-                SettingsSwitchItem(
-                  icon: Icons.extension_outlined,
-                  title: l10n.backupSelectExtensions,
-                  value: _includeExtensions,
-                  onChanged: _isBusy
-                      ? null
-                      : (value) => setState(() {
-                          _includeExtensions = value;
-                          if (!value) _includeSecrets = false;
-                        }),
-                ),
-                SettingsSwitchItem(
-                  icon: Icons.vpn_key_outlined,
-                  title: l10n.backupIncludeSecrets,
-                  subtitle: l10n.backupIncludeSecretsDescription,
-                  value: _includeSecrets,
-                  onChanged: _isBusy || !_includeExtensions
-                      ? null
-                      : (value) => setState(() => _includeSecrets = value),
                 ),
                 SettingsItem(
                   icon: Icons.ios_share,
