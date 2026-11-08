@@ -20,6 +20,8 @@ import 'package:tango/widgets/app_shape.dart';
 import 'package:tango/widgets/expressive_button.dart';
 import 'package:tango/widgets/app_sliver_header.dart';
 import 'package:tango/widgets/player_artwork.dart';
+import 'package:tango/widgets/rhythm/rhythm_empty_state.dart';
+import 'package:tango/widgets/rhythm/rhythm_stats_kit.dart';
 import 'package:tango/widgets/settings_group.dart';
 
 export 'package:tango/providers/listening_statistics_provider.dart';
@@ -366,12 +368,58 @@ class _ListeningStatisticsScreenState
           ),
         ),
       ),
-      if (data.tracks.isEmpty)
+      if (context.isRhythm && data.tracks.isNotEmpty)
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Text(context.l10n.listeningStatsEmpty),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: RhythmStatCard(
+                    value: '${data.plays}',
+                    label: context.l10n.listeningStatsPlaysLabel,
+                    icon: Icons.play_arrow_rounded,
+                    color: colors.secondaryContainer,
+                    onColor: colors.onSecondaryContainer,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: RhythmStatCard(
+                    value: '${data.tracks.length}',
+                    label: context.l10n.listeningStatsTracksLabel,
+                    icon: Icons.music_note_rounded,
+                    color: colors.tertiaryContainer,
+                    onColor: colors.onTertiaryContainer,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: RhythmStatCard(
+                    value: '${data.days.length}',
+                    label: context.l10n.listeningStatsDaysLabel,
+                    icon: Icons.calendar_today_rounded,
+                    color: colors.surfaceContainerHigh,
+                    onColor: colors.onSurface,
+                  ),
+                ),
+              ],
+            ),
           ),
+        ),
+      if (data.tracks.isEmpty)
+        SliverToBoxAdapter(
+          child: context.isRhythm
+              ? RhythmCookieEmptyState(
+                  title: context.l10n.listeningStats,
+                  subtitle: context.l10n.listeningStatsEmpty,
+                  mainIcon: Icons.insights_rounded,
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Text(context.l10n.listeningStatsEmpty),
+                ),
         ),
       if (days.isNotEmpty) ...[
         SliverToBoxAdapter(

@@ -11,11 +11,13 @@ import 'package:tango/l10n/l10n.dart';
 import 'package:tango/providers/local_library_provider.dart';
 import 'package:tango/providers/settings_provider.dart';
 import 'package:tango/theme/material_expressive.dart';
+import 'package:tango/theme/tango_theme.dart';
 import 'package:tango/utils/desktop_folders.dart';
 import 'package:tango/utils/desktop_platform.dart';
 import 'package:tango/utils/logger.dart';
 import 'package:tango/widgets/app_icon.dart';
 import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/rhythm/rhythm_onboarding_kit.dart';
 
 final _log = AppLogger('SetupScreen');
 
@@ -99,8 +101,45 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
     }
   }
 
+  Widget _rhythmOnboarding(BuildContext context) {
+    final l10n = context.l10n;
+    return Stack(
+      children: [
+        RhythmOnboarding(
+          finishLabel: l10n.setupGetStarted,
+          onFinish: _completeSetup,
+          pages: [
+            RhythmOnboardingPage(
+              icon: Icons.music_note_rounded,
+              title: l10n.appName,
+              description: l10n.setupRhythmWelcomeDescription,
+            ),
+            RhythmOnboardingPage(
+              icon: Icons.folder_special_rounded,
+              title: l10n.setupRhythmLibraryTitle,
+              description: l10n.setupRhythmLibraryDescription,
+            ),
+            RhythmOnboardingPage(
+              icon: Icons.tune_rounded,
+              title: l10n.setupRhythmCustomizeTitle,
+              description: l10n.setupRhythmCustomizeDescription,
+            ),
+          ],
+        ),
+        if (_isLoading)
+          Positioned.fill(
+            child: ColoredBox(
+              color: Theme.of(context).colorScheme.scrim.withValues(alpha: 0.32),
+              child: const Center(child: AppLoadingIndicator(size: 64)),
+            ),
+          ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (context.isRhythm) return _rhythmOnboarding(context);
     final colorScheme = Theme.of(context).colorScheme;
     final shortestSide = MediaQuery.sizeOf(context).shortestSide;
     final logoSize = (shortestSide * 0.24).clamp(80.0, 104.0);

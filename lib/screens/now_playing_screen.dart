@@ -54,6 +54,7 @@ import 'package:tango/widgets/tango_context_menu.dart';
 import 'package:tango/widgets/tango_player_artwork.dart';
 import 'package:tango/providers/player_motion_artwork_provider.dart';
 import 'package:tango/widgets/rhythm/rhythm_player_controls.dart';
+import 'package:tango/widgets/rhythm/rhythm_sheets.dart';
 
 export 'package:tango/routes/now_playing_route.dart';
 
@@ -1327,6 +1328,10 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     MusicPlayerController controller,
     ColorScheme colorScheme,
   ) async {
+    if (context.isRhythm) {
+      await _showRhythmSleepTimerSheet(context, controller);
+      return;
+    }
     const durations = [15, 30, 45, 60];
     final isActive = controller.sleepTimerEndsAt != null;
     final selection = await showAppBottomSheet<String>(
@@ -1374,6 +1379,51 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         content: Text(
           context.l10n.nowPlayingSleepTimerSet(
             context.l10n.nowPlayingSleepTimerMinutes(minutes),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showRhythmSleepTimerSheet(
+    BuildContext context,
+    MusicPlayerController controller,
+  ) async {
+    final endsAt = controller.sleepTimerEndsAt;
+    final remaining = endsAt?.difference(DateTime.now());
+    final result = await showRhythmSleepTimerSheet(
+      context,
+      remaining: remaining == null || remaining.isNegative ? null : remaining,
+    );
+    if (!mounted || !context.mounted || result == null) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
+
+    if (result.cancelled) {
+      controller.cancelSleepTimer();
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.nowPlayingSleepTimerCancelled)),
+      );
+      return;
+    }
+
+    Duration? duration = result.duration;
+    if (result.endOfTrack) {
+      final total = ref.read(currentMediaItemProvider).value?.duration;
+      final left = total == null
+          ? null
+          : total - ref.read(playbackPositionProvider);
+      if (left == null || left <= Duration.zero) return;
+      duration = left;
+    }
+    if (duration == null) return;
+    controller.setSleepTimer(duration);
+    final minutes = duration.inMinutes < 1 ? 1 : duration.inMinutes;
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(
+          l10n.nowPlayingSleepTimerSet(
+            l10n.nowPlayingSleepTimerMinutes(minutes),
           ),
         ),
       ),
