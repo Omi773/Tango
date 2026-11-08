@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:tango/utils/logger.dart';
 
@@ -193,5 +196,40 @@ Future<AudioRouteInfo?> readAudioRouteInfo({String? path}) async {
   } catch (error) {
     _log.w('Failed to read audio route: $error');
     return null;
+  }
+}
+
+/// Keeps the current output device up to date while something shows it.
+/// iOS pushes `routeChanged`; a slow poll covers platforms that do not.
+class AudioRouteWatcher {
+  AudioRouteWatcher._();
+
+  static final AudioRouteWatcher instance = AudioRouteWatcher._();
+
+  final ValueNotifier<AudioRouteDevice?> device = ValueNotifier(null);
+  int _users = 0;
+  Timer? _timer;
+
+  void acquire() {
+    if (_users++ > 0) return;
+    _channel.setMethodCallHandler((call) async {
+      if (call.method == 'routeChanged') unawaited(refresh());
+    });
+    unawaited(refresh());
+    _timer = Timer.periodic(const Duration(seconds: 3), (_) => refresh());
+  }
+
+  void release() {
+    if (_users == 0 || --_users > 0) return;
+    _timer?.cancel();
+    _timer = null;
+    _channel.setMethodCallHandler(null);
+  }
+
+  Future<void> refresh() async {
+    final next = (await readAudioRouteInfo())?.device;
+    final current = device.value;
+    if (next?.type == current?.type && next?.name == current?.name) return;
+    device.value = next;
   }
 }

@@ -21,7 +21,6 @@ import 'package:tango/services/playback_deck.dart';
 import 'package:tango/services/playback_notification.dart';
 import 'package:tango/services/playback_output_volume.dart';
 import 'package:tango/services/source_deletion_events.dart';
-import 'package:tango/services/system_volume_service.dart';
 import 'package:tango/utils/desktop_platform.dart';
 import 'package:tango/utils/logger.dart';
 
@@ -43,7 +42,6 @@ class PlaybackDependencies {
     LibraryDatabase? libraryDatabase,
     ListeningRecorder? recorder,
     SourceDeletionEvents? sourceDeletionEvents,
-    Stream<double>? volumeChanges,
     bool? isIOS,
     bool? isAndroid,
     this.notificationChannel = const MethodChannel(
@@ -53,7 +51,6 @@ class PlaybackDependencies {
        _libraryDatabase = libraryDatabase,
        _recorder = recorder,
        _sourceDeletionEvents = sourceDeletionEvents,
-       _volumeChanges = volumeChanges,
        _isIOS = isIOS,
        _isAndroid = isAndroid;
 
@@ -74,7 +71,6 @@ class PlaybackDependencies {
   final LibraryDatabase? _libraryDatabase;
   final ListeningRecorder? _recorder;
   final SourceDeletionEvents? _sourceDeletionEvents;
-  final Stream<double>? _volumeChanges;
   final bool? _isIOS, _isAndroid;
 
   AppStateDatabase get sessionDatabase =>
@@ -84,8 +80,6 @@ class PlaybackDependencies {
   ListeningRecorder get recorder => _recorder ?? listeningRecorder;
   SourceDeletionEvents get sourceDeletionEvents =>
       _sourceDeletionEvents ?? SourceDeletionEvents.instance;
-  Stream<double> get volumeChanges =>
-      _volumeChanges ?? SystemVolumeService.instance.changes;
   bool get isIOS => _isIOS ?? Platform.isIOS;
   bool get isAndroid => _isAndroid ?? Platform.isAndroid;
 
@@ -145,7 +139,6 @@ class MusicPlayerRuntime {
   Future<MusicPlayerHandler>? _initFuture;
   Future<void>? _restoreFuture;
   final _handlers = StreamController<MusicPlayerHandler?>.broadcast(sync: true);
-  final _mutedPlaybackEvents = StreamController<void>.broadcast();
   bool _initializing = false;
   bool _disposed = false;
   Future<void>? _disposeFuture;
@@ -159,13 +152,6 @@ class MusicPlayerRuntime {
   String get unknownTitle => _unknownTitle;
   String get unknownArtist => _unknownArtist;
   PlaybackNotification get notification => _notification;
-
-  // Transient feedback is never replayed when a screen or app shell reopens.
-  Stream<void> get mutedPlaybackEvents => _mutedPlaybackEvents.stream;
-
-  void notifyMutedPlayback() {
-    if (!_disposed) _mutedPlaybackEvents.add(null);
-  }
 
   void configure(AppSettings settings) {
     final previous = _settings;
@@ -309,7 +295,6 @@ class MusicPlayerRuntime {
     }
     await _personalization?.dispose();
     await _handlers.close();
-    await _mutedPlaybackEvents.close();
   }
 
   Stream<T> _events<T>(

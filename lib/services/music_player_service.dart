@@ -120,7 +120,6 @@ class MusicPlayerHandler extends BaseAudioHandler
       <PlaybackDeck, List<StreamSubscription<dynamic>>>{};
   AudioSession? _audioSession;
   late final PlaybackAutomation _playbackAutomation;
-  StreamSubscription<double>? _automationVolumeSubscription;
   StreamSubscription<Set<AudioDevice>>? _automationDevicesSubscription;
   bool _headphoneMonitoringRequested = false;
   int _headphoneMonitoringRevision = 0;
@@ -191,7 +190,6 @@ class MusicPlayerHandler extends BaseAudioHandler
     // USB changes apply at the next source boundary, without raising volume.
     if ((previous.playerMode == 'internal') !=
             (settings.playerMode == 'internal') ||
-        previous.pauseOnMute != settings.pauseOnMute ||
         previous.playOnHeadphonesConnected !=
             settings.playOnHeadphonesConnected ||
         previous.usbBitPerfect != settings.usbBitPerfect) {
@@ -256,7 +254,6 @@ class MusicPlayerHandler extends BaseAudioHandler
       pause: _pausePlayback,
       play: play,
       onError: (error) => _log.w('Automatic playback failed: $error'),
-      onMutedPause: _runtime.notifyMutedPlayback,
     );
     _autoMix = _MusicAutoMix(
       this,
@@ -333,11 +330,6 @@ class MusicPlayerHandler extends BaseAudioHandler
           )
           .distinct()
           .listen((_) => recordListening()),
-    );
-    _subscriptions.add(
-      playbackState.map((state) => state.playing).distinct().listen((playing) {
-        if (playing) unawaited(_playbackAutomation.playbackStarted());
-      }),
     );
     _subscriptions.add(mediaItem.listen((_) => _updateHaptics()));
     _subscriptions.add(playbackState.listen((_) => _updateHaptics()));
@@ -559,8 +551,7 @@ class MusicPlayerHandler extends BaseAudioHandler
 
             _interruptionActive = false;
             if (_pausedByInterruption &&
-                event.type == AudioInterruptionType.pause &&
-                !_playbackAutomation.blocksPlayback) {
+                event.type == AudioInterruptionType.pause) {
               _pausedByInterruption = false;
               unawaited(play());
             } else {
@@ -584,34 +575,16 @@ class MusicPlayerHandler extends BaseAudioHandler
 
   void _refreshPlaybackAutomation() {
     if (_disposed) return;
-    // Both follow mobile system volume and audio_session routes, which
-    // desktop does not use.
-    final pauseOnMute =
-        !isDesktopPlatform &&
-        _settings.playerMode == 'internal' &&
-        _settings.pauseOnMute &&
-        !_settings.usbBitPerfect;
+    // Follows audio_session routes, which desktop does not use.
     final playOnHeadphonesConnected =
         !isDesktopPlatform &&
         _settings.playerMode == 'internal' &&
         _settings.playOnHeadphonesConnected;
     unawaited(
       _playbackAutomation.configure(
-        pauseOnMute: pauseOnMute,
         playOnHeadphonesConnected: playOnHeadphonesConnected,
       ),
     );
-    if (pauseOnMute && _automationVolumeSubscription == null) {
-      _automationVolumeSubscription = _dependencies.volumeChanges.listen(
-        (volume) => unawaited(_playbackAutomation.volumeChanged(volume)),
-        onError: (Object error) =>
-            _log.w('Could not monitor media volume: $error'),
-      );
-    } else if (!pauseOnMute) {
-      final subscription = _automationVolumeSubscription;
-      _automationVolumeSubscription = null;
-      if (subscription != null) unawaited(subscription.cancel());
-    }
     final session = _audioSession;
     if (playOnHeadphonesConnected &&
         session != null &&
@@ -1723,7 +1696,6 @@ class MusicPlayerHandler extends BaseAudioHandler
 
   @override
   Future<void> play() async {
-    _playbackAutomation.manualPlaybackRequested();
     final activeOperation = _activePlayOperation;
     if (activeOperation != null) {
       await activeOperation;
@@ -2072,7 +2044,6 @@ class MusicPlayerHandler extends BaseAudioHandler
     await _dependencies.recorder.flush();
     _playRequestGeneration++;
     _headphoneMonitoringRevision++;
-    await _automationVolumeSubscription?.cancel();
     await _automationDevicesSubscription?.cancel();
     await _playbackAutomation.dispose();
     await _sourceChangeTail;
