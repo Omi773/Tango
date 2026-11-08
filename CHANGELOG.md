@@ -4,6 +4,7 @@ All notable changes to Tango are recorded here.
 
 ## Unreleased
 
+- Rhythm theme wiring: cookie loader replaces the loading indicator app-wide, cookie empty state replaces the empty-state block, stat cards and empty state on Listening statistics, Rhythm onboarding on first launch, Rhythm sleep timer sheet (with end-of-track) in Now Playing, Rhythm artist chooser for multi-artist credits
 - Rhythm interface kit: reorder sheet, create-playlist, save-preset, cache-size, switch-mode, customize-image and beta dialogs, artist chooser, licenses, shape presets, backup result, update and multi-selection sheets, cookie slider, tooltip and guard card
 - About: Legal section with Privacy Policy, Terms of Service and open-source licenses
 - Playlist create/rename and equalizer "Save preset" now use the Rhythm name dialog
