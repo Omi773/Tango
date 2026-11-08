@@ -24,8 +24,8 @@ class StaggeredListItem extends StatelessWidget {
     super.key,
     required this.index,
     required this.child,
-    this.duration = const Duration(milliseconds: 250),
-    this.staggerDelay = const Duration(milliseconds: 40),
+    this.duration = const Duration(milliseconds: 320),
+    this.staggerDelay = const Duration(milliseconds: 28),
     this.animate = true,
   });
 
@@ -1315,7 +1315,7 @@ class AnimatedSelectionCheckbox extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = AppMotion.spatialFast(
       context,
-      const AppMotionSpec(Duration(milliseconds: 200), Curves.easeOutBack),
+      const AppMotionSpec(Duration(milliseconds: 200), Curves.easeOutCubic),
     );
     final fill = AppMotion.effectsFast(
       context,

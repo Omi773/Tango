@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:tango/theme/app_tokens.dart';
 import 'package:tango/theme/tango_theme.dart';
@@ -69,12 +71,18 @@ class AppSliverHeader extends StatelessWidget {
         screenSize.height < screenSize.width && screenSize.height < 720
         ? tokens.headerExpandedHeight - 24
         : tokens.headerExpandedHeight;
-    final maxHeight = expandedHeight + topPadding;
     final edgeInset = detailHeaderEdgeInset(context);
     // A page at the root of a nested navigator, such as the desktop settings
     // detail pane, has nothing to go back to.
     final showLeading =
         _showLeading && (leading != null || !_isNestedNavigatorRoot(context));
+    // With a back button the expanded title must sit fully below the toolbar
+    // row, or the two overlap. Reserve toolbar + title line + the title's
+    // bottom margin + a small breathing gap, whatever the theme's height.
+    final titleClearance = showLeading
+        ? kToolbarHeight + tokens.headerExpandedTitleSize * 1.25 + tokens.gapLg + 8
+        : 0.0;
+    final maxHeight = math.max(expandedHeight, titleClearance) + topPadding;
 
     return SliverAppBar(
       expandedHeight: maxHeight,

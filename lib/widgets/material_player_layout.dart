@@ -70,11 +70,11 @@ class MaterialPlayerLayout extends StatelessWidget {
                             MediaQuery.disableAnimationsOf(context)
                                 ? Duration.zero
                                 : const Duration(milliseconds: 500),
-                            Curves.easeOutBack,
+                            Curves.easeOutCubic,
                           ),
                         );
                         return AnimatedScale(
-                          scale: resting ? 0.9 : 1,
+                          scale: resting ? 0.95 : 1,
                           duration: motion.duration,
                           curve: motion.curve,
                           child: TweenAnimationBuilder<double>(
@@ -146,8 +146,8 @@ class MaterialPlayerLayout extends StatelessWidget {
                     math.max(
                       0.0,
                       math.min(
-                        math.min(area.maxWidth - 32, area.maxHeight - 16),
-                        MediaQuery.sizeOf(context).height * 0.5,
+                        math.min(area.maxWidth - 24, area.maxHeight - 8),
+                        MediaQuery.sizeOf(context).height * 0.56,
                       ),
                     ),
                   ),
@@ -186,7 +186,7 @@ class MaterialPlayerLayout extends StatelessWidget {
           child: Column(
             children: [
               Expanded(child: visual()),
-              const SizedBox(height: 12),
+              const SizedBox(height: 22),
               PlayerQueueSwipeRegion(
                 onOpenQueue: onOpenQueue,
                 child: Column(
@@ -254,8 +254,8 @@ class MaterialPlayerLayout extends StatelessWidget {
                         metadata: metadata,
                         style:
                             (compact
-                                    ? Theme.of(context).textTheme.titleLarge
-                                    : Theme.of(context).textTheme.headlineSmall)
+                                    ? Theme.of(context).textTheme.titleMedium
+                                    : Theme.of(context).textTheme.titleLarge)
                                 ?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: colorScheme.onSurface,
@@ -275,7 +275,7 @@ class MaterialPlayerLayout extends StatelessWidget {
                           return ClickableArtistName(
                             artistName: mediaItem.artist ?? '',
                             artistId: track?.artistId,
-                            style: Theme.of(context).textTheme.titleMedium
+                            style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(color: colorScheme.onSurfaceVariant),
                             textAlign: TextAlign.left,
                             maxLines: 1,
@@ -291,7 +291,7 @@ class MaterialPlayerLayout extends StatelessWidget {
           ),
         ),
       ),
-      SizedBox(height: compact ? 12 : 24),
+      SizedBox(height: compact ? 10 : 14),
       PlayerPlaybackControls(
         key: ValueKey(mediaItem.id),
         mediaId: mediaItem.id,
@@ -306,7 +306,7 @@ class MaterialPlayerLayout extends StatelessWidget {
         const PlayerVolumeControl(),
       ],
       if (context.isRhythm && rhythmChipRowBuilder != null) ...[
-        SizedBox(height: compact ? 12 : 16),
+        SizedBox(height: compact ? 8 : 10),
         rhythmChipRowBuilder!(context),
       ],
     ];
