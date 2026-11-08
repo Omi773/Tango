@@ -37,7 +37,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   playbackNormalizationMode: json['playbackNormalizationMode'] == null
       ? 'track'
       : playbackNormalizationModeFromJson(json['playbackNormalizationMode']),
-  pauseOnMute: json['pauseOnMute'] as bool? ?? true,
   playOnHeadphonesConnected:
       json['playOnHeadphonesConnected'] as bool? ?? false,
   autoMix: json['autoMix'] as bool? ?? false,
@@ -90,6 +89,7 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
       json['filterContributingArtistsInAlbumArtist'] as bool? ?? false,
   historyViewMode: json['historyViewMode'] as String? ?? 'grid',
   historyFilterMode: json['historyFilterMode'] as String? ?? 'all',
+  librarySortMode: json['librarySortMode'] as String? ?? 'a-z',
   defaultLibraryView: json['defaultLibraryView'] as String? ?? 'last',
   libraryQualityLabelMode:
       json['libraryQualityLabelMode'] as String? ??
@@ -185,7 +185,6 @@ Map<String, dynamic> _$AppSettingsToJson(
   'playbackNormalization': instance.playbackNormalization,
   'playbackNormalizationPreamp': instance.playbackNormalizationPreamp,
   'playbackNormalizationMode': instance.playbackNormalizationMode,
-  'pauseOnMute': instance.pauseOnMute,
   'playOnHeadphonesConnected': instance.playOnHeadphonesConnected,
   'autoMix': instance.autoMix,
   'autoMixDuration': instance.autoMixDuration,
@@ -218,6 +217,7 @@ Map<String, dynamic> _$AppSettingsToJson(
       instance.filterContributingArtistsInAlbumArtist,
   'historyViewMode': instance.historyViewMode,
   'historyFilterMode': instance.historyFilterMode,
+  'librarySortMode': instance.librarySortMode,
   'defaultLibraryView': instance.defaultLibraryView,
   'libraryQualityLabelMode': instance.libraryQualityLabelMode,
   'askQualityBeforeDownload': instance.askQualityBeforeDownload,

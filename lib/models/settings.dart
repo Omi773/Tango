@@ -56,7 +56,6 @@ class AppSettings {
   final double playbackNormalizationPreamp;
   @JsonKey(fromJson: playbackNormalizationModeFromJson)
   final String playbackNormalizationMode; // 'track' or 'album'
-  final bool pauseOnMute;
   final bool playOnHeadphonesConnected;
   final bool autoMix;
   @JsonKey(fromJson: autoMixDurationFromJson)
@@ -103,6 +102,9 @@ class AppSettings {
   final bool filterContributingArtistsInAlbumArtist;
   final String historyViewMode;
   final String historyFilterMode;
+
+  /// Sort chosen in the Library sort sheet; survives restarts.
+  final String librarySortMode;
 
   /// Library view opened when switching to the Library tab:
   /// 'last' (keep last used), 'all', 'albums', 'singles', or 'playlists'.
@@ -211,7 +213,6 @@ class AppSettings {
     this.playbackNormalization = false,
     this.playbackNormalizationPreamp = 0,
     this.playbackNormalizationMode = 'track',
-    this.pauseOnMute = true,
     this.playOnHeadphonesConnected = false,
     this.autoMix = false,
     this.autoMixDuration = 0,
@@ -243,6 +244,7 @@ class AppSettings {
     this.filterContributingArtistsInAlbumArtist = false,
     this.historyViewMode = 'grid',
     this.historyFilterMode = 'all',
+    this.librarySortMode = 'a-z',
     this.defaultLibraryView = 'last',
     this.libraryQualityLabelMode = AppSettings.libraryQualityLabelBitDepthOnly,
     this.askQualityBeforeDownload = true,
@@ -332,7 +334,6 @@ class AppSettings {
     bool? playbackNormalization,
     double? playbackNormalizationPreamp,
     String? playbackNormalizationMode,
-    bool? pauseOnMute,
     bool? playOnHeadphonesConnected,
     bool? autoMix,
     int? autoMixDuration,
@@ -364,6 +365,7 @@ class AppSettings {
     bool? filterContributingArtistsInAlbumArtist,
     String? historyViewMode,
     String? historyFilterMode,
+    String? librarySortMode,
     String? defaultLibraryView,
     String? libraryQualityLabelMode,
     bool? askQualityBeforeDownload,
@@ -446,7 +448,6 @@ class AppSettings {
           playbackNormalizationPreamp ?? this.playbackNormalizationPreamp,
       playbackNormalizationMode:
           playbackNormalizationMode ?? this.playbackNormalizationMode,
-      pauseOnMute: pauseOnMute ?? this.pauseOnMute,
       playOnHeadphonesConnected:
           playOnHeadphonesConnected ?? this.playOnHeadphonesConnected,
       autoMix: autoMix ?? this.autoMix,
@@ -485,6 +486,7 @@ class AppSettings {
           this.filterContributingArtistsInAlbumArtist,
       historyViewMode: historyViewMode ?? this.historyViewMode,
       historyFilterMode: historyFilterMode ?? this.historyFilterMode,
+      librarySortMode: librarySortMode ?? this.librarySortMode,
       defaultLibraryView: defaultLibraryView ?? this.defaultLibraryView,
       libraryQualityLabelMode:
           libraryQualityLabelMode ?? this.libraryQualityLabelMode,
