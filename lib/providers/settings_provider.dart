@@ -636,11 +636,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
-  void setPauseOnMute(bool enabled) {
-    state = state.copyWith(pauseOnMute: enabled);
-    _saveSettings();
-  }
-
   void setPlayOnHeadphonesConnected(bool enabled) {
     state = state.copyWith(playOnHeadphonesConnected: enabled);
     _saveSettings();
@@ -926,6 +921,12 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   void setHistoryFilterMode(String mode) {
     state = state.copyWith(historyFilterMode: mode);
+    _saveSettings();
+  }
+
+  void setLibrarySortMode(String mode) {
+    if (state.librarySortMode == mode) return;
+    state = state.copyWith(librarySortMode: mode);
     _saveSettings();
   }
 
