@@ -1000,7 +1000,7 @@ extension _QueueTabItemWidgets on _QueueTabState {
             },
             onSort: (next) {
               final mode = switch (next) {
-                null => 'latest',
+                null => 'a-z',
                 (column: TrackTableColumn.title, ascending: true) => 'a-z',
                 (column: TrackTableColumn.title, ascending: false) => 'z-a',
                 (column: TrackTableColumn.artist, ascending: true) =>
@@ -1018,6 +1018,7 @@ extension _QueueTabItemWidgets on _QueueTabState {
                 _sortMode = mode;
                 _resetLibraryPaging();
               });
+              ref.read(settingsProvider.notifier).setLibrarySortMode(mode);
             },
           ),
         ),

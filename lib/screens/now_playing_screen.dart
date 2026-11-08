@@ -455,12 +455,6 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
               ? null
               : [
                   AppIconButton(
-                    tooltip: context.l10n.nowPlayingUpNext,
-                    color: overCover ? Colors.white : null,
-                    icon: const AppIcon(Icons.queue_music),
-                    onPressed: () => _showQueueSheet(context, colorScheme),
-                  ),
-                  AppIconButton(
                     color: overCover ? Colors.white : null,
                     tooltip: MaterialLocalizations.of(
                       context,
@@ -596,6 +590,8 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                             ],
                           ),
                         )
+                      else if (!tango && context.isRhythm)
+                        const SizedBox.shrink()
                       else if (!tango)
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 28),
@@ -1083,34 +1079,69 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             (state) => track != null && state.isLoved(track),
           ),
         );
-        return RhythmPlayerChipRow(
-          chips: [
-            RhythmPlayerChip(
-              icon: Icons.playlist_add_rounded,
-              label: 'Playlist',
-              onPressed: () => _updatePlayerCollection(mediaItem, favorite: false),
-            ),
-            RhythmPlayerChip(
-              icon: loved
-                  ? Icons.favorite_rounded
-                  : Icons.favorite_border_rounded,
-              label: 'Loved',
-              selected: loved,
-              onPressed: () => _updatePlayerCollection(mediaItem, favorite: true),
-            ),
-            RhythmPlayerChip(
-              icon: Icons.bedtime_rounded,
-              label: context.l10n.nowPlayingSleepTimer,
-              selected: controller.sleepTimerEndsAt != null,
-              onPressed: () =>
-                  _showSleepTimerSheet(context, controller, colorScheme),
-            ),
-            RhythmPlayerChip(
-              icon: Icons.queue_music_rounded,
-              label: 'Queue',
-              onPressed: () => _showQueueSheet(context, colorScheme),
-            ),
-          ],
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Row(
+            children: [
+              RhythmPlayerIconCapsule(
+                items: [
+                  RhythmPlayerChip(
+                    icon: Icons.lyrics_outlined,
+                    label: context.l10n.nowPlayingTabLyrics,
+                    iconOnly: true,
+                    flat: true,
+                    selected: _showsPage(1),
+                    onPressed: _toggleMaterialLyrics,
+                  ),
+                  RhythmPlayerChip(
+                    icon: Icons.playlist_add_rounded,
+                    label: 'Playlist',
+                    iconOnly: true,
+                    flat: true,
+                    onPressed: () =>
+                        _updatePlayerCollection(mediaItem, favorite: false),
+                  ),
+                  RhythmPlayerChip(
+                    icon: loved
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    label: 'Loved',
+                    iconOnly: true,
+                    flat: true,
+                    selected: loved,
+                    onPressed: () =>
+                        _updatePlayerCollection(mediaItem, favorite: true),
+                  ),
+                  RhythmPlayerChip(
+                    icon: Icons.bedtime_rounded,
+                    label: context.l10n.nowPlayingSleepTimer,
+                    iconOnly: true,
+                    flat: true,
+                    selected: controller.sleepTimerEndsAt != null,
+                    onPressed: () =>
+                        _showSleepTimerSheet(context, controller, colorScheme),
+                  ),
+                  RhythmPlayerChip(
+                    icon: Icons.queue_music_rounded,
+                    label: 'Queue',
+                    iconOnly: true,
+                    flat: true,
+                    onPressed: () => _showQueueSheet(context, colorScheme),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: AudioOutputButton(
+                    showRoute: true,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

@@ -22,7 +22,7 @@ extension _QueueTabFilterSheet on _QueueTabState {
                   tempQuality = null;
                   tempFormat = null;
                   tempMetadata = null;
-                  tempSortMode = 'latest';
+                  tempSortMode = 'a-z';
                 });
               },
               child: Text(context.l10n.libraryFilterReset),
@@ -242,6 +242,9 @@ extension _QueueTabFilterSheet on _QueueTabState {
                           _sortMode = tempSortMode;
                           _resetLibraryPaging();
                         });
+                        ref
+                            .read(settingsProvider.notifier)
+                            .setLibrarySortMode(tempSortMode);
                         Navigator.pop(context);
                         if (widget.librarySection == null &&
                             isAlbumCompletenessFilter(tempMetadata)) {

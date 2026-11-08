@@ -204,7 +204,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   String? _filterQuality;
   String? _filterFormat;
   String? _filterMetadata;
-  String _sortMode = 'latest';
+  String _sortMode = 'a-z';
   String _libraryQualityLabelMode = AppSettings.libraryQualityLabelBitDepthOnly;
   final _libraryGridExtent = ValueNotifier(_libraryGridDefaultExtent);
   double? _libraryGridPinchStartExtent;
@@ -257,6 +257,8 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   @override
   void initState() {
     super.initState();
+    final savedSort = ref.read(settingsProvider).librarySortMode;
+    _sortMode = _librarySortModes.contains(savedSort) ? savedSort : 'a-z';
     _completionBridgePlayableProbe = CompletionBridgePlayableProbeCache(
       onPlayable: _fileExistsCache.markExists,
     );
@@ -482,9 +484,10 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       _filterQuality = null;
       _filterFormat = null;
       _filterMetadata = null;
-      _sortMode = 'latest';
+      _sortMode = 'a-z';
       _resetLibraryPaging();
     });
+    ref.read(settingsProvider.notifier).setLibrarySortMode(_sortMode);
   }
 
   @override
