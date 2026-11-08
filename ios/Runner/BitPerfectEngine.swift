@@ -401,7 +401,11 @@ final class BitPerfectEngine {
 
     private static func sourceBits(_ file: AVAudioFile) -> Int? {
         let description = file.fileFormat.streamDescription.pointee
-        if description.mFormatID == kAudioFormatAppleLossless {
+        // Both Apple Lossless and FLAC flag the source bit depth in
+        // mFormatFlags (1 = 16, 2 = 20, 3 = 24, 4 = 32).
+        if description.mFormatID == kAudioFormatAppleLossless
+            || description.mFormatID == kAudioFormatFLAC
+        {
             switch description.mFormatFlags {
             case 1: return 16
             case 2: return 20
