@@ -330,6 +330,9 @@ class RhythmMiniPlayerSurface extends ConsumerWidget {
         child: Material(
           key: surfaceKey,
           color: scheme.surfaceContainer,
+          elevation: 3,
+          shadowColor: Colors.black.withValues(alpha: 0.28),
+          surfaceTintColor: Colors.transparent,
           shape: shape,
           clipBehavior: Clip.antiAlias,
           child: InkWell(

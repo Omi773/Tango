@@ -576,16 +576,14 @@ class RhythmTimePill extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: scheme.primaryContainer.withValues(alpha: 0.6),
-        borderRadius: BorderRadius.circular(12),
-      ),
+      // Plain text: the timeline reads cleaner without a pill behind it.
+      decoration: const BoxDecoration(),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
         child: RhythmDigitTicker(
           text: text,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(fontSize: 12),
-          color: scheme.onPrimaryContainer,
+          color: scheme.onSurfaceVariant,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -643,7 +641,7 @@ class _RhythmControlButtonState extends State<RhythmControlButton> {
     Widget button = AnimatedScale(
       scale: visual ? 0.92 : 1,
       duration: duration,
-      curve: Curves.easeOutBack,
+      curve: Curves.easeOutCubic,
       child: AnimatedContainer(
         duration: duration,
         curve: Curves.easeOut,
@@ -721,7 +719,8 @@ class RhythmTransportRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buttonSize = compact ? 48.0 : 56.0;
+    final buttonSize = compact ? 40.0 : 46.0;
+    final scheme = Theme.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -730,20 +729,24 @@ class RhythmTransportRow extends StatelessWidget {
           icon: Icons.skip_previous_rounded,
           tooltip: previousTooltip,
           size: buttonSize,
-          iconSize: buttonSize * 0.55,
+          iconSize: buttonSize * 0.62,
+          containerColor: Colors.transparent,
+          contentColor: scheme.onSurface,
           onPressed: onPrevious,
         ),
         RhythmMorphPlayPauseButton(
           isPlaying: playing,
           isLoading: loading,
-          size: compact ? 64 : 76,
+          size: compact ? 56 : 64,
           onPressed: onPlayPause,
         ),
         RhythmControlButton(
           icon: Icons.skip_next_rounded,
           tooltip: nextTooltip,
           size: buttonSize,
-          iconSize: buttonSize * 0.55,
+          iconSize: buttonSize * 0.62,
+          containerColor: Colors.transparent,
+          contentColor: scheme.onSurface,
           onPressed: onNext,
         ),
         ?trailing,
@@ -899,7 +902,7 @@ class _RhythmPlayerChipState extends State<RhythmPlayerChip> {
         ? scheme.primaryContainer
         : widget.flat
         ? Colors.transparent
-        : scheme.surfaceContainerHigh;
+        : scheme.surfaceContainerHigh.withValues(alpha: 0.5);
     final fg = widget.selected
         ? scheme.onPrimaryContainer
         : scheme.onSurfaceVariant;
@@ -921,11 +924,11 @@ class _RhythmPlayerChipState extends State<RhythmPlayerChip> {
         child: AnimatedScale(
           scale: _pressed ? 0.95 : 1,
           duration: reduce ? Duration.zero : const Duration(milliseconds: 200),
-          curve: Curves.easeOutBack,
+          curve: Curves.easeOutCubic,
           child: AnimatedContainer(
             duration: reduce ? Duration.zero : const Duration(milliseconds: 200),
-            height: 40,
-            padding: EdgeInsets.symmetric(horizontal: widget.iconOnly ? 11 : 14),
+            height: 36,
+            padding: EdgeInsets.symmetric(horizontal: widget.iconOnly ? 10 : 12),
             decoration: BoxDecoration(
               color: bg,
               borderRadius: BorderRadius.circular(20),
@@ -993,11 +996,11 @@ class RhythmPlayerIconCapsule extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: scheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(22),
+        color: scheme.surfaceContainerHigh.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(2),
+        padding: const EdgeInsets.all(1),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
