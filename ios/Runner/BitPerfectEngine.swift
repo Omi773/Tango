@@ -9,7 +9,9 @@ import os
 //   - decode FLAC / ALAC / WAV / AIFF losslessly (AVAudioFile -> Float32; every
 //     integer sample up to 24 bits is exactly representable in Float32),
 //   - ask the session for the file's own sample rate so the system does not
-//     resample (setPreferredSampleRate),
+//     resample (setPreferredSampleRate). USB DACs renegotiate asynchronously,
+//     so the rate is polled until it settles and retried, then re-verified
+//     against the engine's real output format before and after it starts,
 //   - keep the whole path at unity gain: no EQ tap, no AVPlayer volume, no
 //     mixer gain, no rate change, no ReplayGain/AutoMix (Dart bypasses those).
 //
@@ -192,6 +194,7 @@ final class BitPerfectEngine {
     private var decodeDone: DispatchSemaphore?
     private var baseFrames: Int64 = 0
     private var fileRate: Double = 44100
+    private var configObserver: NSObjectProtocol?
     private(set) var isPlaying = false
 
     var isLoaded: Bool { engine != nil }
@@ -246,6 +249,14 @@ final class BitPerfectEngine {
         engine.mainMixerNode.outputVolume = 1
         engine.prepare()
 
+        // The mixer converts to whatever the output node runs at. If that is
+        // not the file's rate, renegotiate once more before committing.
+        if abs(Self.hardwareRate(engine, session) - format.sampleRate) > 0.5 {
+            engine.stop()
+            try configureSession(rate: format.sampleRate)
+            engine.prepare()
+        }
+
         self.file = opened
         self.ring = ring
         self.engine = engine
@@ -261,7 +272,8 @@ final class BitPerfectEngine {
             usleep(5_000)
         }
 
-        let outputRate = session.sampleRate
+        observeConfigurationChanges(of: engine)
+        let outputRate = Self.hardwareRate(engine, session)
         return Prepared(
             durationMs: Int((Double(opened.length) / format.sampleRate * 1000).rounded()),
             fileRate: format.sampleRate,
@@ -272,17 +284,61 @@ final class BitPerfectEngine {
         )
     }
 
-    private func configureSession(rate: Double) throws {
+    /// Asks CoreAudio for `rate` and waits for the hardware to actually switch.
+    /// `setPreferredSampleRate` is only a request: with a USB DAC the session
+    /// keeps reporting the old rate (e.g. the DAC's 192 kHz) for a while, and
+    /// the first request is often ignored while the session is already active.
+    /// Cycling the session between attempts forces a fresh negotiation.
+    /// Returns the rate the session settled at (may differ if unsupported).
+    @discardableResult
+    private func configureSession(rate: Double) throws -> Double {
         let session = AVAudioSession.sharedInstance()
         try session.setCategory(.playback, mode: .default, options: [])
-        try session.setPreferredSampleRate(rate)
-        try session.setActive(true)
-        if abs(session.sampleRate - rate) > 0.5 {
-            // The first activation can keep the previous track's rate. Cycle
-            // the session once so the hardware renegotiates.
-            try? session.setActive(false, options: [])
+        for attempt in 0..<3 {
             try session.setPreferredSampleRate(rate)
             try session.setActive(true)
+            if Self.waitForRate(session, rate: rate, timeout: attempt == 0 ? 0.4 : 0.8) {
+                return session.sampleRate
+            }
+            if attempt < 2 {
+                try? session.setActive(false, options: [])
+                usleep(150_000)
+            }
+        }
+        return session.sampleRate
+    }
+
+    private static func waitForRate(
+        _ session: AVAudioSession, rate: Double, timeout: TimeInterval
+    ) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        while true {
+            if abs(session.sampleRate - rate) <= 0.5 { return true }
+            if Date() >= deadline { return false }
+            usleep(20_000)
+        }
+    }
+
+    /// The rate the mixer actually renders to: the output node's format,
+    /// falling back to the session's rate before the node has one.
+    private static func hardwareRate(_ engine: AVAudioEngine, _ session: AVAudioSession) -> Double {
+        let node = engine.outputNode.outputFormat(forBus: 0).sampleRate
+        return node > 0 ? node : session.sampleRate
+    }
+
+    /// A route or rate change stops the engine. Renegotiate the file's rate
+    /// and restart instead of silently carrying on resampled.
+    private func observeConfigurationChanges(of engine: AVAudioEngine) {
+        if let configObserver { NotificationCenter.default.removeObserver(configObserver) }
+        configObserver = NotificationCenter.default.addObserver(
+            forName: .AVAudioEngineConfigurationChange, object: engine, queue: .main
+        ) { [weak self, weak engine] _ in
+            guard let self, let engine, self.engine === engine else { return }
+            let wasPlaying = self.isPlaying
+            engine.stop()
+            try? self.configureSession(rate: self.fileRate)
+            engine.prepare()
+            if wasPlaying { try? engine.start() }
         }
     }
 
@@ -290,9 +346,24 @@ final class BitPerfectEngine {
 
     func resume() throws {
         guard let engine, ring != nil else { throw BitPerfectError.notPrepared }
-        try AVAudioSession.sharedInstance().setActive(true)
-        if !engine.isRunning { try engine.start() }
+        let session = AVAudioSession.sharedInstance()
+        try session.setActive(true)
+        if !engine.isRunning {
+            // Another plugin may have reconfigured the shared session since
+            // prepare (Now Playing refresh, interruptions). Re-assert the rate.
+            if abs(Self.hardwareRate(engine, session) - fileRate) > 0.5 {
+                try configureSession(rate: fileRate)
+                engine.prepare()
+            }
+            try engine.start()
+        }
         isPlaying = true
+    }
+
+    /// The rate the hardware is running at right now.
+    var currentOutputRate: Double? {
+        guard let engine else { return nil }
+        return Self.hardwareRate(engine, AVAudioSession.sharedInstance())
     }
 
     func pause() {
@@ -325,6 +396,10 @@ final class BitPerfectEngine {
 
     private func teardown() {
         stopDecoding()
+        if let configObserver {
+            NotificationCenter.default.removeObserver(configObserver)
+            self.configObserver = nil
+        }
         engine?.stop()
         engine = nil
         ring = nil
@@ -489,7 +564,10 @@ final class BitPerfectBridge {
             do {
                 try engine.resume()
                 startMonitor()
-                result(nil)
+                // Report the rate the hardware really runs at once playing.
+                result(engine.currentOutputRate.map {
+                    ["sampleRate": Int($0.rounded())]
+                })
             } catch {
                 result(FlutterError(code: "engine_failed", message: "\(error)", details: nil))
             }
