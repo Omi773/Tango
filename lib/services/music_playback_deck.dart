@@ -456,7 +456,20 @@ class AudioplayersPlaybackDeck implements PlaybackDeck {
     // reconnect through the handler to obtain a fresh lease for the same song.
     try {
       if (_routeLost) throw PlatformException(code: 'route_changed');
-      await _channel.invokeMethod<void>('resume');
+      final started = await _channel.invokeMethod<Object?>('resume');
+      // iOS renegotiates the hardware rate while starting; show the rate it
+      // really ended up at rather than the one seen during prepare.
+      final actualRate = started is Map ? (started['sampleRate'] as num?) : null;
+      if (actualRate != null && actualRate.toInt() > 0) {
+        _preparedStatus = UsbAudioStatus(
+          reason: _preparedStatus.reason,
+          device: _preparedStatus.device,
+          sampleRate: actualRate.toInt(),
+          bitDepth: _preparedStatus.bitDepth,
+          transport: _preparedStatus.transport,
+          driver: _preparedStatus.driver,
+        );
+      }
     } on PlatformException {
       if (token != _token || !_direct || _disposed) return;
       if (_preparedStatus.driver == 'usb_direct') {
