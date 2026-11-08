@@ -15,6 +15,8 @@ import 'package:tango/utils/artist_utils.dart';
 import 'package:tango/utils/logger.dart';
 import 'package:tango/widgets/app_bottom_sheet.dart';
 import 'package:tango/widgets/app_loading_indicator.dart';
+import 'package:tango/widgets/rhythm/rhythm_extra_sheets.dart';
+import 'package:tango/theme/tango_theme.dart';
 
 final _log = AppLogger('ClickableMetadata');
 
@@ -136,9 +138,20 @@ Future<void> navigateToArtistCredits(
 }) async {
   final artists = _buildArtistTapTargets(artistNames, artistIds);
   if (artists.isEmpty) return;
-  final selected = artists.length == 1
-      ? artists.single
-      : await showAppBottomSheet<_ArtistTapTarget>(
+  _ArtistTapTarget? selected;
+  if (artists.length == 1) {
+    selected = artists.single;
+  } else if (context.isRhythm) {
+    final name = await showRhythmArtistChooserSheet(
+      context,
+      artists: [for (final artist in artists) artist.name],
+      title: context.l10n.tangoGoToArtist,
+    );
+    if (name != null) {
+      selected = artists.firstWhere((artist) => artist.name == name);
+    }
+  } else {
+    selected = await showAppBottomSheet<_ArtistTapTarget>(
           context: context,
           useRootNavigator: true,
           title: context.l10n.tangoGoToArtist,
@@ -155,6 +168,7 @@ Future<void> navigateToArtistCredits(
             ],
           ),
         );
+  }
   if (!context.mounted || selected == null) return;
   await navigateToArtist(
     context,
