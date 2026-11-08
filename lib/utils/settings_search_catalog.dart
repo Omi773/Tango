@@ -314,12 +314,6 @@ class SettingsSearchCatalog {
           keywords: const ['haptic', 'vibrate', 'vibration', 'beat', 'getar'],
         ),
         SettingsSearchEntry(
-          icon: Icons.volume_off_outlined,
-          title: l10n.playbackPauseOnMute,
-          subtitle: l10n.playbackPauseOnMuteDescription,
-          keywords: const ['mute', 'volume', 'pause', 'resume'],
-        ),
-        SettingsSearchEntry(
           icon: Icons.headphones_outlined,
           title: l10n.playbackOnHeadphonesConnected,
           subtitle: l10n.playbackOnHeadphonesConnectedDescription,
