@@ -870,12 +870,20 @@ class RhythmPlayerChip extends StatefulWidget {
     required this.icon,
     required this.onPressed,
     this.selected = false,
+    this.iconOnly = false,
+    this.flat = false,
   });
 
   final String label;
   final IconData icon;
   final VoidCallback onPressed;
   final bool selected;
+
+  /// Shows just the icon; [label] is still used for accessibility.
+  final bool iconOnly;
+
+  /// No resting background, for chips grouped inside a shared capsule.
+  final bool flat;
 
   @override
   State<RhythmPlayerChip> createState() => _RhythmPlayerChipState();
@@ -889,6 +897,8 @@ class _RhythmPlayerChipState extends State<RhythmPlayerChip> {
     final scheme = Theme.of(context).colorScheme;
     final bg = widget.selected
         ? scheme.primaryContainer
+        : widget.flat
+        ? Colors.transparent
         : scheme.surfaceContainerHigh;
     final fg = widget.selected
         ? scheme.onPrimaryContainer
@@ -915,7 +925,7 @@ class _RhythmPlayerChipState extends State<RhythmPlayerChip> {
           child: AnimatedContainer(
             duration: reduce ? Duration.zero : const Duration(milliseconds: 200),
             height: 40,
-            padding: const EdgeInsets.symmetric(horizontal: 14),
+            padding: EdgeInsets.symmetric(horizontal: widget.iconOnly ? 11 : 14),
             decoration: BoxDecoration(
               color: bg,
               borderRadius: BorderRadius.circular(20),
@@ -923,15 +933,17 @@ class _RhythmPlayerChipState extends State<RhythmPlayerChip> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(widget.icon, size: 18, color: fg),
-                const SizedBox(width: 6),
-                Text(
-                  widget.label,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: fg,
-                    fontWeight: FontWeight.w600,
+                Icon(widget.icon, size: widget.iconOnly ? 20 : 18, color: fg),
+                if (!widget.iconOnly) ...[
+                  const SizedBox(width: 6),
+                  Text(
+                    widget.label,
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: fg,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),
@@ -964,6 +976,41 @@ class RhythmPlayerChipRow extends StatelessWidget {
               ],
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One capsule holding icon-only actions separated by thin dividers.
+class RhythmPlayerIconCapsule extends StatelessWidget {
+  const RhythmPlayerIconCapsule({super.key, required this.items});
+
+  final List<Widget> items;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(2),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (var i = 0; i < items.length; i++) ...[
+              if (i > 0)
+                Container(
+                  width: 1,
+                  height: 20,
+                  color: scheme.outlineVariant.withValues(alpha: 0.5),
+                ),
+              items[i],
+            ],
+          ],
         ),
       ),
     );

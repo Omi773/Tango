@@ -31,7 +31,7 @@ enum RhythmMiniPlayerStyle { card, pill, compact }
 @immutable
 class RhythmMiniPlayerPrefs {
   const RhythmMiniPlayerPrefs({
-    this.style = RhythmMiniPlayerStyle.pill,
+    this.style = RhythmMiniPlayerStyle.compact,
     this.wavyProgress = true,
   });
 
@@ -216,7 +216,25 @@ class RhythmMiniPlayerSurface extends ConsumerWidget {
       },
     );
 
-    final content = switch (prefs.style) {
+    // Text sits on the surface and, once the track plays, on the progress
+    // fill. Pick the colour with the best contrast over both, so a light
+    // cover palette never leaves white text on a light pill.
+    final fillColor = prefs.style == RhythmMiniPlayerStyle.pill
+        ? scheme.primaryContainer
+        : scheme.primaryContainer.withValues(alpha: 0.45);
+    final backgrounds = prefs.style == RhythmMiniPlayerStyle.card
+        ? [scheme.surfaceContainer]
+        : [
+            scheme.surfaceContainer,
+            Color.alphaBlend(fillColor, scheme.surfaceContainer),
+          ];
+    final foreground = _readableForeground(backgrounds, scheme.onSurface);
+    final readableScheme = scheme.copyWith(
+      onSurface: foreground,
+      onSurfaceVariant: foreground.withValues(alpha: 0.72),
+    );
+
+    final rawContent = switch (prefs.style) {
       RhythmMiniPlayerStyle.card => _CardBody(
         artworkBuilder: artworkBuilder,
         title: title,
@@ -273,6 +291,11 @@ class RhythmMiniPlayerSurface extends ConsumerWidget {
       ),
     };
 
+    final content = Theme(
+      data: Theme.of(context).copyWith(colorScheme: readableScheme),
+      child: rawContent,
+    );
+
     final isCard = prefs.style == RhythmMiniPlayerStyle.card;
     final shape = isCard
         ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(28))
@@ -293,9 +316,7 @@ class RhythmMiniPlayerSurface extends ConsumerWidget {
               Positioned.fill(
                 child: _PillFill(
                   duration: duration,
-                  color: prefs.style == RhythmMiniPlayerStyle.pill
-                      ? scheme.primaryContainer
-                      : scheme.primaryContainer.withValues(alpha: 0.45),
+                  color: fillColor,
                 ),
               ),
               content,
@@ -323,6 +344,22 @@ class RhythmMiniPlayerSurface extends ConsumerWidget {
       ),
     );
   }
+}
+
+double _contrast(Color a, Color b) {
+  final la = a.computeLuminance(), lb = b.computeLuminance();
+  final hi = la > lb ? la : lb, lo = la > lb ? lb : la;
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+/// The colour among [preferred], white and near-black that reads best on the
+/// worst of [backgrounds]. Keeps the theme's colour whenever it is legible.
+Color _readableForeground(List<Color> backgrounds, Color preferred) {
+  double worst(Color fg) =>
+      backgrounds.map((bg) => _contrast(fg, bg)).reduce((a, b) => a < b ? a : b);
+  if (worst(preferred) >= 4.5) return preferred;
+  const light = Color(0xFFF5F5F5), dark = Color(0xFF121212);
+  return worst(light) >= worst(dark) ? light : dark;
 }
 
 // ---------------------------------------------------------------------------
