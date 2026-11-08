@@ -6,6 +6,7 @@ import 'package:tango/widgets/app_content_card.dart';
 import 'package:tango/widgets/app_icon.dart';
 import 'package:tango/widgets/app_shape.dart';
 import 'package:tango/widgets/expressive_button.dart';
+import 'package:tango/widgets/rhythm/rhythm_empty_state.dart';
 
 /// Error card shown by detail screens: a dedicated rate-limit presentation
 /// when the message looks like an HTTP 429, otherwise a generic error row.
@@ -118,6 +119,15 @@ class EmptyState extends StatelessWidget {
     final tokens = context.tokens;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
+    if (context.isRhythm) {
+      return RhythmCookieEmptyState(
+        title: title,
+        subtitle: message,
+        mainIcon: icon,
+        action: action,
+      );
+    }
 
     return Center(
       child: Padding(

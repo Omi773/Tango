@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:tango/theme/material_expressive.dart';
 import 'package:tango/theme/tango_theme.dart';
+import 'package:tango/widgets/rhythm/rhythm_loaders.dart';
 
 /// Indeterminate loading only. Downloads/analysis keep their real progress.
 class AppLoadingIndicator extends StatelessWidget {
@@ -27,7 +28,15 @@ class AppLoadingIndicator extends StatelessWidget {
         TickerMode.valuesOf(context).enabled;
     return SizedBox.square(
       dimension: size,
-      child: !context.isTango
+      child: context.isRhythm
+          ? Semantics(
+              label: semanticLabel,
+              child: TickerMode(
+                enabled: animate,
+                child: RhythmLoadingIndicator(size: size, color: color),
+              ),
+            )
+          : !context.isTango
           ? MaterialExpressiveScope(
               child: FittedBox(
                 child: M3ELoadingIndicator(
