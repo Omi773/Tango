@@ -194,6 +194,7 @@ final class BitPerfectEngine {
     private var decodeDone: DispatchSemaphore?
     private var baseFrames: Int64 = 0
     private var fileRate: Double = 44100
+    private var achievedRate: Double = 0
     private var configObserver: NSObjectProtocol?
     private(set) var isPlaying = false
 
@@ -232,7 +233,7 @@ final class BitPerfectEngine {
             throw Rejection.format("empty file")
         }
 
-        try configureSession(rate: format.sampleRate)
+        var achieved = try configureSession(rate: format.sampleRate)
 
         let capacity = max(Int(format.sampleRate * 1.5), 16384)
         let ring = PlanarRing(channels: channels, capacity: capacity)
@@ -251,12 +252,17 @@ final class BitPerfectEngine {
 
         // The mixer converts to whatever the output node runs at. If that is
         // not the file's rate, renegotiate once more before committing.
-        if abs(Self.hardwareRate(engine, session) - format.sampleRate) > 0.5 {
+        // Only worth redoing when the hardware disagrees with what the session
+        // settled at. If the DAC simply cannot run the file's rate (e.g. 176.4
+        // kHz on a DAC that only offers 192 kHz) renegotiating changes nothing
+        // and costs seconds.
+        if abs(Self.hardwareRate(engine, session) - achieved) > 0.5 {
             engine.stop()
-            try configureSession(rate: format.sampleRate)
+            achieved = try configureSession(rate: format.sampleRate)
             engine.prepare()
         }
 
+        self.achievedRate = achieved
         self.file = opened
         self.ring = ring
         self.engine = engine
@@ -284,36 +290,74 @@ final class BitPerfectEngine {
         )
     }
 
-    /// Asks CoreAudio for `rate` and waits for the hardware to actually switch.
-    /// `setPreferredSampleRate` is only a request: with a USB DAC the session
-    /// keeps reporting the old rate (e.g. the DAC's 192 kHz) for a while, and
-    /// the first request is often ignored while the session is already active.
-    /// Cycling the session between attempts forces a fresh negotiation.
+    /// Rates a route was already asked for -> the rate it settled at. A DAC
+    /// that cannot run a rate (176.4 kHz on a 192 kHz-only DAC) never will, so
+    /// remembering saves every later track from waiting out the retries.
+    private static var negotiated: [String: Double] = [:]
+    private static let negotiatedLock = NSLock()
+
+    private static func negotiationKey(_ session: AVAudioSession, _ rate: Double) -> String {
+        let port = session.currentRoute.outputs.first?.portName ?? ""
+        return "\(port)|\(Int(rate.rounded()))"
+    }
+
+    /// Asks CoreAudio for `rate` and waits for the hardware to switch.
+    /// `setPreferredSampleRate` is only a request. Three things keep this fast:
+    ///  - if the hardware moves to a *different* rate and stays there, that is
+    ///    its answer (rate unsupported): accept it immediately instead of
+    ///    retrying for seconds;
+    ///  - the outcome is cached per device + rate, so a known-unsupported rate
+    ///    gets one short attempt;
+    ///  - the session is only cycled (inactive -> active) if the rate did not
+    ///    move at all, and only once.
     /// Returns the rate the session settled at (may differ if unsupported).
     @discardableResult
     private func configureSession(rate: Double) throws -> Double {
         let session = AVAudioSession.sharedInstance()
         try session.setCategory(.playback, mode: .default, options: [])
-        for attempt in 0..<3 {
+        let key = Self.negotiationKey(session, rate)
+        Self.negotiatedLock.lock()
+        let known = Self.negotiated[key]
+        Self.negotiatedLock.unlock()
+
+        let start = session.sampleRate
+        let attempts = known == nil ? 2 : 1
+        for attempt in 0..<attempts {
             try session.setPreferredSampleRate(rate)
             try session.setActive(true)
-            if Self.waitForRate(session, rate: rate, timeout: attempt == 0 ? 0.4 : 0.8) {
-                return session.sampleRate
+            let timeout: TimeInterval = known != nil ? 0.3 : (attempt == 0 ? 1.0 : 1.5)
+            let settled = Self.waitForSettle(session, rate: rate, start: start, timeout: timeout)
+            if settled || abs(session.sampleRate - start) > 0.5 || known != nil {
+                break
             }
-            if attempt < 2 {
+            if attempt + 1 < attempts {
                 try? session.setActive(false, options: [])
-                usleep(150_000)
+                usleep(100_000)
             }
         }
-        return session.sampleRate
+        let result = session.sampleRate
+        Self.negotiatedLock.lock()
+        Self.negotiated[key] = result
+        Self.negotiatedLock.unlock()
+        return result
     }
 
-    private static func waitForRate(
-        _ session: AVAudioSession, rate: Double, timeout: TimeInterval
+    /// True when the session is at `rate`, or has moved off `start` to another
+    /// rate and held it for a moment (the hardware's final answer).
+    private static func waitForSettle(
+        _ session: AVAudioSession, rate: Double, start: Double, timeout: TimeInterval
     ) -> Bool {
         let deadline = Date().addingTimeInterval(timeout)
+        var changedAt: Date?
         while true {
-            if abs(session.sampleRate - rate) <= 0.5 { return true }
+            let current = session.sampleRate
+            if abs(current - rate) <= 0.5 { return true }
+            if abs(current - start) > 0.5 {
+                if changedAt == nil { changedAt = Date() }
+                if Date().timeIntervalSince(changedAt!) >= 0.25 { return true }
+            } else {
+                changedAt = nil
+            }
             if Date() >= deadline { return false }
             usleep(20_000)
         }
@@ -351,8 +395,9 @@ final class BitPerfectEngine {
         if !engine.isRunning {
             // Another plugin may have reconfigured the shared session since
             // prepare (Now Playing refresh, interruptions). Re-assert the rate.
-            if abs(Self.hardwareRate(engine, session) - fileRate) > 0.5 {
-                try configureSession(rate: fileRate)
+            if abs(session.sampleRate - achievedRate) > 0.5 {
+                achievedRate = try configureSession(rate: fileRate)
+                engine.stop()
                 engine.prepare()
             }
             try engine.start()
@@ -556,36 +601,71 @@ final class BitPerfectBridge {
         handler.sink?(["event": name, "token": token])
     }
 
+    /// Engine work (session negotiation with a USB DAC can block for a while)
+    /// runs on this serial queue so the UI thread never stalls; replies hop
+    /// back to main. Serial order also keeps stop/seek after a prepare.
+    private let work = DispatchQueue(label: "app.tango.bitperfect", qos: .userInitiated)
+    private var pendingPrepares = 0
+
     private func handle(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "prepare":
-            result(prepare(call.arguments as? [String: Any] ?? [:]))
+            let args = call.arguments as? [String: Any] ?? [:]
+            token = (args["token"] as? NSNumber)?.intValue ?? token
+            let myToken = token
+            pendingPrepares += 1
+            work.async { [weak self] in
+                guard let self else { return }
+                // A newer prepare/stop arrived while this one waited in line.
+                let current = DispatchQueue.main.sync { self.token }
+                let response: [String: Any] = current == myToken
+                    ? self.prepare(args)
+                    : ["ready": false, "reason": "unsupported", "detail": "superseded"]
+                DispatchQueue.main.async {
+                    self.pendingPrepares -= 1
+                    result(response)
+                }
+            }
         case "resume":
-            do {
-                try engine.resume()
-                startMonitor()
-                // Report the rate the hardware really runs at once playing.
-                result(engine.currentOutputRate.map {
-                    ["sampleRate": Int($0.rounded())]
-                })
-            } catch {
-                result(FlutterError(code: "engine_failed", message: "\(error)", details: nil))
+            work.async { [weak self] in
+                guard let self else { return }
+                do {
+                    try self.engine.resume()
+                    // Report the rate the hardware really runs at once playing.
+                    let rate = self.engine.currentOutputRate
+                    DispatchQueue.main.async {
+                        self.startMonitor()
+                        result(rate.map { ["sampleRate": Int($0.rounded())] })
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        result(FlutterError(code: "engine_failed", message: "\(error)", details: nil))
+                    }
+                }
             }
         case "pause":
-            engine.pause()
             stopMonitor()
-            result(nil)
+            work.async { [weak self] in
+                self?.engine.pause()
+                DispatchQueue.main.async { result(nil) }
+            }
         case "seek":
             let args = call.arguments as? [String: Any]
-            engine.seek(milliseconds: (args?["position"] as? NSNumber)?.intValue ?? 0)
-            result(nil)
+            let ms = (args?["position"] as? NSNumber)?.intValue ?? 0
+            work.async { [weak self] in
+                self?.engine.seek(milliseconds: ms)
+                DispatchQueue.main.async { result(nil) }
+            }
         case "position":
-            result(engine.isLoaded ? engine.positionMs() : nil)
+            // Answered immediately; no position while a prepare is in flight.
+            result(engine.isLoaded && pendingPrepares == 0 ? engine.positionMs() : nil)
         case "stop":
             token += 1
             stopMonitor()
-            engine.stop()
-            result(nil)
+            work.async { [weak self] in
+                self?.engine.stop()
+                DispatchQueue.main.async { result(nil) }
+            }
         default:
             // "volume": iOS has no app-controlled DAC volume; the system owns it.
             result(FlutterMethodNotImplemented)
@@ -593,7 +673,6 @@ final class BitPerfectBridge {
     }
 
     private func prepare(_ args: [String: Any]) -> [String: Any] {
-        token = (args["token"] as? NSNumber)?.intValue ?? token
         if args["requiresDsd"] as? Bool == true {
             return ["ready": false, "reason": "dsd_unsupported"]
         }
