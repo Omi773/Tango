@@ -40,6 +40,7 @@ final class PlaybackNotificationBridge {
 /// Read-only route and stream facts for the player's audio information sheet.
 final class AudioRouteInfoBridge {
     private let channel: FlutterMethodChannel
+    private var routeObserver: NSObjectProtocol?
 
     init(messenger: FlutterBinaryMessenger) {
         channel = FlutterMethodChannel(name: "app.tango/audio_route", binaryMessenger: messenger)
@@ -55,6 +56,14 @@ final class AudioRouteInfoBridge {
                 let payload = info
                 await MainActor.run { result(payload) }
             }
+        }
+        // Lets the output button follow headphones, AirPods and AirPlay live.
+        routeObserver = NotificationCenter.default.addObserver(
+            forName: AVAudioSession.routeChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.channel.invokeMethod("routeChanged", arguments: nil)
         }
     }
 
@@ -121,6 +130,7 @@ final class AudioRouteInfoBridge {
     }
 
     deinit {
+        if let routeObserver { NotificationCenter.default.removeObserver(routeObserver) }
         channel.setMethodCallHandler(nil)
     }
 }
