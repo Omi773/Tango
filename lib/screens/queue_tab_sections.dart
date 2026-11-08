@@ -125,7 +125,8 @@ extension _QueueTabSections on _QueueTabState {
     String? label;
     var start = 0;
     for (var i = 0; i < items.length; i++) {
-      final next = _trackSectionLabel(context, items[i]) ?? '';
+      // One continuous list: no letter or month dividers.
+      const next = '';
       if (i == 0) {
         label = next;
       } else if (next != label) {
@@ -236,19 +237,22 @@ extension _QueueTabSections on _QueueTabState {
         required VoidCallback onPressed,
         VoidCallback? onLongPress,
       }) => Padding(
-        padding: const EdgeInsetsDirectional.only(start: 8),
+        padding: const EdgeInsetsDirectional.only(start: 2),
         child: GestureDetector(
           onLongPress: onLongPress,
-          child: IconButton.filledTonal(
+          child: IconButton(
             tooltip: tooltip,
             onPressed: onPressed,
             icon: icon,
+            iconSize: 20,
             style: IconButton.styleFrom(
-              minimumSize: const Size(48, 48),
-              backgroundColor: scheme.surfaceContainerHigh,
+              minimumSize: const Size(36, 36),
+              padding: EdgeInsets.zero,
+              tapTargetSize: MaterialTapTargetSize.padded,
+              backgroundColor: Colors.transparent,
               foregroundColor: scheme.onSurfaceVariant,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
           ),

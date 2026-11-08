@@ -419,11 +419,11 @@ class _RhythmLibraryTabs extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         children: [
           for (final (index, tab) in tabs.indexed) ...[
-            if (index > 0) const SizedBox(width: 8),
+            if (index > 0) const SizedBox(width: 4),
             Semantics(
               button: true,
               selected: index == selectedIndex,
@@ -434,60 +434,32 @@ class _RhythmLibraryTabs extends StatelessWidget {
                   onSelected(index);
                 },
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 220),
+                  duration: const Duration(milliseconds: 260),
                   curve: Curves.easeOutCubic,
-                  height: 44,
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  height: 32,
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
                   decoration: BoxDecoration(
                     color: index == selectedIndex
-                        ? scheme.secondaryContainer
-                        : scheme.surfaceContainerHigh,
-                    borderRadius: BorderRadius.circular(
-                      index == selectedIndex ? 22 : 14,
-                    ),
+                        ? scheme.secondaryContainer.withValues(alpha: 0.7)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   alignment: Alignment.center,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        tab.$1,
-                        style: textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: index == selectedIndex
-                              ? scheme.onSecondaryContainer
-                              : scheme.onSurfaceVariant,
-                        ),
-                      ),
-                      if (tab.$2 != null) ...[
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 7,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: index == selectedIndex
-                                ? scheme.onSecondaryContainer.withValues(
-                                    alpha: 0.12,
-                                  )
-                                : scheme.onSurfaceVariant.withValues(
-                                    alpha: 0.12,
-                                  ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            '${tab.$2}',
-                            style: textTheme.labelSmall?.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: index == selectedIndex
-                                  ? scheme.onSecondaryContainer
-                                  : scheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
+                  child: AnimatedDefaultTextStyle(
+                    duration: const Duration(milliseconds: 260),
+                    curve: Curves.easeOutCubic,
+                    style: textTheme.labelLarge!.copyWith(
+                      fontSize: 13,
+                      fontWeight: index == selectedIndex
+                          ? FontWeight.w700
+                          : FontWeight.w500,
+                      color: index == selectedIndex
+                          ? scheme.onSecondaryContainer
+                          : scheme.onSurfaceVariant,
+                    ),
+                    child: Text(
+                      tab.$2 == null ? tab.$1 : '${tab.$1} ${tab.$2}',
+                    ),
                   ),
                 ),
               ),

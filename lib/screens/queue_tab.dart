@@ -411,7 +411,10 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     }
     final motion = AppMotion.spatialSlow(
       context,
-      const AppMotionSpec(Duration(milliseconds: 300), Curves.easeOutCubic),
+      const AppMotionSpec(
+        Duration(milliseconds: 340),
+        Curves.easeInOutCubicEmphasized,
+      ),
     );
     _filterPageController?.animateToPage(
       index,

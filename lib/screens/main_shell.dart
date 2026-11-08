@@ -237,7 +237,7 @@ class _MainShellState extends ConsumerState<MainShell>
     _pageController = PageController(initialPage: _currentIndex);
     _tabJumpTransitionController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 180),
+      duration: const Duration(milliseconds: 240),
       value: 1,
     );
     ShellNavigationService.registerTabSelectionHandler(
@@ -471,8 +471,8 @@ class _MainShellState extends ConsumerState<MainShell>
       } else {
         _pageController.animateToPage(
           index,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOutCubic,
+          duration: const Duration(milliseconds: 320),
+          curve: Curves.easeInOutCubicEmphasized,
         );
       }
     }
@@ -1153,14 +1153,8 @@ class _MainShellState extends ConsumerState<MainShell>
                   ),
                 );
               }
-              final bottomBar = Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const MiniPlayer(),
-                  // The bar's container fill separates it; no divider, so
-                  // the mini player and the bar read as one surface.
-                  if (!useNavigationRail)
-                    ExpressiveNavigationBar(
+              final navBar = !useNavigationRail
+                  ? ExpressiveNavigationBar(
                       selectedIndex: _currentIndex.clamp(0, maxIndex),
                       onDestinationSelected: _onNavTap,
                       isTablet: isTablet,
@@ -1169,7 +1163,35 @@ class _MainShellState extends ConsumerState<MainShell>
                           : settingsGroupColor(context)
                                 .withValues(alpha: 0.72),
                       destinations: destinations,
-                    ),
+                    )
+                  : null;
+              // Rhythm: the mini player floats above a nav bar whose top
+              // corners are rounded, so the two no longer read as one slab.
+              if (context.isRhythm) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const MiniPlayer(bottomPadding: 10),
+                    if (navBar != null)
+                      ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(28),
+                        ),
+                        child: ColoredBox(
+                          color: settingsGroupColor(context),
+                          child: navBar,
+                        ),
+                      ),
+                  ],
+                );
+              }
+              final bottomBar = Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const MiniPlayer(),
+                  // The bar's container fill separates it; no divider, so
+                  // the mini player and the bar read as one surface.
+                  if (navBar != null) navBar,
                 ],
               );
               // The backdrop blur re-filters everything scrolling underneath on

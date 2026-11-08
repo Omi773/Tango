@@ -98,21 +98,6 @@ final _homeOnRepeatProvider =
       return tracks;
     });
 
-/// The prompt under the Home greeting, picked again on each launch.
-class _HomeTagline extends StatelessWidget {
-  const _HomeTagline();
-
-  @override
-  Widget build(BuildContext context) => Text(
-    homeTagline(context.l10n),
-    maxLines: 1,
-    overflow: TextOverflow.ellipsis,
-    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-      color: Theme.of(context).colorScheme.onSurfaceVariant,
-    ),
-  );
-}
-
 /// Everything under the search bar on the Material Home. Sections without
 /// content leave no gap behind.
 class _HomeSections extends ConsumerWidget {
@@ -925,74 +910,42 @@ class _HomeStatsCard extends ConsumerWidget {
   }
 }
 
-/// Quick ways into player tools that otherwise sit a few screens deep.
+/// Quick ways into player tools: shuffle, equalizer and statistics as one
+/// minimal row of three.
 class _HomeShortcuts extends ConsumerWidget {
   const _HomeShortcuts();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final colorScheme = Theme.of(context).colorScheme;
     void open(Widget screen) => Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(builder: (_) => screen));
 
-    // Shuffle is the one emphasized action; the other tools share a neutral
-    // tile so color marks importance rather than varying per tile.
     final tiles = [
       _HomeShortcutTile(
         label: l10n.nowPlayingShuffleLibrary,
         icon: Icons.shuffle,
-        container: colorScheme.primaryContainer,
-        onContainer: colorScheme.onPrimaryContainer,
-        badge: colorScheme.primary,
-        onBadge: colorScheme.onPrimary,
+        emphasized: true,
         onTap: () => _shuffle(context, ref),
       ),
       _HomeShortcutTile(
         label: l10n.equalizerTitle,
         icon: Icons.graphic_eq,
-        container: colorScheme.surfaceContainerHigh,
-        onContainer: colorScheme.onSurface,
-        badge: colorScheme.secondaryContainer,
-        onBadge: colorScheme.onSecondaryContainer,
         onTap: () => open(const EqualizerScreen()),
       ),
       _HomeShortcutTile(
         label: l10n.listeningStats,
         icon: Icons.insights,
-        container: colorScheme.surfaceContainerHigh,
-        onContainer: colorScheme.onSurface,
-        badge: colorScheme.secondaryContainer,
-        onBadge: colorScheme.onSecondaryContainer,
         onTap: () => open(const ListeningStatisticsScreen()),
-      ),
-      _HomeShortcutTile(
-        label: l10n.networkStorage,
-        icon: Icons.lan_outlined,
-        container: colorScheme.surfaceContainerHigh,
-        onContainer: colorScheme.onSurface,
-        badge: colorScheme.secondaryContainer,
-        onBadge: colorScheme.onSecondaryContainer,
-        onTap: () => open(const NetworkStorageScreen()),
       ),
     ];
 
-    return Column(
+    return Row(
       children: [
-        for (var row = 0; row < tiles.length; row += 2) ...[
-          if (row > 0) const SizedBox(height: 8),
-          // A label that wraps keeps its neighbor the same height.
-          IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(child: tiles[row]),
-                const SizedBox(width: 8),
-                Expanded(child: tiles[row + 1]),
-              ],
-            ),
-          ),
+        for (final (index, tile) in tiles.indexed) ...[
+          if (index > 0) const SizedBox(width: 8),
+          Expanded(child: tile),
         ],
       ],
     );
@@ -1013,43 +966,46 @@ class _HomeShortcutTile extends StatelessWidget {
   const _HomeShortcutTile({
     required this.label,
     required this.icon,
-    required this.container,
-    required this.onContainer,
-    required this.badge,
-    required this.onBadge,
     required this.onTap,
+    this.emphasized = false,
   });
 
   final String label;
   final IconData icon;
-  final Color container;
-  final Color onContainer;
-  final Color badge;
-  final Color onBadge;
+  final bool emphasized;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final container = emphasized
+        ? scheme.primaryContainer
+        : scheme.surfaceContainerHigh;
+    final onContainer = emphasized
+        ? scheme.onPrimaryContainer
+        : scheme.onSurfaceVariant;
     return Material(
       color: container,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(14, 14, 14, 16),
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _HomeIconBadge(icon: icon, color: badge, onColor: onBadge),
-              const SizedBox(height: 16),
+              Icon(icon, size: 20, color: onContainer),
+              const SizedBox(height: 6),
               Text(
                 label,
-                maxLines: 2,
+                maxLines: 1,
+                textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleSmall?.copyWith(color: onContainer),
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: onContainer,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
           ),

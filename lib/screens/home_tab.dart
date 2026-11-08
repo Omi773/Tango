@@ -51,7 +51,6 @@ import 'package:tango/providers/music_player_provider.dart';
 import 'package:tango/models/unified_library_item.dart';
 import 'package:tango/screens/equalizer_screen.dart';
 import 'package:tango/screens/listening_statistics_screen.dart';
-import 'package:tango/screens/network_storage_screen.dart';
 import 'package:tango/screens/now_playing_screen.dart';
 import 'package:tango/services/library_database.dart';
 import 'package:tango/services/listening_statistics.dart';
@@ -1408,14 +1407,8 @@ class _HomeTabState extends ConsumerState<HomeTab>
     // in the content area.
     if (context.isTango) return const SizedBox.shrink();
 
-    // The header carries the greeting; prompts take turns beneath it.
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24 + wideListInset(context)),
-      child: const Align(
-        alignment: AlignmentDirectional.centerStart,
-        child: _HomeTagline(),
-      ),
-    );
+    // Minimal home: the greeting stands alone, no prompt line beneath it.
+    return const SizedBox.shrink();
   }
 
   void _onEmbeddedCoverChanged() {

@@ -11,15 +11,15 @@ extension _QueueTabFilterWidgets on _QueueTabState {
     final edge = 16 + wideListInset(context);
     final rhythm = context.isRhythm;
     return Padding(
-      padding: EdgeInsets.fromLTRB(edge, rhythm ? 12 : 8, edge, 8),
+      padding: EdgeInsets.fromLTRB(edge, rhythm ? 4 : 8, edge, rhythm ? 4 : 8),
       child: Row(
         children: [
           Text(
             countText,
             style: rhythm
-                ? Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: Theme.of(context).colorScheme.onSurface,
+                ? Theme.of(context).textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   )
                 : Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
