@@ -986,6 +986,11 @@
   "@setupGetStarted": {
     "description": "Final setup button"
   },
+  "setupRhythmWelcomeDescription": "Your music, on your device. Fast, private and made to feel good to use.",
+  "setupRhythmLibraryTitle": "Your library",
+  "setupRhythmLibraryDescription": "Tango creates a music folder for you and scans it automatically. You can add more folders any time in Settings.",
+  "setupRhythmCustomizeTitle": "Make it yours",
+  "setupRhythmCustomizeDescription": "Colors, fonts, lyrics, the equalizer and playback options are all waiting in Settings.",
   "setupAllowAccessToManageFiles": "Please enable \"Allow access to manage all files\" in the next screen.",
   "@setupAllowAccessToManageFiles": {
     "description": "Instruction for file access permission"
@@ -7318,6 +7323,9 @@
   "listeningStatsPreviousYear": "Previous year",
   "listeningStatsNextYear": "Next year",
   "listeningStatsActivity": "Recent listening days · minutes",
+  "listeningStatsPlaysLabel": "Plays",
+  "listeningStatsTracksLabel": "Tracks",
+  "listeningStatsDaysLabel": "Active days",
   "listeningStatsTopArtists": "Top artists",
   "listeningStatsTopTracks": "Top tracks",
   "listeningStatsLoadError": "Could not load listening statistics",
