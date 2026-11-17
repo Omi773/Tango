@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C0CE00000000000000000001 /* ConcertCalendarBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CE00000000000000000002 /* ConcertCalendarBridge.swift */; };
 		A0D100000000000000000005 /* BitPerfectEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D100000000000000000006 /* BitPerfectEngine.swift */; };
+		A0D100000000000000000007 /* ResumePlaybackIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D100000000000000000008 /* ResumePlaybackIntent.swift */; };
 		A0D100000000000000000001 /* AudioOutputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D100000000000000000002 /* AudioOutputView.swift */; };
 		A0D100000000000000000003 /* MusicHaptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D100000000000000000004 /* MusicHaptics.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
@@ -52,6 +53,7 @@
 /* Begin PBXFileReference section */
 		C0CE00000000000000000002 /* ConcertCalendarBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcertCalendarBridge.swift; sourceTree = "<group>"; };
 		A0D100000000000000000006 /* BitPerfectEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitPerfectEngine.swift; sourceTree = "<group>"; };
+		A0D100000000000000000008 /* ResumePlaybackIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResumePlaybackIntent.swift; sourceTree = "<group>"; };
 		A0D100000000000000000002 /* AudioOutputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioOutputView.swift; sourceTree = "<group>"; };
 		A0D100000000000000000004 /* MusicHaptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicHaptics.swift; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				A0D100000000000000000002 /* AudioOutputView.swift */,
+				A0D100000000000000000008 /* ResumePlaybackIntent.swift */,
 				A0D100000000000000000006 /* BitPerfectEngine.swift */,
 				A0D100000000000000000004 /* MusicHaptics.swift */,
 				C0CE00000000000000000002 /* ConcertCalendarBridge.swift */,
@@ -410,6 +413,7 @@
 			files = (
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				A0D100000000000000000001 /* AudioOutputView.swift in Sources */,
+				A0D100000000000000000007 /* ResumePlaybackIntent.swift in Sources */,
 				A0D100000000000000000005 /* BitPerfectEngine.swift in Sources */,
 				A0D100000000000000000003 /* MusicHaptics.swift in Sources */,
 				C0CE00000000000000000001 /* ConcertCalendarBridge.swift in Sources */,
