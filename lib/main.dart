@@ -29,6 +29,7 @@ import 'package:tango/services/app_crash_service.dart';
 import 'package:tango/services/desktop_deep_links.dart';
 import 'package:tango/services/desktop_diagnostics.dart';
 import 'package:tango/services/desktop_library_watcher.dart';
+import 'package:tango/services/ios_resume_playback.dart';
 import 'package:tango/services/music_player_service.dart';
 import 'package:tango/services/audio_diagnostics.dart';
 import 'package:tango/utils/desktop_platform.dart';
@@ -127,6 +128,9 @@ void main() {
       await _prepareAndroidInstallationState(prefs);
       final bootstrapSettings = loadBootstrapSettings(prefs);
       musicPlayerRuntime.configure(bootstrapSettings);
+      // Must be listening before runApp: a background launch from the
+      // Resume Tango intent can call in before any screen exists.
+      IosResumePlayback.install();
       final bootstrapTheme = loadBootstrapThemeSettings(prefs);
       final initialSafAccessLost = await _detectInitialSafAccessLoss(
         bootstrapSettings,
