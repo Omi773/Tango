@@ -1,0 +1,194 @@
+name: Build iOS (Unsigned IPA, full entitlements)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ios-unsigned-build
+  cancel-in-progress: true
+
+jobs:
+  build-ios:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Fetch Discord SDK (iOS)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download discord-sdk --pattern discord-ios.zip --dir /tmp
+          mkdir -p third_party/tango_discord/ios/Frameworks
+          unzip -q /tmp/discord-ios.zip -d third_party/tango_discord/ios/Frameworks
+          test -d third_party/tango_discord/ios/Frameworks/discord_partner_sdk.xcframework
+          test -f third_party/tango_discord/ios/Frameworks/Discord-License-Notices.txt
+
+      - name: Select Xcode 26.1.1
+        run: |
+          sudo xcode-select -s /Applications/Xcode_26.1.1.app
+          xcodebuild -version
+
+      - name: Restore Rust cache
+        id: rust-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            rust_backend/target
+          key: rust-ios-fast-${{ runner.os }}-${{ hashFiles('rust_backend/Cargo.lock', 'rust_backend/rust-toolchain.toml', 'scripts/build_rust_backend.sh') }}
+          restore-keys: |
+            rust-ios-fast-${{ runner.os }}-
+
+      - name: Build Rust backend for iOS (device only)
+        env:
+          CARGO_PROFILE_RELEASE_LTO: 'off'
+          CARGO_PROFILE_RELEASE_CODEGEN_UNITS: '16'
+          CARGO_INCREMENTAL: '0'
+        run: |
+          python3 - <<'PY'
+          import pathlib
+          src = pathlib.Path('scripts/build_rust_backend.sh').read_text()
+          src = src.replace('rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios', 'rustup target add aarch64-apple-ios')
+          src = src.replace('for target in aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios; do', 'for target in aarch64-apple-ios; do')
+          out = []
+          skip = 0
+          in_ios = False
+          for line in src.split(chr(10)):
+              if skip:
+                  skip -= 1
+                  continue
+              if 'PLATFORM" == "ios' in line:
+                  in_ios = True
+              if in_ios and line.strip() == 'xcrun lipo -create ' + chr(92):
+                  skip = 3
+                  continue
+              if '-library "$SIMULATOR_LIBRARY"' in line:
+                  continue
+              out.append(line)
+          pathlib.Path('scripts/_ci_rust_ios_device.sh').write_text(chr(10).join(out))
+          PY
+          bash scripts/_ci_rust_ios_device.sh ios
+
+      - name: Save Rust cache
+        if: always() && steps.rust-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            rust_backend/target
+          key: rust-ios-fast-${{ runner.os }}-${{ hashFiles('rust_backend/Cargo.lock', 'rust_backend/rust-toolchain.toml', 'scripts/build_rust_backend.sh') }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
+        with:
+          channel: "stable"
+          flutter-version-file: .fvmrc
+          cache: true
+
+      - name: Get Flutter dependencies
+        run: flutter pub get
+
+      - name: Normalize ffmpeg plugin shell scripts (strip CRLF)
+        run: |
+          find "$HOME/.pub-cache/hosted" -path "*ffmpeg_kit_flutter_new_audio*/scripts/*.sh" -type f -print0 |
+            while IFS= read -r -d '' f; do
+              perl -pi -e 's/\r$//' "$f"
+              chmod +x "$f"
+            done
+
+      - name: Generate app icons
+        run: dart run flutter_launcher_icons
+
+      - name: Install pods
+        working-directory: ios
+        run: pod install
+
+      - name: Build iOS (unsigned)
+        run: |
+          flutter build ios --release --no-codesign --config-only --target lib/main.dart \
+            --dart-define="GIT_COMMIT=$(git rev-parse --short=8 HEAD)"
+
+          cd ios
+          xcodebuild -workspace Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/Runner.xcarchive \
+            archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
+            DEBUG_INFORMATION_FORMAT=dwarf \
+            COMPILER_INDEX_STORE_ENABLE=NO
+
+      # No certificate is used here. The entitlements are written straight
+      # into the app binary with ldid, so whatever signs or installs the IPA
+      # later (Feather, AltStore, Sideloadly, TrollStore) can see and keep them.
+      # Delete any line you do not want.
+      - name: Embed full entitlements (ldid)
+        run: |
+          set -euo pipefail
+          brew install ldid
+
+          cat > "$RUNNER_TEMP/entitlements.plist" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>com.apple.developer.kernel.increased-memory-limit</key>
+              <true/>
+              <key>com.apple.developer.kernel.extended-virtual-addressing</key>
+              <true/>
+              <key>com.apple.developer.siri</key>
+              <true/>
+              <key>com.apple.developer.usernotifications.time-sensitive</key>
+              <true/>
+          </dict>
+          </plist>
+          PLIST
+
+          APP="ios/build/Runner.xcarchive/Products/Applications/Runner.app"
+          EXEC="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$APP/Info.plist")"
+          ldid -S"$RUNNER_TEMP/entitlements.plist" "$APP/$EXEC"
+          echo "Entitlements now inside the binary:"
+          ldid -e "$APP/$EXEC"
+
+      - name: Create IPA
+        run: |
+          set -euo pipefail
+          mkdir -p build/ios/ipa
+          cd ios/build/Runner.xcarchive/Products/Applications
+          rm -rf Payload && mkdir Payload
+          cp -r Runner.app Payload/
+          zip -qr "$GITHUB_WORKSPACE/build/ios/ipa/Tango-ios-unsigned.ipa" Payload
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Tango-ios-unsigned
+          path: build/ios/ipa/Tango-ios-unsigned.ipa
+
+      - name: Publish IPA to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="unsigned-${{ github.run_number }}"
+          cp build/ios/ipa/Tango-ios-unsigned.ipa "build/ios/ipa/Tango-unsigned-${{ github.run_number }}.ipa"
+          gh release create "$TAG" \
+            "build/ios/ipa/Tango-unsigned-${{ github.run_number }}.ipa" \
+            --target "$GITHUB_SHA" \
+            --title "Tango unsigned build ${{ github.run_number }}" \
+            --notes "Unsigned iOS build with full entitlements, from commit ${GITHUB_SHA::8}." \
+            --prerelease
